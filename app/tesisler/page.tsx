@@ -29,30 +29,75 @@ export default function Tesisler() {
     }
   }, [])
 
-  const sustainablePractices = [
+  const facilityFeatures = [
     {
       icon: <Leaf className="w-8 h-8 text-green-600" />,
-      title: "Biyolojik Mücadele",
-      description: "Zararlı böcekleri doğal yollarla kontrol altına alarak, pestisit kullanımını tamamen ortadan kaldırıyoruz.",
-      features: ["Faydalı böcekler", "Doğal düşmanlar", "Biyolojik preparatlar"]
+      title: "1. Sürdürülebilir ve İlaçsız Üretim Yöntemleri",
+      description: "Geleceğin tarımını inşa ederken, doğaya ve insan sağlığına verdiğimiz değeri üretimimizin her aşamasında gösteriyoruz.",
+      content: [
+        {
+          subtitle: "Pestisitsiz Üretim",
+          text: "Ürünlerimizin hiçbir aşamasında pestisit kullanılmamaktadır. Üretim alanımıza bir ameliyathane titizliğiyle yaklaşarak zararlı böcek ve hastalıkların tesise girişini tamamen engelliyoruz."
+        },
+        {
+          subtitle: "İyi Tarım Uygulamaları",
+          text: "Türkiye'nin ilk İyi Tarım Uygulamaları (İTU) belgesi alan dikey tarım tesisi olmanın gururunu yaşıyoruz. Bu belge, üretim süreçlerimizin ulusal standartlara uygunluğunu ve gıda güvenliğini garanti eder."
+        },
+        {
+          subtitle: "Özel Besin Çözeltisi",
+          text: "Bitkilerin büyümesi için gerekli olan tüm makro ve mikro elementleri bir araya getirerek her ürün grubuna özel besin çözeltileri hazırlıyoruz. Besinlerimizi kendimiz formüle etmemiz bitkilerin doğal gelişimini desteklerken ürünlerimizde hiçbir kimyasal kullanılmamasını sağlıyor."
+        }
+      ]
+    },
+    {
+      icon: <Zap className="w-8 h-8 text-blue-600" />,
+      title: "2. Akıllı ve Yüksek Teknolojili Üretim",
+      description: "Dikey tarım tesisimiz, dünyanın en gelişmiş iklim kontrollü üretim alanları arasında yer almaktadır. Çok katlı hidroponik sistemler ile kaynakları verimli kullanıyor ve maksimum verim elde ediyoruz.",
+      content: [
+        {
+          subtitle: "Gelişmiş Teknoloji",
+          text: "Fide dolaplarımız sayesinde üretim süreçlerimizi tohumdan hasada kadar tesisimizde yönetiyoruz. Bu durum her bitkinin en hassas gelişim aşamalarında bile optimum koşullara sahip olmasını sağlıyor."
+        },
+        {
+          subtitle: "Akıllı Sistemler",
+          text: "Büyüme sürecini optimize eden özel LED aydınlatmalar, ideal ortamı sağlayan akıllı iklimlendirme ve iklim kontrol sistemleri, besin çözeltilerini ve pH dengesini otomatik yöneten gelişmiş besleme teknolojileri tesisimizin temel bileşenlerindendir."
+        },
+        {
+          subtitle: "Bulut Tabanlı Yönetim",
+          text: "Bulut tabanlı yazılımımız sayesinde tesis uzaktan izlenip yönetilebilmektedir. Akıllı sensörler nem, sıcaklık, CO₂ ve besin değerlerini sürekli takip eder; bu veriler doğrultusunda alınan kararlarla süreçler optimize edilir."
+        }
+      ],
+      conclusion: "Tüm bu teknolojiler sayesinde bitkilerimizin her gelişim evresinde en sevdikleri koşulları oluşturarak, en yüksek tazelik ve besin değerine ulaşmalarını sağlıyoruz."
     },
     {
       icon: <Shield className="w-8 h-8 text-yellow-600" />,
-      title: "İyi Tarım Uygulamaları",
-      description: "Uluslararası standartlarda üretim yaparak, güvenli ve kaliteli gıda üretimi sağlıyoruz.",
-      features: ["GAP sertifikası", "Kalite kontrol", "Sürdürülebilir yöntemler"]
+      title: "3. Üretim ve Lojistik Alanımız",
+      description: "Şehir merkezine yakın konumumuz, ürünlerin tazeliğini koruyarak sofralarınıza en hızlı şekilde ulaşmasını sağlar.",
+      content: [
+        {
+          subtitle: "Üretim Alanı",
+          text: "650 m² net üretim alanında, 84 adet 8 katlı dikey tarım ünitesi ile yıl boyunca kesintisiz üretim ve hasat yapıyoruz."
+        },
+        {
+          subtitle: "Hijyenik Paketleme ve Sevkiyat",
+          text: "Üretim alanıyla entegre paketleme bölümümüz ürünlerin taze ve hızlı bir şekilde sevkiyatını mümkün kılar."
+        }
+      ]
     },
     {
-      icon: <Droplets className="w-8 h-8 text-blue-600" />,
-      title: "Pestisitsiz Üretim",
-      description: "Hiçbir kimyasal pestisit kullanmadan, tamamen doğal yöntemlerle üretim yapıyoruz.",
-      features: ["Organik sertifika", "Doğal koruma", "Güvenli ürünler"]
-    },
-    {
-      icon: <Zap className="w-8 h-8 text-green-600" />,
-      title: "Modern Teknoloji",
-      description: "Hidroponik sistemler ve akıllı sera teknolojileri ile verimli üretim gerçekleştiriyoruz.",
-      features: ["Hidroponik sistem", "Akıllı sera", "Otomatik sulama"]
+      icon: <Droplets className="w-8 h-8 text-green-600" />,
+      title: "4. Çevre Dostu ve Sürdürülebilir Yaklaşım",
+      description: "Sürdürülebilirlik ilkemiz tesisimizin her detayında kendini gösterir.",
+      content: [
+        {
+          subtitle: "Su Tasarrufu",
+          text: "Geleneksel tarıma göre %90 daha az su tüketerek su kaynaklarının korunmasına büyük katkı sağlıyoruz."
+        },
+        {
+          subtitle: "Atık Yönetimi",
+          text: "Üretim sürecinde çıkan tüm bitkisel atıkları çevremizdeki hayvan çiftlikleriyle paylaşarak döngüsel ekonomiye katkıda bulunuyoruz."
+        }
+      ]
     }
   ]
 
@@ -103,131 +148,45 @@ export default function Tesisler() {
         <div className="max-w-6xl mx-auto">
           {/* Page Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">Sürdürülebilir Tarım Tesislerimiz</h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Biyolojik mücadele, iyi tarım uygulamaları ve pestisitsiz üretim ile doğaya ve insan sağlığına saygılı tarım yapıyoruz.
+            <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">Tesisimiz</h1>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-4">
+              Teknolojik, Sürdürülebilir ve Güvenli Üretim
+            </p>
+            <p className="text-base text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              Tarımın köklü yöntemlerini geleceğin teknolojileriyle harmanlayarak sürdürülebilir gıda üretiminde yeni bir model oluşturuyoruz. Tohumdan sofraya tüm üretim süreçlerini kendi bünyesinde yöneten tam entegre dikey tarım tesisimiz, kaynakları en verimli şekilde kullanırken yüksek kalite ve gıda güvenliği standartlarını bir araya getiriyor.
             </p>
           </div>
 
-          {/* Sustainable Practices Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {sustainablePractices.map((practice, index) => (
+          {/* Facility Features */}
+          <div className="space-y-8 mb-12">
+            {facilityFeatures.map((feature, index) => (
               <div key={index} className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-4 mb-6">
                   <div className="flex-shrink-0">
-                    {practice.icon}
+                    {feature.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-medium mb-3 text-gray-700">{practice.title}</h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{practice.description}</p>
-                    <ul className="space-y-2">
-                      {practice.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-gray-600">
-                          <span className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                    <h3 className="text-xl font-bold mb-3 text-gray-800">{feature.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                   </div>
+                </div>
+                <div className="ml-12 space-y-6">
+                  {feature.content.map((item, idx) => (
+                    <div key={idx} className="border-l-2 border-gray-200 pl-4">
+                      <h4 className="font-semibold text-gray-700 mb-2">{item.subtitle}:</h4>
+                      <p className="text-gray-600 leading-relaxed">{item.text}</p>
+                    </div>
+                  ))}
+                  {feature.conclusion && (
+                    <div className="mt-6">
+                      <p className="text-gray-600 leading-relaxed">{feature.conclusion}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Production Facility */}
-          <div className="bg-white p-8 rounded-lg shadow-sm mb-12">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl font-medium mb-4 text-gray-700">Üretim Tesisimiz</h2>
-              <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Modern sera teknolojisi ile geleneksel tarım yöntemlerini birleştiren üretim tesisimizde, 
-                her ürün en yüksek kalite standartlarında yetiştirilmektedir. Biyolojik mücadele yöntemleri 
-                ve pestisitsiz üretim teknikleri kullanarak, doğaya ve insan sağlığına zarar vermeden üretim yapıyoruz.
-              </p>
-            </div>
-
-            {/* Facility Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-medium mb-4 text-gray-700">Üretim Alanı</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  650 metrekare net üretim alanımızda 84 adet 8 katlı dikey tarım ünitesiyle yıl boyunca üretim ve hasat yapıyoruz. 
-                  Bu sayede yıl boyunca taze ürünleri tüketiciyle buluşturuyoruz.
-                </p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-medium mb-4 text-gray-700">Teknoloji</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Üstün Farmicca büyütme ledleri, iklim kontrol, gübre dozajlama ve enerji yönetim teknolojisi sayesinde 
-                  bitkilerimiz doğal ortamlarında olduğu kadar mutlu ve sağlıklı büyüyor.
-                </p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-medium mb-4 text-gray-700">Paketleme ve Sevkiyat</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Üretim alanıyla bütünleşik, hijyenik paketleme ve sevkiyat alanı sebzelerin üretim tesisinden çıktıktan sonra 
-                  mümkün olan en hızlı sürede tüketiciyle buluşmasını sağlıyor. Şehir içinde yerleşik üretim tesisimizden toplanan 
-                  ürünler zaman kaybetmeden tazeliklerini koruyarak sofralara ulaşıyor.
-                </p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-xl font-medium mb-4 text-gray-700">Yeşil Enerji</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Kurulu 1 mW güneş panelleri ve yağmur hasadı, kullandığımız enerji yönetim teknolojileri sayesinde doğaya saygı 
-                  en önemli prensibimiz. Skycrops'ta yetiştirilen sebzeler geleneksel tarım yöntemlerine göre %94 daha az su 
-                  tüketerek su kaynaklarının verimli kullanıyoruz.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
-              <div>
-                <img
-                  src="/organic-farming-greenhouse-vegetables.png"
-                  alt="Üretim tesisi"
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              </div>
-              <div>
-                <h3 className="text-xl font-medium mb-6 text-gray-700">Kalite ve Güvenlik Standartları</h3>
-                <div className="space-y-4">
-                  {productionFeatures.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <div className="flex-shrink-0 mt-1">
-                        {feature.icon}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-gray-700 mb-1">{feature.title}</h4>
-                        <p className="text-sm text-gray-600">{feature.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Technology Showcase */}
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h4 className="text-lg font-medium mb-4 text-gray-700 text-center">Kullandığımız Teknolojiler</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="p-3 bg-white rounded-lg">
-                  <div className="text-2xl mb-2">🌱</div>
-                  <div className="text-sm font-medium text-gray-700">Hidroponik Sistem</div>
-                </div>
-                <div className="p-3 bg-white rounded-lg">
-                  <div className="text-2xl mb-2">💧</div>
-                  <div className="text-sm font-medium text-gray-700">Akıllı Sulama</div>
-                </div>
-                <div className="p-3 bg-white rounded-lg">
-                  <div className="text-2xl mb-2">🌡️</div>
-                  <div className="text-sm font-medium text-gray-700">İklim Kontrolü</div>
-                </div>
-                <div className="p-3 bg-white rounded-lg">
-                  <div className="text-2xl mb-2">📊</div>
-                  <div className="text-sm font-medium text-gray-700">IoT Sensörler</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </main>
 
