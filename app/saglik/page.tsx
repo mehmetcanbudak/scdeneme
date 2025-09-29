@@ -1,8 +1,5 @@
 "use client";
 
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	Apple,
 	Award,
@@ -16,6 +13,9 @@ import {
 	Zap,
 } from "lucide-react";
 import Link from "next/link";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Saglik() {
 	// Enable transparent navigation for hero section
@@ -59,8 +59,8 @@ export default function Saglik() {
 			description:
 				"Pestisit kullanılmadan yetiştirilen meyvelerimiz, doğal antioksidanlar açısından zengindir. Bu antioksidanlar vücudunuzu serbest radikallerden korur ve yaşlanma sürecini yavaşlatır.",
 			icon: Shield,
-			color: "bg-blue-100",
-			iconColor: "text-blue-600",
+			color: "bg-green-100",
+			iconColor: "text-green-600",
 		},
 		{
 			title: "Doğal Enerji Kaynağı",
@@ -179,7 +179,7 @@ export default function Saglik() {
 							Beslenme Değerleri
 						</h2>
 
-						<div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8">
+						<div className="bg-gradient-to-br from-green-50 to-green-50 rounded-2xl p-8">
 							<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 								{nutritionFacts.map((fact, index) => (
 									<div
@@ -234,8 +234,8 @@ export default function Saglik() {
 							</div>
 
 							<div className="text-center">
-								<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-									<Users className="w-8 h-8 text-blue-600" />
+								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+									<Users className="w-8 h-8 text-green-600" />
 								</div>
 								<h3 className="text-lg font-semibold mb-2 text-gray-800">
 									Çiftçi Sağlığı
@@ -293,7 +293,7 @@ export default function Saglik() {
 									</h3>
 									<ul className="space-y-2 text-gray-600">
 										<li className="flex items-center">
-											<Droplets className="w-4 h-4 mr-2 text-blue-600" />
+											<Droplets className="w-4 h-4 mr-2 text-green-600" />
 											Günde en az 8 bardak su için
 										</li>
 										<li className="flex items-center">

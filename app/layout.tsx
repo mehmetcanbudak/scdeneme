@@ -1,9 +1,10 @@
 import Footer from "@/components/footer";
 import Navigation from "@/components/navigation";
 import { NavigationProvider } from "@/components/navigation-context";
-import WavyFooter from "@/components/wavy-footer";
+import WavyFooterWithContext from "@/components/wavy-footer-with-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
+import { PageBackgroundProvider } from "@/contexts/page-background-context";
 import { ProductProvider } from "@/contexts/product-context";
 import { SubscriptionProvider } from "@/contexts/subscription-context";
 import { Analytics } from "@vercel/analytics/next";
@@ -27,24 +28,29 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="tr" className="overflow-x-hidden">
+			<head>
+				<script src="https://accounts.google.com/gsi/client" async></script>
+			</head>
 			<body
 				className={`font-sans ${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden`}
 			>
-				<AuthProvider>
-					<ProductProvider>
-						<CartProvider>
-							<SubscriptionProvider>
-								<NavigationProvider>
-									<ScrollToTop />
-									<Navigation />
-									{children}
-									<WavyFooter className="h-16" />
-									<Footer />
-								</NavigationProvider>
-							</SubscriptionProvider>
-						</CartProvider>
-					</ProductProvider>
-				</AuthProvider>
+				<PageBackgroundProvider>
+					<AuthProvider>
+						<ProductProvider>
+							<CartProvider>
+								<SubscriptionProvider>
+									<NavigationProvider>
+										<ScrollToTop />
+										<Navigation />
+										{children}
+										<WavyFooterWithContext />
+										<Footer />
+									</NavigationProvider>
+								</SubscriptionProvider>
+							</CartProvider>
+						</ProductProvider>
+					</AuthProvider>
+				</PageBackgroundProvider>
 				<Analytics />
 			</body>
 		</html>

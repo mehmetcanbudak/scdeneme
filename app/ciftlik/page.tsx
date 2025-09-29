@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
+import { useCallback } from "react";
 import HeroHeader from "@/components/hero-header";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { useCallback } from "react";
 
 export default function Ciftlik() {
 	// Enable transparent navigation for hero section
@@ -85,11 +86,14 @@ export default function Ciftlik() {
 								</ul>
 							</div>
 							<div>
-								<img
-									src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
-									alt="Sürdürülebilir Tarım"
-									className="w-full h-80 object-cover rounded-lg"
-								/>
+								<div className="relative w-full h-80 rounded-lg overflow-hidden">
+									<Image
+										src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
+										alt="Sürdürülebilir Tarım"
+										fill
+										className="object-cover"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

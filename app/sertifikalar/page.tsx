@@ -1,8 +1,5 @@
 "use client";
 
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	Award,
 	Bug,
@@ -13,6 +10,9 @@ import {
 	Sun,
 	Trees,
 } from "lucide-react";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Sertifikalar() {
 	// Enable transparent navigation for hero section
@@ -67,7 +67,7 @@ export default function Sertifikalar() {
 					</div>
 
 					{/* Quality Assurance Section */}
-					<div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8 mb-16">
+					<div className="bg-gradient-to-br from-green-50 to-green-50 rounded-2xl p-8 mb-16">
 						<div className="grid md:grid-cols-3 gap-8">
 							<div className="text-center">
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -82,8 +82,8 @@ export default function Sertifikalar() {
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-									<Award className="w-8 h-8 text-blue-600" />
+								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+									<Award className="w-8 h-8 text-green-600" />
 								</div>
 								<h3 className="text-lg font-semibold mb-2 text-gray-800">
 									İyi Tarım Uygulamaları
@@ -168,8 +168,8 @@ export default function Sertifikalar() {
 							{/* Good Agricultural Practices */}
 							<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
 								<div className="flex items-start space-x-4">
-									<div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-										<Award className="w-6 h-6 text-blue-600" />
+									<div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+										<Award className="w-6 h-6 text-green-600" />
 									</div>
 									<div>
 										<h3 className="text-xl font-semibold mb-3 text-gray-800">
@@ -218,8 +218,8 @@ export default function Sertifikalar() {
 							{/* Water Management */}
 							<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
 								<div className="flex items-start space-x-4">
-									<div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-										<Droplets className="w-6 h-6 text-blue-600" />
+									<div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+										<Droplets className="w-6 h-6 text-green-600" />
 									</div>
 									<div>
 										<h3 className="text-xl font-semibold mb-3 text-gray-800">
@@ -546,8 +546,8 @@ export default function Sertifikalar() {
 							</div>
 
 							<div className="text-center">
-								<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-									<Sun className="w-8 h-8 text-blue-600" />
+								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+									<Sun className="w-8 h-8 text-green-600" />
 								</div>
 								<h3 className="text-lg font-semibold mb-2 text-gray-800">
 									Güneş Enerjisi

@@ -14,6 +14,7 @@ export interface HeroSlide {
 	image?: string;
 	video?: string;
 	alt?: string;
+	logo?: string;
 }
 
 export interface HeroButton {
@@ -181,7 +182,6 @@ const HeroHeader = memo(function HeroHeader({
 				marginLeft: "calc(50% - 50vw)",
 				marginRight: "calc(50% - 50vw)",
 			}}
-			role="banner"
 			aria-label="Hero section"
 		>
 			{/* Background media */}
@@ -205,7 +205,6 @@ const HeroHeader = memo(function HeroHeader({
 						muted
 						loop
 						playsInline
-						aria-hidden="true"
 						onError={(e) => {
 							console.warn("Video failed to load:", currentSlideData.video);
 							// Fallback to image if video fails
@@ -240,17 +239,30 @@ const HeroHeader = memo(function HeroHeader({
 			>
 				<div className="max-w-5xl mx-auto px-6">
 					<div className="mb-8">
-						{/* Subtitle */}
-						{currentSlideData.subtitle && (
-							<h2 className="text-sm uppercase tracking-[0.3em] mb-4 opacity-90 font-medium animate-fade-in">
-								{currentSlideData.subtitle}
-							</h2>
-						)}
+						{/* Logo or Text Content */}
+						{currentSlideData.logo ? (
+							<div className="flex items-center justify-center mb-8 animate-logo-entrance">
+								<img
+									src={currentSlideData.logo}
+									alt={currentSlideData.alt || currentSlideData.title}
+									className="w-full max-w-md md:max-w-2xl h-auto"
+								/>
+							</div>
+						) : (
+							<>
+								{/* Subtitle */}
+								{currentSlideData.subtitle && (
+									<h2 className="text-sm uppercase tracking-[0.3em] mb-4 opacity-90 font-medium animate-fade-in">
+										{currentSlideData.subtitle}
+									</h2>
+								)}
 
-						{/* Title */}
-						<h1 className="text-4xl md:text-6xl font-light mb-8 tracking-wide leading-tight animate-fade-in">
-							{currentSlideData.title}
-						</h1>
+								{/* Title */}
+								<h1 className="text-4xl md:text-6xl font-light mb-8 tracking-wide leading-tight animate-fade-in">
+									{currentSlideData.title}
+								</h1>
+							</>
+						)}
 
 						{/* Button */}
 						{showButton && currentSlideData.buttonText && (

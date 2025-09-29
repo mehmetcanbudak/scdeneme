@@ -1,6 +1,5 @@
 "use client";
 
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	CheckCircle,
 	ChevronDown,
@@ -9,6 +8,7 @@ import {
 	Shield,
 	Zap,
 } from "lucide-react";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Uretim() {
 	// Enable transparent navigation for hero section
@@ -53,7 +53,7 @@ export default function Uretim() {
 			],
 		},
 		{
-			icon: <Droplets className="w-8 h-8 text-blue-600" />,
+			icon: <Droplets className="w-8 h-8 text-green-600" />,
 			title: "Pestisitsiz Üretim",
 			description:
 				"Hiçbir kimyasal pestisit kullanmadan, tamamen doğal yöntemlerle üretim yapıyoruz.",

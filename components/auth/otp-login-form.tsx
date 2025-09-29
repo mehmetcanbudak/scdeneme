@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { ArrowLeft, Loader2, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
 	Card,
 	CardContent,
@@ -11,9 +11,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/auth-context";
-import { Phone, ArrowLeft, Loader2 } from "lucide-react";
+import GoogleLoginButton from "./google-login-button";
 
 interface OTPLoginFormProps {
 	onSuccess?: () => void;
@@ -168,6 +169,26 @@ export default function OTPLoginForm({
 						</Button>
 					)}
 				</form>
+
+				{/* Divider */}
+				<div className="relative my-6">
+					<div className="absolute inset-0 flex items-center">
+						<div className="w-full border-t border-gray-300"></div>
+					</div>
+					<div className="relative flex justify-center text-sm">
+						<span className="px-2 bg-white text-gray-500">veya</span>
+					</div>
+				</div>
+
+				{/* Google Sign-In */}
+				<GoogleLoginButton
+					onSuccess={onSuccess}
+					onError={(errorMsg) => {
+						// Display error using auth context's error
+						// The error will be shown through the error state from useAuth
+						console.error("Google login error:", errorMsg);
+					}}
+				/>
 			</div>
 		);
 	}

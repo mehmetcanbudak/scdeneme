@@ -54,6 +54,7 @@ const config: Config = {
 				scroll: "scroll 20s linear infinite",
 				"fade-in": "fadeIn 0.3s ease-out",
 				"slide-in-from-left": "slideInFromLeft 0.3s ease-out",
+				"logo-entrance": "logoEntrance 1.2s ease-out",
 			},
 			keyframes: {
 				scroll: {
@@ -67,6 +68,10 @@ const config: Config = {
 				slideInFromLeft: {
 					"0%": { transform: "translateX(-100%)" },
 					"100%": { transform: "translateX(0)" },
+				},
+				logoEntrance: {
+					"0%": { opacity: "0", transform: "translateY(20px) scale(0.95)" },
+					"100%": { opacity: "1", transform: "translateY(0) scale(1)" },
 				},
 			},
 		},

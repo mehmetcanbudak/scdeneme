@@ -1,7 +1,8 @@
 "use client";
 
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Ekibim() {
 	// Enable transparent navigation for hero section
@@ -29,10 +30,11 @@ export default function Ekibim() {
 			{/* Hero section with first slide image */}
 			<section className="relative h-[52.5vh] overflow-visible z-10">
 				<div className="absolute inset-0">
-					<img
+					<Image
 						src="/agricultural-figures-with-plants-and-sun.png"
 						alt="Ekibimiz"
-						className="w-full h-full object-cover"
+						fill
+						className="object-cover"
 					/>
 					<div className="absolute inset-0 bg-black/40"></div>
 				</div>
@@ -102,10 +104,12 @@ export default function Ekibim() {
 							].map((member, index) => (
 								<div key={index} className="text-center">
 									<div className="relative mb-6 overflow-hidden rounded-lg w-full h-48 mx-auto">
-										<img
+										<Image
 											src={member.image || "/placeholder.svg"}
 											alt={member.name}
-											className="w-full h-full object-cover"
+											width={300}
+											height={192}
+											className="object-cover"
 										/>
 									</div>
 									<h3 className="text-xl font-medium mb-2">{member.name}</h3>

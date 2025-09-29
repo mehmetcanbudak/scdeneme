@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
 import OTPLoginForm from "@/components/auth/otp-login-form";
+import { useAuth } from "@/contexts/auth-context";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
 	const { isAuthenticated, isLoading } = useAuth();
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log("Login page useEffect:", { isAuthenticated, isLoading });
 		if (isAuthenticated && !isLoading) {
-			// Redirect to home page if already authenticated
-			router.push("/");
+			// Redirect to profile page if already authenticated
+			console.log("Redirecting to /profile");
+			router.push("/profile");
 		}
 	}, [isAuthenticated, isLoading, router]);
 
@@ -20,10 +23,11 @@ export default function LoginPage() {
 		return (
 			<div className="min-h-screen relative flex items-center justify-center">
 				<div className="absolute inset-0">
-					<img
+					<Image
 						src="/agricultural-figures-with-plants-and-sun.png"
 						alt="Skycrops Background"
-						className="w-full h-full object-cover"
+						fill
+						className="object-cover"
 					/>
 					<div className="absolute inset-0 bg-black/50"></div>
 				</div>
@@ -40,16 +44,18 @@ export default function LoginPage() {
 	}
 
 	const handleLoginSuccess = () => {
-		router.push("/");
+		// Redirect will be handled automatically by the useEffect
+		// when isAuthenticated becomes true
 	};
 
 	return (
 		<div className="min-h-screen relative flex items-center justify-center p-4">
 			<div className="absolute inset-0">
-				<img
+				<Image
 					src="/agricultural-figures-with-plants-and-sun.png"
 					alt="Skycrops Background"
-					className="w-full h-full object-cover"
+					fill
+					className="object-cover"
 				/>
 				<div className="absolute inset-0 bg-black/50"></div>
 			</div>

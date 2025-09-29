@@ -1,8 +1,8 @@
+import { ShoppingBag, User } from "lucide-react";
+import { memo, useEffect, useState } from "react";
 import AuthModal from "@/components/auth/auth-modal";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
-import { ShoppingBag, User } from "lucide-react";
-import { memo, useEffect, useState } from "react";
 
 interface ActionIconsProps {
 	shouldBeTransparent: boolean;

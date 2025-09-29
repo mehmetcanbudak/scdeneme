@@ -1,3 +1,5 @@
+import { Check, Star } from "lucide-react";
+import { memo, type ReactNode } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -5,8 +7,6 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Check, Star } from "lucide-react";
-import { memo, type ReactNode } from "react";
 
 interface SubscriptionPackageProps {
 	id: number;

@@ -16,6 +16,8 @@ class ApiClient {
 	private tokenPromise: Promise<string | null> | null = null;
 	private isInitialized = false;
 	private initializationCallbacks: Array<() => void> = [];
+	// Dedupe concurrent GET requests for the same URL
+	private inflight = new Map<string, Promise<ApiResponse<any>>>();
 
 	constructor(baseURL: string) {
 		this.baseURL = baseURL;
@@ -120,6 +122,7 @@ class ApiClient {
 		options: RequestInit = {},
 	): Promise<ApiResponse<T>> {
 		const url = `${this.baseURL}${endpoint}`;
+		const method = (options.method || "GET").toString().toUpperCase();
 
 		// Wait for token to be initialized for authenticated endpoints
 		const needsAuth = this.isAuthenticatedEndpoint(endpoint);
@@ -129,28 +132,101 @@ class ApiClient {
 
 		const headers: HeadersInit = {
 			"Content-Type": "application/json",
-			"Cache-Control": "no-cache, no-store, must-revalidate",
-			Pragma: "no-cache",
-			Expires: "0",
 			...options.headers,
 		};
 
-		if (this.token && this.token.length > 0) {
+		// Only add Authorization header for authenticated endpoints
+		if (needsAuth && this.token && this.token.length > 0) {
 			(headers as any).Authorization = `Bearer ${this.token}`;
+		}
+
+		// For GET requests, dedupe concurrent calls for the same URL
+		if (method === "GET") {
+			const existing = this.inflight.get(url);
+			if (existing) {
+				return existing as Promise<ApiResponse<T>>;
+			}
+			const p = (async (): Promise<ApiResponse<T>> => {
+				try {
+					const response = await fetch(url, {
+						...options,
+						headers,
+					});
+					const data = await response.json();
+					if (!response.ok) {
+						// Handle authorization errors more gracefully
+						if (response.status === 401 || response.status === 403) {
+							const errorMessage = data.error?.message || data.message || "";
+							if (endpoint.startsWith("/api/cart")) {
+								return {
+									error: {
+										status: response.status,
+										name: "AuthenticationRequired",
+										message: "Authorization header missing or invalid",
+									},
+								};
+							}
+							if (
+								errorMessage.includes("Authorization header missing") &&
+								!this.isAuthenticatedEndpoint(endpoint)
+							) {
+								console.warn(
+									`Authorization error on public endpoint ${endpoint}, continuing...`,
+								);
+							} else if (
+								errorMessage.includes("Authorization header missing") ||
+								errorMessage.includes("invalid") ||
+								response.status === 403
+							) {
+								return {
+									error: {
+										status: response.status,
+										name: "AuthenticationRequired",
+										message: "Bu işlem için giriş yapmanız gerekiyor",
+									},
+								};
+							}
+						}
+						return {
+							error: {
+								status: response.status,
+								name: data.error?.name || "ApiError",
+								message:
+									data.error?.message || data.message || "API request failed",
+							},
+						};
+					}
+					return { data, message: data.message };
+				} catch (error) {
+					return {
+						error: {
+							status: 0,
+							name: "NetworkError",
+							message:
+								error instanceof Error
+									? error.message
+									: "Network error occurred",
+						},
+					};
+				} finally {
+					this.inflight.delete(url);
+				}
+			})();
+			this.inflight.set(url, p as Promise<ApiResponse<any>>);
+			return p as Promise<ApiResponse<T>>;
 		}
 
 		try {
 			const response = await fetch(url, {
 				...options,
 				headers,
-				cache: "no-store", // Disable browser caching
 			});
 
 			const data = await response.json();
 
 			if (!response.ok) {
 				// Handle authorization errors more gracefully
-				if (response.status === 401) {
+				if (response.status === 401 || response.status === 403) {
 					const errorMessage = data.error?.message || data.message || "";
 
 					// For cart endpoints, handle auth errors gracefully
@@ -175,9 +251,11 @@ class ApiClient {
 						);
 					} else if (
 						errorMessage.includes("Authorization header missing") ||
-						errorMessage.includes("invalid")
+						errorMessage.includes("invalid") ||
+						response.status === 403
 					) {
 						// For authenticated endpoints, this is expected if user is not logged in
+						// Also handle 403 Forbidden errors
 						return {
 							error: {
 								status: response.status,
@@ -238,9 +316,6 @@ class ApiClient {
 				searchParams.append(`filters[${key}][$eq]`, value.toString());
 			});
 		}
-
-		// Add cache-busting parameter to ensure fresh data
-		searchParams.append("_t", Date.now().toString());
 
 		const queryString = searchParams.toString();
 		return this.request(`/api/products${queryString ? `?${queryString}` : ""}`);
@@ -304,9 +379,6 @@ class ApiClient {
 
 		if (params?.populate) searchParams.append("populate", params.populate);
 		if (params?.locale) searchParams.append("locale", params.locale);
-
-		// Add cache-busting parameter to ensure fresh data
-		searchParams.append("_t", Date.now().toString());
 
 		const queryString = searchParams.toString();
 		const endpoint = `/api/products/${slug}${queryString ? `?${queryString}` : ""}`;

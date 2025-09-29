@@ -1,9 +1,9 @@
 "use client";
 
-import HeroHeader from "@/components/hero-header";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { CheckCircle, Droplets, Leaf, Shield, Zap } from "lucide-react";
 import { useCallback, useId } from "react";
+import HeroHeader from "@/components/hero-header";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Tesisler() {
 	// Enable transparent navigation for hero section
@@ -48,7 +48,7 @@ export default function Tesisler() {
 			],
 		},
 		{
-			icon: <Zap className="w-8 h-8 text-blue-600" />,
+			icon: <Zap className="w-8 h-8 text-green-600" />,
 			title: "2. Akıllı ve Yüksek Teknolojili Üretim",
 			description:
 				"Dikey tarım tesisimiz, dünyanın en gelişmiş iklim kontrollü üretim alanları arasında yer almaktadır. Çok katlı hidroponik sistemler ile kaynakları verimli kullanıyor ve maksimum verim elde ediyoruz.",
@@ -103,7 +103,7 @@ export default function Tesisler() {
 		},
 	];
 
-	const productionFeatures = [
+	const _productionFeatures = [
 		{
 			title: "Organik Sertifikalar",
 			description:

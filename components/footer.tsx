@@ -1,11 +1,12 @@
-import type { FooterSection } from "@/lib/navigation-config";
-import { FOOTER_POLICY_LINKS, FOOTER_SECTIONS } from "@/lib/navigation-config";
+"use client";
+
 import Link from "next/link";
 import { memo } from "react";
+import type { FooterSection } from "@/lib/navigation-config";
+import { FOOTER_POLICY_LINKS, FOOTER_SECTIONS } from "@/lib/navigation-config";
 import Logo from "./ui/logo";
 
 interface FooterProps {
-	className?: string;
 	showLogo?: boolean;
 	logoClassName?: string;
 	copyrightText?: string;
@@ -17,7 +18,7 @@ const Footer = memo(function Footer({
 	logoClassName = "h-24 w-auto",
 	copyrightText = "© 2025 Skycrops. Tüm hakları saklıdır.",
 }: FooterProps) {
-	const renderFooterSection = (section: FooterSection, index: number) => (
+	const renderFooterSection = (section: FooterSection, _index: number) => (
 		<div key={section.title} className="space-y-4">
 			<h3 className="font-medium text-gray-800 text-sm uppercase tracking-wide">
 				{section.title}
@@ -68,56 +69,76 @@ const Footer = memo(function Footer({
 	);
 
 	return (
-		<footer
-			className={`sticky bottom-0 left-0 w-full bg-[#E7EBDE] py-8 px-6 border-t overflow-x-hidden ${className}`}
+		<div
+			className="relative"
+			style={{
+				height: "320px", // Approximate footer height
+				clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+			}}
 		>
-			<div className="mx-12">
-				{/* Main footer content */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-					{/* Logo section */}
-					{showLogo && (
-						<div className="md:col-span-1 flex items-start">
-							<Link
-								href="/"
-								aria-label="SkyCrops ana sayfasına git"
-								className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#E7EBDE] focus-visible:ring-gray-500/40"
-							>
-								<Logo className={logoClassName} />
-							</Link>
+			<div
+				className="relative"
+				style={{
+					height: "calc(100vh + 320px)",
+					top: "-100vh",
+				}}
+			>
+				<footer
+					className={`h-[320px] sticky bg-[#E7EBDE] py-8 px-6 border-t overflow-x-hidden ${className}`}
+					style={{
+						top: "calc(100vh - 320px)",
+						zIndex: 40,
+					}}
+				>
+					<div className="mx-12">
+						{/* Main footer content */}
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+							{/* Logo section */}
+							{showLogo && (
+								<div className="md:col-span-1 flex items-start">
+									<Link
+										href="/"
+										aria-label="SkyCrops ana sayfasına git"
+										className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#E7EBDE] focus-visible:ring-gray-500/40"
+									>
+										<Logo className={logoClassName} />
+									</Link>
+								</div>
+							)}
+
+							{/* Footer sections */}
+							{FOOTER_SECTIONS.map((section, index) =>
+								renderFooterSection(section, index),
+							)}
 						</div>
-					)}
 
-					{/* Footer sections */}
-					{FOOTER_SECTIONS.map((section, index) =>
-						renderFooterSection(section, index),
-					)}
-				</div>
+						{/* Bottom section with copyright and policies */}
+						<div className="border-t pt-8">
+							<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+								{/* Copyright */}
+								<p className="text-sm text-gray-600">{copyrightText}</p>
 
-				{/* Bottom section with copyright and policies */}
-				<div className="border-t pt-8">
-					<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-						{/* Copyright */}
-						<p className="text-sm text-gray-600">{copyrightText}</p>
-
-						{/* Policy links */}
-						<nav
-							className="flex flex-wrap justify-center md:justify-end space-x-6"
-							aria-label="Politika menüsü"
-						>
-							{FOOTER_POLICY_LINKS.map((link, index) => (
-								<Link
-									key={`${link.href}-${index}`}
-									href={link.href}
-									className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+								{/* Policy links */}
+								<nav
+									className="flex flex-wrap justify-center md:justify-end space-x-6"
+									aria-label="Politika menüsü"
 								>
-									{link.label}
-								</Link>
-							))}
-						</nav>
+									{FOOTER_POLICY_LINKS.map((link, index) => (
+										<Link
+											key={`${link.href}-${index}`}
+											href={link.href}
+											className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+										>
+											{link.label}
+										</Link>
+									))}
+								</nav>
+							</div>
+						</div>
 					</div>
-				</div>
+				</footer>
 			</div>
-		</footer>
+		</div>
 	);
 });
 

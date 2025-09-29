@@ -6,7 +6,16 @@
 		"useIgnoreFile": false
 	},
 	"files": {
-		"ignoreUnknown": false
+		"ignoreUnknown": false,
+		"includes": [
+			"app/**/*",
+			"components/**/*",
+			"contexts/**/*",
+			"hooks/**/*",
+			"lib/**/*",
+			"types/**/*",
+			"*.{ts,tsx,js,jsx,json,css,scss,html}"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -15,7 +24,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			}
 		}
 	},
 	"javascript": {

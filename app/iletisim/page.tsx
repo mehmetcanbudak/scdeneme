@@ -147,7 +147,7 @@ export default function Iletisim() {
 											placeholder="Adınız"
 											value={formData.firstName}
 											onChange={handleChange}
-											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-blue-50 placeholder:text-gray-500 text-gray-800"
+											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -166,7 +166,7 @@ export default function Iletisim() {
 											placeholder="Soyadınız"
 											value={formData.lastName}
 											onChange={handleChange}
-											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-blue-50 placeholder:text-gray-500 text-gray-800"
+											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -186,7 +186,7 @@ export default function Iletisim() {
 										placeholder="ornek@email.com"
 										value={formData.email}
 										onChange={handleChange}
-										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-blue-50 placeholder:text-gray-500 text-gray-800"
+										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
 										required
 									/>
 								</div>
@@ -209,7 +209,7 @@ export default function Iletisim() {
 											placeholder="5XX XXX XX XX"
 											value={formData.phone}
 											onChange={handleChange}
-											className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-blue-50 placeholder:text-gray-500 text-gray-800"
+											className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -229,7 +229,7 @@ export default function Iletisim() {
 										placeholder="Mesajınızı yazın..."
 										value={formData.message}
 										onChange={handleChange}
-										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-blue-50 placeholder:text-gray-500 text-gray-800"
+										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
 										required
 									/>
 								</div>
@@ -241,7 +241,7 @@ export default function Iletisim() {
 										name="agreeToPolicy"
 										checked={formData.agreeToPolicy}
 										onChange={handleChange}
-										className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+										className="mt-1 mr-3 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
 										required
 									/>
 									<label
@@ -251,7 +251,7 @@ export default function Iletisim() {
 										Gizlilik politikamızı kabul ediyorum.{" "}
 										<a
 											href="#"
-											className="text-blue-600 hover:text-blue-800 underline"
+											className="text-green-600 hover:text-green-800 underline"
 										>
 											Gizlilik politikası
 										</a>

@@ -1,14 +1,22 @@
 "use client";
+import { memo, useCallback, useEffect } from "react";
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
+import { usePageBackground } from "@/contexts/page-background-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { memo, useCallback } from "react";
 
 const Hakkimizda = memo(function Hakkimizda() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
-	const slides = [
+	// Set the background color for this page
+	const { setBackgroundColor } = usePageBackground();
+
+	useEffect(() => {
+		setBackgroundColor("#AD3911");
+	}, [setBackgroundColor]);
+
+	const _slides = [
 		{
 			title: "HAKKIMIZDA",
 			subtitle: "DOĞAL VE SAĞLIKLI",
@@ -135,7 +143,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 
 								{/* Çevre Dostu */}
 								<div className="text-center">
-									<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+									<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
 										<span className="text-2xl">🌍</span>
 									</div>
 									<h3 className="text-xl font-medium mb-4 text-gray-700">

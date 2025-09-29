@@ -9,12 +9,31 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/cart-context";
+import { usePageBackground } from "@/contexts/page-background-context";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	Package,
+	RotateCcw,
+	Settings,
+	Snowflake,
+	Truck,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
+
+type UiPost = {
+  title: string;
+  excerpt?: string;
+  date?: string;
+  image?: string | null;
+  readTime?: string;
+  slug: string;
+};
 
 export default function Home() {
 	const router = useRouter();
@@ -24,6 +43,7 @@ export default function Home() {
 		isLoading: productsLoading,
 	} = useProducts();
 	const { addItem } = useCart();
+	const { setBackgroundColor } = usePageBackground();
 	const [showLeftButton, setShowLeftButton] = useState(false);
 	const [showRightButton, setShowRightButton] = useState(true);
 	const [showHerbsLeftButton, setShowHerbsLeftButton] = useState(false);
@@ -37,6 +57,11 @@ export default function Home() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
+	// Set the background color for this page
+	useEffect(() => {
+		setBackgroundColor("#E7EBDE");
+	}, [setBackgroundColor]);
+
 	const slides = [
 		{
 			title: "SKYCROPS",
@@ -44,6 +69,8 @@ export default function Home() {
 			buttonText: "ABONE OL",
 			buttonAction: () => router.push("/abonelik/taze-yesillikler-paketi"),
 			image: "/agricultural-figures-with-plants-and-sun.png",
+			logo: "/skycrops-logo.svg",
+			alt: "Skycrops - Yaşayan Sebzeler",
 		},
 	];
 
@@ -69,7 +96,7 @@ export default function Home() {
 	// Use real products for packages, fallback to static data
 	const packages =
 		featuredProducts.length > 0
-			? featuredProducts.slice(0, 1).map((product, index) => ({
+			? featuredProducts.slice(0, 1).map((product, _index) => ({
 					id: product.id,
 					name: product.name,
 					description:
@@ -90,45 +117,46 @@ export default function Home() {
 					},
 				];
 
-	const blogPosts = [
-		{
-			title: "Peki Dikey Tarım Nedir?",
-			excerpt: "Dikey tarım hakkında bilmeniz gereken her şey...",
-			date: "17 Tem 2025",
-			image: "/blog-vertical-farming.png",
-			type: "blog",
-		},
-		{
-			title: "İl Tarım Müdürlüğü Kadınlar Günü Kutlaması",
-			excerpt:
-				"Tekirdağ Valiliği İl Tarım ve Orman Müdürlüğü'ne katılımımız...",
-			date: "8 Mar 2025",
-			image: "/press-womens-day.png",
-			type: "press",
-		},
-		{
-			title: "Wageningen Üniversitesi Dikey Tarım Programı",
-			excerpt:
-				"Wageningen Üniversitesi ve Araştırma Merkezi Dikey Tarım Programına katıldık...",
-			date: "17 Mar 2025",
-			image: "/press-university-program.png",
-			type: "press",
-		},
-		{
-			title: "Anadolu Ajansı Skycrops'ta",
-			excerpt: "Anadolu Ajansı Skycrops'ta...",
-			date: "3 Mar 2025",
-			image: "/press-anadolu-agency.png",
-			type: "press",
-		},
-		{
-			title: "Dikey Tarımda Yenilikler",
-			excerpt: "Teknolojinin tarımdaki rolü ve gelecek...",
-			date: "15 Şub 2025",
-			image: "/blog-vertical-farming.png",
-			type: "blog",
-		},
-	];
+	const [blogPosts, setBlogPosts] = useState<UiPost[]>([]);
+	const [blogLoading, setBlogLoading] = useState<boolean>(false);
+	const [blogError, setBlogError] = useState<string | null>(null);
+
+	useEffect(() => {
+		let cancelled = false;
+		(async () => {
+			try {
+				setBlogLoading(true);
+				setBlogError(null);
+				const json = await getArticles({ page: 1, pageSize: 8 });
+				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
+					const a = item?.attributes ?? item ?? {};
+					const coverUrl = getStrapiMediaUrl(a.cover);
+					const date =
+						a.publishedAt || a.createdAt
+							? new Date(a.publishedAt || a.createdAt).toLocaleDateString(
+									"tr-TR",
+								)
+							: undefined;
+					return {
+						title: a.title,
+						excerpt: a.excerpt,
+						date,
+						image: coverUrl,
+						readTime: a.readTime ? `${a.readTime} dk okuma` : undefined,
+						slug: a.slug,
+					} as UiPost;
+				});
+				if (!cancelled) setBlogPosts(mapped);
+			} catch (e: any) {
+				if (!cancelled) setBlogError(e?.message || "İçerik yüklenemedi");
+			} finally {
+				if (!cancelled) setBlogLoading(false);
+			}
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
 	useEffect(() => {
 		const container = scrollContainerRef.current;
@@ -150,10 +178,50 @@ export default function Home() {
 		return () => clearInterval(interval);
 	}, []);
 
+	// Herbs scroll functions
+	const handleHerbsScroll = () => {
+		const herbsContainer = herbsScrollRef.current;
+		if (herbsContainer) {
+			const { scrollLeft, scrollWidth, clientWidth } = herbsContainer;
+			setShowHerbsLeftButton(scrollLeft > 0);
+			setShowHerbsRightButton(scrollLeft < scrollWidth - clientWidth - 10);
+		}
+	};
+
+	const scrollHerbsLeft = () => {
+		setIsHerbsUserInteracting(true);
+		const herbsContainer = herbsScrollRef.current;
+		if (herbsContainer) {
+			herbsContainer.scrollBy({
+				left: -200, // Width of one herb card plus gap
+				behavior: "smooth",
+			});
+		}
+		// Reset user interaction after a delay
+		setTimeout(() => {
+			setIsHerbsUserInteracting(false);
+		}, 2000);
+	};
+
+	const scrollHerbsRight = () => {
+		setIsHerbsUserInteracting(true);
+		const herbsContainer = herbsScrollRef.current;
+		if (herbsContainer) {
+			herbsContainer.scrollBy({
+				left: 200, // Width of one herb card plus gap
+				behavior: "smooth",
+			});
+		}
+		// Reset user interaction after a delay
+		setTimeout(() => {
+			setIsHerbsUserInteracting(false);
+		}, 2000);
+	};
+
 	// Initialize herbs scroll state
 	useEffect(() => {
 		handleHerbsScroll();
-	}, []);
+	}, [handleHerbsScroll]);
 
 	// Handle screen resize for herbs section
 	useEffect(() => {
@@ -249,46 +317,6 @@ export default function Home() {
 		}
 	};
 
-	// Herbs scroll functions
-	const scrollHerbsLeft = () => {
-		setIsHerbsUserInteracting(true);
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			herbsContainer.scrollBy({
-				left: -200, // Width of one herb card plus gap
-				behavior: "smooth",
-			});
-		}
-		// Reset user interaction after a delay
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000);
-	};
-
-	const scrollHerbsRight = () => {
-		setIsHerbsUserInteracting(true);
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			herbsContainer.scrollBy({
-				left: 200, // Width of one herb card plus gap
-				behavior: "smooth",
-			});
-		}
-		// Reset user interaction after a delay
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000);
-	};
-
-	const handleHerbsScroll = () => {
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			const { scrollLeft, scrollWidth, clientWidth } = herbsContainer;
-			setShowHerbsLeftButton(scrollLeft > 0);
-			setShowHerbsRightButton(scrollLeft < scrollWidth - clientWidth - 10);
-		}
-	};
-
 	const handleHerbsTouchStart = () => {
 		setIsHerbsUserInteracting(true);
 	};
@@ -349,7 +377,7 @@ export default function Home() {
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+								<div className="w-24 h-24 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
 									<img
 										src="/Frame 169.svg"
 										alt="Skycrops Icon"
@@ -414,118 +442,94 @@ export default function Home() {
 					</div>
 
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-						{/* Package Card - Left Side */}
-						<div className="space-y-6">
-							{packages.map((pkg, index) => (
-								<div
-									key={index}
-									className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow rounded-product"
-								>
-									{/* Bundle Image - Top */}
-									<div className="aspect-[4/3]">
-										<img
-											src={pkg.image || "/placeholder.svg"}
-											alt={pkg.name}
-											className="w-full h-full object-cover"
-										/>
-									</div>
-
-									{/* Product Info - Bottom */}
-									<div className="p-6">
-										<h3 className="font-medium text-2xl mb-3 text-gray-800">
-											{pkg.name}
-										</h3>
-										<p className="text-gray-600 text-base mb-6 leading-relaxed">
-											{pkg.description}
-										</p>
-										<div className="flex items-center justify-between mb-6">
-											<div className="flex items-center space-x-3">
-												<span className="text-3xl font-light text-gray-800">
-													{pkg.price} TL
-												</span>
-												<span className="text-gray-400 line-through text-lg">
-													{pkg.originalPrice} TL
-												</span>
-											</div>
-										</div>
-										<Button
-											className="w-full uppercase tracking-wide py-3 text-base rounded-product-sm"
-											onClick={() => {
-												if (pkg.id) {
-													addItem(pkg.id, 1);
-												}
-											}}
-										>
-											Sepete Ekle
-										</Button>
-									</div>
-								</div>
-							))}
+						{/* Package Image - Left Side */}
+						<div className="flex items-center justify-center">
+							<div className="w-full max-w-md">
+								<img
+									src={packages[0]?.image || "/bundle4.png"}
+									alt="Taze Yeşillikler Paketi"
+									className="w-full h-auto object-cover rounded-product shadow-md"
+								/>
+							</div>
 						</div>
 
 						{/* FAQ Accordion - Right Side */}
-						<div className="bg-white p-8 shadow-sm rounded-product">
-							<h3 className="text-3xl font-medium mb-8 text-gray-700">
+						<div className="space-y-4">
+							<h3 className="text-3xl font-medium mb-6 text-gray-700">
 								Paketlerimiz Hakkında
 							</h3>
-							<Accordion type="single" collapsible className="space-y-6">
-								<AccordionItem value="item-1" className="border-gray-200">
-									<AccordionTrigger className="text-left hover:no-underline text-lg font-medium text-gray-800 py-4">
-										Paketlerimiz nasıl hazırlanır?
-									</AccordionTrigger>
-									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Her paket, taze hasat edilmiş sebzelerimizden özenle
-										seçilerek hazırlanır. Kalite kontrolümüzden geçen ürünler,
-										hijyenik koşullarda paketlenir ve en kısa sürede teslim
-										edilmek üzere hazır hale getirilir.
-									</AccordionContent>
-								</AccordionItem>
-
-								<AccordionItem value="item-2" className="border-gray-200">
-									<AccordionTrigger className="text-left hover:no-underline text-lg font-medium text-gray-800 py-4">
-										Teslimat süresi ne kadardır?
-									</AccordionTrigger>
-									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Siparişleriniz genellikle 24 saat içinde hazırlanır ve
-										İstanbul içi teslimat için 2-3 iş günü, diğer bölgeler için
-										3-5 iş günü sürer. Hafta sonu siparişleri pazartesi günü
-										işleme alınır.
-									</AccordionContent>
-								</AccordionItem>
-
-								<AccordionItem value="item-3" className="border-gray-200">
-									<AccordionTrigger className="text-left hover:no-underline text-lg font-medium text-gray-800 py-4">
-										Ürünlerin tazeliği nasıl korunur?
-									</AccordionTrigger>
-									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve
-										teslimata kadar bu koşullarda muhafaza edilir. Her paket,
-										teslimattan önce taze kalite kontrolünden geçer.
-									</AccordionContent>
-								</AccordionItem>
-
-								<AccordionItem value="item-4" className="border-gray-200">
-									<AccordionTrigger className="text-left hover:no-underline text-lg font-medium text-gray-800 py-4">
-										Paket içeriği değiştirilebilir mi?
-									</AccordionTrigger>
-									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Evet, özel ihtiyaçlarınıza göre paket içeriğini
-										kişiselleştirebilirsiniz. Alerji durumunuz, tercih ettiğiniz
-										sebzeler veya miktar değişiklikleri için müşteri
-										hizmetlerimizle iletişime geçebilirsiniz.
-									</AccordionContent>
-								</AccordionItem>
-
-								<AccordionItem value="item-5" className="border-gray-200">
-									<AccordionTrigger className="text-left hover:no-underline text-lg font-medium text-gray-800 py-4">
-										İptal ve iade koşulları nelerdir?
-									</AccordionTrigger>
-									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi
-										ile ilgili sorunlarınızı bildirebilirsiniz. Kalite garantisi
-										kapsamındaki ürünler için tam geri ödeme yapılır.
-									</AccordionContent>
-								</AccordionItem>
+							<Accordion type="single" collapsible defaultValue="item-1">
+								{[
+									{
+										id: "item-1",
+										question: "Paketlerimiz nasıl hazırlanır?",
+										answer:
+											"Her paket, taze hasat edilmiş sebzelerimizden özenle seçilerek hazırlanır. Kalite kontrolümüzden geçen ürünler, hijyenik koşullarda paketlenir ve en kısa sürede teslim edilmek üzere hazır hale getirilir.",
+										icon: Package,
+										color: { bg: "bg-green-100", text: "text-green-600" },
+									},
+									{
+										id: "item-2",
+										question: "Teslimat süresi ne kadardır?",
+										answer:
+											"Siparişleriniz genellikle 24 saat içinde hazırlanır ve İstanbul içi teslimat için 2-3 iş günü, diğer bölgeler için 3-5 iş günü sürer. Hafta sonu siparişleri pazartesi günü işleme alınır.",
+										icon: Truck,
+										color: { bg: "bg-blue-100", text: "text-blue-600" },
+									},
+									{
+										id: "item-3",
+										question: "Ürünlerin tazeliği nasıl korunur?",
+										answer:
+											"Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve teslimata kadar bu koşullarda muhafaza edilir. Her paket, teslimattan önce taze kalite kontrolünden geçer.",
+										icon: Snowflake,
+										color: { bg: "bg-yellow-100", text: "text-yellow-600" },
+									},
+									{
+										id: "item-4",
+										question: "Paket içeriği değiştirilebilir mi?",
+										answer:
+											"Evet, özel ihtiyaçlarınıza göre paket içeriğini kişiselleştirebilirsiniz. Alerji durumunuz, tercih ettiğiniz sebzeler veya miktar değişiklikleri için müşteri hizmetlerimizle iletişime geçebilirsiniz.",
+										icon: Settings,
+										color: { bg: "bg-purple-100", text: "text-purple-600" },
+									},
+									{
+										id: "item-5",
+										question: "İptal ve iade koşulları nelerdir?",
+										answer:
+											"Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi ile ilgili sorunlarınızı bildirebilirsiniz. Kalite garantisi kapsamındaki ürünler için tam geri ödeme yapılır.",
+										icon: RotateCcw,
+										color: { bg: "bg-red-100", text: "text-red-600" },
+									},
+								].map((faq) => {
+									const IconComponent = faq.icon;
+									return (
+										<AccordionItem
+											key={faq.id}
+											value={faq.id}
+											className="bg-white rounded-xl shadow-sm border border-gray-100 px-5 mb-3 overflow-hidden"
+										>
+											<AccordionTrigger className="hover:no-underline py-4">
+												<div className="flex items-center space-x-4">
+													<div
+														className={`w-11 h-11 ${faq.color.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
+													>
+														<IconComponent
+															className={`w-5 h-5 ${faq.color.text}`}
+														/>
+													</div>
+													<h4 className="text-lg font-semibold text-left text-gray-800">
+														{faq.question}
+													</h4>
+												</div>
+											</AccordionTrigger>
+											<AccordionContent className="pb-4 pl-[60px] pr-4">
+												<p className="text-gray-600 leading-relaxed text-sm">
+													{faq.answer}
+												</p>
+											</AccordionContent>
+										</AccordionItem>
+									);
+								})}
 							</Accordion>
 						</div>
 					</div>
@@ -651,7 +655,7 @@ export default function Home() {
 							{blogPosts.map((post, index) => (
 								<Link
 									key={index}
-									href={`/blog/${post.title.toLowerCase().replace(/\s+/g, "-").replace(/[?]/g, "")}`}
+										href={`/blog/${post.slug}`}
 									className="flex-shrink-0 w-80"
 								>
 									<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">

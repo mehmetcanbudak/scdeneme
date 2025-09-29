@@ -1,18 +1,19 @@
 "use client";
 
 import HeroHeader from "@/components/hero-header";
+import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
 import { Button } from "@/components/ui/button";
 import { Grid, Section, SectionHeader } from "@/components/ui/page-layout";
 import {
 	BenefitCard,
 	CTASection,
-	FAQSection,
 	TestimonialCard,
 } from "@/components/ui/subscription-components";
 import { useSubscriptions } from "@/contexts/subscription-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
 import { Award, Leaf, Minus, Plus, Shield, Truck } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -33,10 +34,10 @@ export default function Abonelik() {
 	const [sebzePaketiImage, setSebzePaketiImage] = useState<string>(
 		"/skycrops-package-product.png",
 	);
-	const [tazeYesilliklerImage, setTazeYesilliklerImage] = useState<string>(
+	const [_tazeYesilliklerImage, setTazeYesilliklerImage] = useState<string>(
 		"/skycrops-package-product.png",
 	);
-	const [isImageLoading, setIsImageLoading] = useState(false);
+	const [_isImageLoading, setIsImageLoading] = useState(false);
 
 	// State for interactive elements
 	const [selectedImage, setSelectedImage] = useState(0);
@@ -107,10 +108,7 @@ export default function Abonelik() {
 							tazeYesilliklerPaketi.images.length > 0
 						) {
 							imageUrl = tazeYesilliklerPaketi.images[0].url;
-						} else if (
-							tazeYesilliklerPaketi.image &&
-							tazeYesilliklerPaketi.image.url
-						) {
+						} else if (tazeYesilliklerPaketi.image?.url) {
 							// Fallback to single image field
 							imageUrl = tazeYesilliklerPaketi.image.url;
 						}
@@ -139,7 +137,7 @@ export default function Abonelik() {
 							sebzePaketi.images.length > 0
 						) {
 							imageUrl = sebzePaketi.images[0].url;
-						} else if (sebzePaketi.image && sebzePaketi.image.url) {
+						} else if (sebzePaketi.image?.url) {
 							// Fallback to single image field
 							imageUrl = sebzePaketi.image.url;
 						}
@@ -164,7 +162,7 @@ export default function Abonelik() {
 	}, []);
 
 	// Subscription packages from Skycrops content
-	const subscriptionPackages = [
+	const _subscriptionPackages = [
 		{
 			id: 1,
 			name: "Çok küçük bir paket için büyük bir adım!",
@@ -200,7 +198,7 @@ export default function Abonelik() {
 				"Kapalı ortamda, hiçbir kimyasal ve pestisit kullanmadan yetiştirilen taze ürünler",
 		},
 		{
-			icon: <Shield className="w-8 h-8 text-blue-600" />,
+			icon: <Shield className="w-8 h-8 text-green-600" />,
 			title: "Çevre Dostu",
 			description: "Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
 		},
@@ -534,7 +532,7 @@ export default function Abonelik() {
 							{/* Left Column - Product Image */}
 							<div className="relative">
 								<div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden">
-									<img
+									<Image
 										src={
 											[
 												"/bundle4.png",
@@ -544,7 +542,8 @@ export default function Abonelik() {
 											][selectedImage]
 										}
 										alt="Taze Yeşillikler Paketi"
-										className="w-full h-full object-cover"
+										fill
+										className="object-cover"
 										onError={(e) => {
 											const target = e.target as HTMLImageElement;
 											target.src = "/bundle4.png";
@@ -566,18 +565,21 @@ export default function Abonelik() {
 											className={`flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer ${
 												selectedImage === index
 													? "border-gray-600"
-													: "border-gray-200 hover:border-gray-400"
+													: "border-gray-200 hover:border-yellow-400"
 											}`}
 										>
-											<img
-												src={img}
-												alt={`Product view ${index + 1}`}
-												className="w-full h-full object-cover"
-												onError={(e) => {
-													const target = e.target as HTMLImageElement;
-													target.src = "/bundle4.png";
-												}}
-											/>
+											<div className="relative w-full h-full">
+												<Image
+													src={img}
+													alt={`Product view ${index + 1}`}
+													fill
+													className="object-cover"
+													onError={(e) => {
+														const target = e.target as HTMLImageElement;
+														target.src = "/bundle4.png";
+													}}
+												/>
+											</div>
 										</button>
 									))}
 								</div>
@@ -677,7 +679,7 @@ export default function Abonelik() {
 															onClick={() =>
 																setQuantity(Math.max(1, quantity - 1))
 															}
-															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
 															disabled={quantity <= 1}
 														>
 															<Minus className="w-3 h-3" />
@@ -690,7 +692,7 @@ export default function Abonelik() {
 															onClick={() =>
 																setQuantity(Math.min(10, quantity + 1))
 															}
-															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
 															disabled={quantity >= 10}
 														>
 															<Plus className="w-3 h-3" />
@@ -721,7 +723,7 @@ export default function Abonelik() {
 																className={`p-2 text-xs rounded border transition-colors ${
 																	selectedDeliveryDay === day.id
 																		? "border-gray-600 bg-gray-600 text-white"
-																		: "border-gray-200 hover:border-gray-300 text-gray-700"
+																		: "border-gray-200 hover:border-yellow-400 text-gray-700"
 																}`}
 															>
 																{day.shortName}
@@ -799,7 +801,7 @@ export default function Abonelik() {
 
 								{/* Product Details Link */}
 								<div className="text-center">
-									<button className="text-gray-600 hover:text-gray-800 underline text-sm transition-colors">
+									<button className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors">
 										Ürün detaylarını gör
 									</button>
 								</div>
@@ -828,11 +830,29 @@ export default function Abonelik() {
 
 				{/* FAQ Section */}
 				<Section>
-					<FAQSection
-						title="Sıkça Sorulan Sorular"
-						subtitle="Merak ettiklerinizin cevapları"
-						items={faqItems}
-					/>
+					<div className="max-w-4xl mx-auto">
+						<div className="text-center mb-12">
+							<h2 className="text-2xl font-medium mb-4 text-gray-700">
+								Sıkça Sorulan Sorular
+							</h2>
+							<p className="text-gray-600">Merak ettiklerinizin cevapları</p>
+						</div>
+
+						<BasicAccordion
+							items={faqItems.map((item) => ({
+								id: item.id,
+								title: item.question,
+								content: (
+									<div className="text-gray-600 leading-relaxed text-base whitespace-pre-line">
+										{item.answer}
+									</div>
+								),
+							}))}
+							allowMultiple={true}
+							defaultExpandedIds={[]}
+							className="bg-white shadow-sm border border-gray-100"
+						/>
+					</div>
 				</Section>
 
 				{/* Testimonials Section */}

@@ -4,7 +4,7 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		--background: 33 15% 92%;
 		--foreground: 222.2 84% 4.9%;
 		--card: 0 0% 100%;
 		--card-foreground: 222.2 84% 4.9%;
@@ -27,7 +27,7 @@
 	}
 
 	.dark {
-		--background: 222.2 84% 4.9%;
+		--background: 33 15% 8%;
 		--foreground: 210 40% 98%;
 		--card: 222.2 84% 4.9%;
 		--card-foreground: 210 40% 98%;
@@ -65,13 +65,29 @@
 	}
 }
 
+@layer utilities {
+	.line-clamp-2 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.line-clamp-3 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+}
+
 /* Global overflow control */
 html,
 body,
 #__next {
-	overflow-x: hidden !important;
-	max-width: 100vw !important;
-	width: 100% !important;
+	overflow-x: hidden;
+	max-width: 100vw;
+	width: 100%;
 }
 
 /* Custom scrollbar styles for horizontal scrolling sections */
@@ -81,6 +97,15 @@ body,
 }
 
 .horizontal-scroll::-webkit-scrollbar {
+	display: none; /* WebKit browsers */
+}
+
+.scrollbar-hide {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
 	display: none; /* WebKit browsers */
 }
 
@@ -101,7 +126,7 @@ body,
 
 /* Desktop herbs section - no scrolling */
 .herbs-scroll-desktop {
-	overflow-x: hidden !important;
+	overflow-x: hidden;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }
@@ -147,11 +172,11 @@ body,
 
 /* Custom border radius for product boxes */
 .rounded-product {
-	border-radius: 20px 10px 10px 20px !important;
+	border-radius: 20px 10px 10px 20px;
 }
 
 .rounded-product-sm {
-	border-radius: 10px !important;
+	border-radius: 10px;
 }
 
 /* Navigation button styling */

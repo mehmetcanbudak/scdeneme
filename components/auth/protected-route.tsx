@@ -1,8 +1,8 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/auth-context";
-import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -16,7 +16,7 @@ export default function ProtectedRoute({
 	redirectTo = "/",
 }: ProtectedRouteProps) {
 	const { isAuthenticated, isLoading } = useAuth();
-	const [shouldRender, setShouldRender] = useState(false);
+	const [_shouldRender, setShouldRender] = useState(false);
 
 	useEffect(() => {
 		if (!isLoading) {

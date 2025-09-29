@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { memo, useCallback } from "react";
+import { Button } from "@/components/ui/button";
 import { useNavigation } from "./navigation-context";
 
 interface Slide {

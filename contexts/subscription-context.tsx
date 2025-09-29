@@ -2,10 +2,12 @@
 
 import {
 	createContext,
-	useContext,
-	useState,
-	useEffect,
 	type ReactNode,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
 import { apiClient } from "@/lib/api-client";
 
@@ -123,7 +125,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
 	const clearError = () => setError(null);
 
-	const loadPlans = async (): Promise<void> => {
+	const loadPlans = useCallback(async (): Promise<void> => {
 		try {
 			setIsLoading(true);
 			setError(null);
@@ -140,6 +142,14 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
 			// Filter active plans on the client side instead
 			const allPlans = response.data || [];
+
+			// Ensure allPlans is an array before filtering
+			if (!Array.isArray(allPlans)) {
+				console.warn("Subscription plans data is not an array:", allPlans);
+				setPlans([]);
+				return;
+			}
+
 			const activePlans = allPlans.filter(
 				(plan: SubscriptionPlan) => plan.isActive === true,
 			);
@@ -153,9 +163,9 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, []);
 
-	const loadSubscriptions = async (): Promise<void> => {
+	const loadSubscriptions = useCallback(async (): Promise<void> => {
 		try {
 			setIsLoading(true);
 			setError(null);
@@ -182,7 +192,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, []);
 
 	const createSubscription = async (data: {
 		planId: number;
@@ -303,10 +313,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
-	// Load plans on mount
+	// Load plans on mount (guard once per mount to avoid Strict Mode double-call)
+	const didInitRef = useRef(false);
 	useEffect(() => {
+		if (didInitRef.current) return;
+		didInitRef.current = true;
 		loadPlans();
-	}, []);
+	}, [loadPlans]);
 
 	const value: SubscriptionContextType = {
 		plans,

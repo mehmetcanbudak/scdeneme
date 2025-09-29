@@ -1,6 +1,6 @@
-import { useCart } from "@/contexts/cart-context";
 import { ShoppingBag } from "lucide-react";
 import { memo } from "react";
+import { useCart } from "@/contexts/cart-context";
 
 interface MobileActionIconsProps {
 	shouldBeTransparent: boolean;

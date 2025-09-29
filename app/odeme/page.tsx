@@ -1,9 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/auth-context";
-import { useCart } from "@/contexts/cart-context";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	ArrowLeft,
 	Clock,
@@ -15,6 +11,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth-context";
+import { useCart } from "@/contexts/cart-context";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 interface Address {
 	id: number;
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
 													</h3>
 													<div className="flex items-center space-x-2 mt-1">
 														{item.purchase_type === "subscription" ? (
-															<span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
+															<span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
 																<Clock className="w-3 h-3 mr-1" />
 																Abonelik
 															</span>

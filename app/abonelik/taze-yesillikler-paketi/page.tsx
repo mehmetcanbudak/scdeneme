@@ -549,11 +549,11 @@ export default function TazeYesilliklerPaketi() {
 				{/* Left Side - Sticky Image */}
 				<div className="w-1/2 h-screen sticky top-0 bg-gray-50">
 					<div className="h-full flex items-center justify-center p-8">
-						<div className="max-w-lg w-full">
+						<div className="max-w-md w-full">
 							<img
 								src={images[selectedImage]}
 								alt={product?.name || "Taze Yeşillikler Paketi"}
-								className="w-full h-auto rounded-lg shadow-lg"
+								className="w-full h-auto max-h-[500px] object-contain rounded-lg shadow-lg"
 								onError={(e) => {
 									const target = e.target as HTMLImageElement;
 									target.src = "/skycrops-package-product.png";
@@ -1024,8 +1024,8 @@ export default function TazeYesilliklerPaketi() {
 								</div>
 
 								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-										<Shield className="w-6 h-6 text-blue-600" />
+									<div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+										<Shield className="w-6 h-6 text-green-600" />
 									</div>
 									<div>
 										<div className="font-medium text-gray-800">
@@ -1253,7 +1253,7 @@ export default function TazeYesilliklerPaketi() {
 							const IconComponent = faq.icon;
 							const colorClasses = [
 								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-blue-100", text: "text-blue-600" },
+								{ bg: "bg-green-100", text: "text-green-600" },
 								{ bg: "bg-yellow-100", text: "text-yellow-600" },
 								{ bg: "bg-purple-100", text: "text-purple-600" },
 								{ bg: "bg-red-100", text: "text-red-600" },

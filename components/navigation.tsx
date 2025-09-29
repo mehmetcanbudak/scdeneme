@@ -1,9 +1,9 @@
 "use client";
 
-import { NAVIGATION_ITEMS } from "@/lib/navigation-config";
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { NAVIGATION_ITEMS } from "@/lib/navigation-config";
 import { useNavigation } from "./navigation-context";
 import ActionIcons from "./ui/action-icons";
 import HamburgerMenu from "./ui/hamburger-menu";
@@ -79,7 +79,6 @@ const Navigation = memo(function Navigation({
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
 				shouldBeTransparent ? "bg-transparent" : "bg-[#E7EBDE] shadow-sm"
 			} ${className}`}
-			role="banner"
 			aria-label="Ana navigasyon"
 		>
 			<nav

@@ -1,14 +1,15 @@
 "use client";
 
+import { initializeApiClient } from "@/lib/api-client";
+import { useRouter } from "next/navigation";
 import {
 	createContext,
-	useContext,
-	useState,
-	useEffect,
 	type ReactNode,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
 } from "react";
-import { useRouter } from "next/navigation";
-import { initializeApiClient } from "@/lib/api-client";
 
 interface User {
 	id: number;
@@ -20,6 +21,8 @@ interface User {
 	blocked: boolean;
 	firstName?: string;
 	lastName?: string;
+	name?: string; // Full name from Google
+	picture?: string; // Profile picture URL from Google
 	createdAt: string;
 	updatedAt: string;
 }
@@ -32,6 +35,9 @@ interface AuthContextType {
 	login: (
 		phone: string,
 		otpCode: string,
+	) => Promise<{ success: boolean; message?: string }>;
+	loginWithGoogle: (
+		googleToken: string,
 	) => Promise<{ success: boolean; message?: string }>;
 	sendOTP: (phone: string) => Promise<{ success: boolean; message?: string }>;
 	resendOTP: (phone: string) => Promise<{ success: boolean; message?: string }>;
@@ -56,6 +62,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [token, setToken] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+
+	// Internal logout function without redirect
+	const forceLogoutInternal = useCallback((reason?: string) => {
+		setUser(null);
+		setToken(null);
+		if (reason) {
+			setError(reason);
+		}
+		localStorage.removeItem("token");
+		localStorage.removeItem("user");
+		initializeApiClient(null);
+	}, []);
+
+	// Helper function to validate token with server
+	const validateTokenWithServer = useCallback(
+		async (
+			tokenToValidate: string,
+		): Promise<{ valid: boolean; user?: User }> => {
+			try {
+				const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${tokenToValidate}`,
+						"Content-Type": "application/json",
+					},
+				});
+
+				if (!response.ok) {
+					if (response.status === 401) {
+						// Token is invalid
+						return { valid: false };
+					}
+					throw new Error("Token validation failed");
+				}
+
+				const data = await response.json();
+				return { valid: true, user: data.user || data };
+			} catch (error) {
+				console.error("Error validating token:", error);
+				return { valid: false };
+			}
+		},
+		[],
+	);
 
 	// Initialize auth state from localStorage
 	useEffect(() => {
@@ -95,55 +145,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		};
 
 		initializeAuth();
-	}, []);
+	}, [
+		// Clear invalid data
+		forceLogoutInternal,
+		validateTokenWithServer,
+	]);
 
 	const clearError = () => setError(null);
-
-	// Internal logout function without redirect
-	const forceLogoutInternal = (reason?: string) => {
-		setUser(null);
-		setToken(null);
-		if (reason) {
-			setError(reason);
-		}
-		localStorage.removeItem("token");
-		localStorage.removeItem("user");
-		initializeApiClient(null);
-	};
 
 	// Public force logout with redirect
 	const forceLogout = (reason?: string) => {
 		forceLogoutInternal(reason);
 		router.push("/");
-	};
-
-	// Helper function to validate token with server
-	const validateTokenWithServer = async (
-		tokenToValidate: string,
-	): Promise<{ valid: boolean; user?: User }> => {
-		try {
-			const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${tokenToValidate}`,
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (!response.ok) {
-				if (response.status === 401) {
-					// Token is invalid
-					return { valid: false };
-				}
-				throw new Error("Token validation failed");
-			}
-
-			const data = await response.json();
-			return { valid: true, user: data.user || data };
-		} catch (error) {
-			console.error("Error validating token:", error);
-			return { valid: false };
-		}
 	};
 
 	const validateToken = async (): Promise<{ valid: boolean; user?: User }> => {
@@ -313,6 +326,77 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const loginWithGoogle = async (
+		googleToken: string,
+	): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+
+			// Decode JWT to get user info from Google
+			const decodeJWT = (token: string) => {
+				const base64Url = token.split(".")[1];
+				const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+				const jsonPayload = decodeURIComponent(
+					atob(base64)
+						.split("")
+						.map((c) => {
+							return `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`;
+						})
+						.join(""),
+				);
+				return JSON.parse(jsonPayload);
+			};
+
+			const googleUserInfo = decodeJWT(googleToken);
+
+			const response = await fetch(`${API_BASE_URL}/api/auth/google`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ idToken: googleToken }),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error?.message || "Google ile giriş başarısız");
+			}
+
+			// Merge Google user info with backend response
+			const enrichedUser = {
+				...data.user,
+				name: data.user.name || googleUserInfo.name,
+				email: data.user.email || googleUserInfo.email,
+				picture: data.user.picture || googleUserInfo.picture,
+			};
+
+			// Store token and user data
+			console.log("Storing user and token:", {
+				user: enrichedUser,
+				hasToken: !!data.jwt,
+			});
+			setToken(data.jwt);
+			setUser(enrichedUser);
+			localStorage.setItem("token", data.jwt);
+			localStorage.setItem("user", JSON.stringify(enrichedUser));
+
+			// Initialize API client with new token
+			initializeApiClient(data.jwt);
+
+			console.log("Google login completed successfully");
+			return {
+				success: true,
+				message: data.message || "Google ile giriş başarılı",
+			};
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "Beklenmeyen bir hata oluştu";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
 	const login = verifyOTP;
 
 	const logout = (redirect: boolean = true) => {
@@ -335,6 +419,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		isAuthenticated: !!token && !!user,
 		isLoading,
 		login,
+		loginWithGoogle,
 		sendOTP,
 		resendOTP,
 		checkPhone,

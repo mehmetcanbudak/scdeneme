@@ -1,9 +1,9 @@
 "use client";
 
-import { memo, useEffect, useCallback } from "react";
+import { ShoppingBag, User, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, User, ShoppingBag } from "lucide-react";
+import { memo, useCallback, useEffect } from "react";
 import Logo from "./logo";
 
 interface MobileSidebarProps {
@@ -108,7 +108,7 @@ const MobileSidebar = memo(function MobileSidebar({
               <input
                 type="text"
                 placeholder="Ara..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
               />
             </div>
           </div> */}

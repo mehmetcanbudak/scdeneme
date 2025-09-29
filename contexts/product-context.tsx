@@ -1,13 +1,15 @@
 "use client";
 
+import { apiClient } from "@/lib/api-client";
 import {
 	createContext,
-	useContext,
-	useState,
-	useEffect,
 	type ReactNode,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
-import { apiClient } from "@/lib/api-client";
 
 interface Product {
 	id: number;
@@ -89,60 +91,88 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
 	const clearError = () => setError(null);
 
-	const loadProducts = async (params?: {
-		populate?: string;
-		filters?: Record<string, any>;
-		pagination?: { page: number; pageSize: number };
-	}): Promise<void> => {
-		try {
-			setIsLoading(true);
-			setError(null);
+	const loadProducts = useCallback(
+		async (params?: {
+			populate?: string;
+			filters?: Record<string, any>;
+			pagination?: { page: number; pageSize: number };
+		}): Promise<void> => {
+			try {
+				setIsLoading(true);
+				setError(null);
 
-			const response = await apiClient.getProducts({
-				populate: params?.populate || "*",
-				filters: params?.filters,
-				pagination: params?.pagination,
-			});
+				const response = await apiClient.getProducts({
+					populate: params?.populate || "*",
+					filters: params?.filters,
+					pagination: params?.pagination,
+				});
 
-			if (response.error) {
-				throw new Error(response.error.message);
+				if (response.error) {
+					// If it's an authentication error, log it but don't fail
+					if (
+						response.error.name === "AuthenticationRequired" ||
+						response.error.status === 401 ||
+						response.error.status === 403
+					) {
+						console.warn(
+							"Products endpoint requires authentication, skipping products load:",
+							response.error.message,
+						);
+						setProducts([]);
+						return;
+					}
+					throw new Error(response.error.message);
+				}
+
+				setProducts(response.data || []);
+			} catch (err) {
+				const errorMessage =
+					err instanceof Error ? err.message : "Ürünler yüklenemedi";
+				// Don't set error state for authentication issues
+				if (
+					errorMessage.includes("giriş yapmanız gerekiyor") ||
+					errorMessage.includes("Authentication")
+				) {
+					console.warn("Products load requires authentication, skipping:", err);
+					setProducts([]);
+				} else {
+					setError(errorMessage);
+					console.error("Products load error:", err);
+				}
+			} finally {
+				setIsLoading(false);
 			}
+		},
+		[],
+	);
 
-			setProducts(response.data || []);
-		} catch (err) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Ürünler yüklenemedi";
-			setError(errorMessage);
-			console.error("Products load error:", err);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const loadProduct = useCallback(
+		async (id: string | number): Promise<Product | null> => {
+			try {
+				setIsLoading(true);
+				setError(null);
 
-	const loadProduct = async (id: string | number): Promise<Product | null> => {
-		try {
-			setIsLoading(true);
-			setError(null);
+				const response = await apiClient.getProduct(id, "*");
 
-			const response = await apiClient.getProduct(id, "*");
+				if (response.error) {
+					throw new Error(response.error.message);
+				}
 
-			if (response.error) {
-				throw new Error(response.error.message);
+				return response.data || null;
+			} catch (err) {
+				const errorMessage =
+					err instanceof Error ? err.message : "Ürün yüklenemedi";
+				setError(errorMessage);
+				console.error("Product load error:", err);
+				return null;
+			} finally {
+				setIsLoading(false);
 			}
+		},
+		[],
+	);
 
-			return response.data || null;
-		} catch (err) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Ürün yüklenemedi";
-			setError(errorMessage);
-			console.error("Product load error:", err);
-			return null;
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const loadCategories = async (): Promise<void> => {
+	const loadCategories = useCallback(async (): Promise<void> => {
 		try {
 			setIsLoading(true);
 			setError(null);
@@ -152,6 +182,19 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 			});
 
 			if (response.error) {
+				// If it's an authentication error, log it but don't fail
+				if (
+					response.error.name === "AuthenticationRequired" ||
+					response.error.status === 401 ||
+					response.error.status === 403
+				) {
+					console.warn(
+						"Categories endpoint requires authentication, skipping categories load:",
+						response.error.message,
+					);
+					setCategories([]);
+					return;
+				}
 				throw new Error(response.error.message);
 			}
 
@@ -159,14 +202,23 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Kategoriler yüklenemedi";
-			setError(errorMessage);
-			console.error("Categories load error:", err);
+			// Don't set error state for authentication issues
+			if (
+				errorMessage.includes("giriş yapmanız gerekiyor") ||
+				errorMessage.includes("Authentication")
+			) {
+				console.warn("Categories load requires authentication, skipping:", err);
+				setCategories([]);
+			} else {
+				setError(errorMessage);
+				console.error("Categories load error:", err);
+			}
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, []);
 
-	const loadTags = async (): Promise<void> => {
+	const loadTags = useCallback(async (): Promise<void> => {
 		try {
 			setIsLoading(true);
 			setError(null);
@@ -174,6 +226,19 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 			const response = await apiClient.getTags();
 
 			if (response.error) {
+				// If it's an authentication error, log it but don't fail
+				if (
+					response.error.name === "AuthenticationRequired" ||
+					response.error.status === 401 ||
+					response.error.status === 403
+				) {
+					console.warn(
+						"Tags endpoint requires authentication, skipping tags load:",
+						response.error.message,
+					);
+					setTags([]);
+					return;
+				}
 				throw new Error(response.error.message);
 			}
 
@@ -181,12 +246,21 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Etiketler yüklenemedi";
-			setError(errorMessage);
-			console.error("Tags load error:", err);
+			// Don't set error state for authentication issues
+			if (
+				errorMessage.includes("giriş yapmanız gerekiyor") ||
+				errorMessage.includes("Authentication")
+			) {
+				console.warn("Tags load requires authentication, skipping:", err);
+				setTags([]);
+			} else {
+				setError(errorMessage);
+				console.error("Tags load error:", err);
+			}
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, []);
 
 	const searchProducts = async (query: string): Promise<void> => {
 		if (!query.trim()) {
@@ -247,8 +321,11 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
-	// Load initial data
+	// Load initial data (once per mount)
+	const didInitRef = useRef(false);
 	useEffect(() => {
+		if (didInitRef.current) return;
+		didInitRef.current = true;
 		const initializeData = async () => {
 			await Promise.all([
 				loadProducts({ populate: "*", pagination: { page: 1, pageSize: 20 } }),
@@ -258,7 +335,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 		};
 
 		initializeData();
-	}, []);
+	}, [loadCategories, loadProducts, loadTags]);
 
 	// Set featured products (first 6 products)
 	useEffect(() => {

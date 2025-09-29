@@ -1,8 +1,5 @@
 "use client";
 
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	Award,
 	Clock,
@@ -13,6 +10,9 @@ import {
 	Users,
 } from "lucide-react";
 import Link from "next/link";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 export default function Sorular() {
 	// Enable transparent navigation for hero section
@@ -111,7 +111,7 @@ export default function Sorular() {
 							const IconComponent = faq.icon;
 							const colorClasses = [
 								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-blue-100", text: "text-blue-600" },
+								{ bg: "bg-green-100", text: "text-green-600" },
 								{ bg: "bg-yellow-100", text: "text-yellow-600" },
 								{ bg: "bg-purple-100", text: "text-purple-600" },
 								{ bg: "bg-red-100", text: "text-red-600" },
