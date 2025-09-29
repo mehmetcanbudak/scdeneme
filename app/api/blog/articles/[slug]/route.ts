@@ -17,11 +17,6 @@ export async function GET(
 			);
 		}
 
-		const qs = new URLSearchParams();
-		qs.set("populate[0]", "cover");
-		// Filter by slug field
-		qs.set("filters[slug][$eq]", slug);
-
 		// Build headers with optional authentication
 		const headers: HeadersInit = {
 			"Content-Type": "application/json",
@@ -30,9 +25,9 @@ export async function GET(
 			headers.Authorization = `Bearer ${TOKEN}`;
 		}
 
-		// Use Strapi public articles endpoint with slug filter
+		// Use direct slug endpoint that matches the working Strapi endpoint
 		const res = await fetch(
-			`${STRAPI_URL}/api/articles/public?${qs.toString()}`,
+			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}/`,
 			{
 				headers,
 				cache: "no-store",
@@ -90,15 +85,15 @@ export async function GET(
 
 		const json = await res.json();
 
-		// Strapi returns array of articles, get the first one (should be only one with slug filter)
-		const article = json?.data?.[0];
+		// Direct slug endpoint returns single article data object
+		const article = json?.data;
 
 		// If no article found, return 404
 		if (!article) {
 			return NextResponse.json({ data: null }, { status: 404 });
 		}
 
-		// Return the article object (not array)
+		// Return the article object directly
 		return NextResponse.json({ data: article }, { status: 200 });
 	} catch (err: unknown) {
 		return NextResponse.json(
