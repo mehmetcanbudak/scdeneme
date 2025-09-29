@@ -3,46 +3,33 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
 async function fetchArticle(slug: string) {
 	try {
 		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
+		const TOKEN = process.env.STRAPI_API_TOKEN;
 		if (!STRAPI_URL) {
 			console.error("Missing NEXT_PUBLIC_API_URL");
 			return null;
 		}
 
-		// Try internal API route with robust base URL fallback (supports dev on 3000 or 3001)
-		const candidates = [
-			process.env.NEXTAUTH_URL,
-			process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
-			"http://localhost:3001",
-			"http://localhost:3000",
-		].filter(Boolean) as string[];
+		// Fetch directly from Strapi in production to avoid self-fetch deadlocks
+		const headers: HeadersInit = {};
+		if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
 
-		for (const base of candidates) {
-			try {
-				const res = await fetch(
-					`${base}/api/blog/articles/${encodeURIComponent(slug)}`,
-					{
-						cache: "force-cache",
-					},
-				);
-				if (!res.ok) {
-					continue;
-				}
-				const json = await res.json();
-				if (json?.error) {
-					continue;
-				}
-				return json?.data || null;
-			} catch {
-				// try next candidate
-				continue;
-			}
+		const res = await fetch(
+			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}/`,
+			{
+				// Use no-store to ensure fresh content and avoid build-time caching issues on Vercel
+				cache: "no-store",
+				headers,
+			},
+		);
+		if (!res.ok) {
+			console.error("Upstream error fetching article", slug, res.status);
+			return null;
 		}
-
-		return null;
+		const json = await res.json();
+		return json?.data || null;
 	} catch (error) {
 		console.error(`Error fetching article ${slug}:`, error);
 		return null;
@@ -92,6 +79,8 @@ export async function generateMetadata({
 		return {};
 	}
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function BlogArticle({
 	params: paramsPromise,
