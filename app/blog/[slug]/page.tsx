@@ -22,9 +22,12 @@ async function fetchArticle(slug: string) {
 
 		for (const base of candidates) {
 			try {
-				const res = await fetch(`${base}/api/blog/articles/${encodeURIComponent(slug)}`, {
-					cache: "force-cache",
-				});
+				const res = await fetch(
+					`${base}/api/blog/articles/${encodeURIComponent(slug)}`,
+					{
+						cache: "force-cache",
+					},
+				);
 				if (!res.ok) {
 					continue;
 				}
