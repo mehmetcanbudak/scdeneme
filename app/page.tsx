@@ -127,7 +127,7 @@ export default function Home() {
 			try {
 				setBlogLoading(true);
 				setBlogError(null);
-				const json = await getArticles({ page: 1, pageSize: 8 });
+				const json = await getArticles({ page: 1, pageSize: 8, preview: true });
 				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
 					const a = item?.attributes ?? item ?? {};
 					const coverUrl = getStrapiMediaUrl(a.cover);
