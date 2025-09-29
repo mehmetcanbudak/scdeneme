@@ -147,7 +147,7 @@ export default function Iletisim() {
 											placeholder="Adınız"
 											value={formData.firstName}
 											onChange={handleChange}
-											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
+											className="w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -166,7 +166,7 @@ export default function Iletisim() {
 											placeholder="Soyadınız"
 											value={formData.lastName}
 											onChange={handleChange}
-											className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
+											className="w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -186,7 +186,7 @@ export default function Iletisim() {
 										placeholder="ornek@email.com"
 										value={formData.email}
 										onChange={handleChange}
-										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
+										className="w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800"
 										required
 									/>
 								</div>
@@ -199,8 +199,8 @@ export default function Iletisim() {
 										Telefon Numarası *
 									</label>
 									<div className="flex">
-										<div className="flex items-center px-3 py-3 border border-gray-300 border-r-0 rounded-l-lg bg-gray-100 text-gray-600">
-											<span className="text-sm">+90</span>
+										<div className="flex items-center px-3.5 py-3.5 border-[1.5px] border-black border-r-0 rounded-l-lg bg-gray-100 text-gray-600 shadow-[2.5px_3px_0_#000]">
+											<span className="text-base">+90</span>
 										</div>
 										<input
 											type="tel"
@@ -209,7 +209,7 @@ export default function Iletisim() {
 											placeholder="5XX XXX XX XX"
 											value={formData.phone}
 											onChange={handleChange}
-											className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
+											className="flex-1 px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-r-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800"
 											required
 										/>
 									</div>
@@ -229,7 +229,7 @@ export default function Iletisim() {
 										placeholder="Mesajınızı yazın..."
 										value={formData.message}
 										onChange={handleChange}
-										className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-green-50 placeholder:text-gray-500 text-gray-800"
+										className="w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800 resize-none"
 										required
 									/>
 								</div>

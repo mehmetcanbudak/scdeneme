@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft, Loader2, Phone } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/auth-context";
+import { ArrowLeft, Loader2, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
 import GoogleLoginButton from "./google-login-button";
 
 interface OTPLoginFormProps {
@@ -130,7 +130,7 @@ export default function OTPLoginForm({
 							value={phone}
 							onChange={(e) => setPhone(e.target.value)}
 							required
-							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-white placeholder:text-gray-500 text-gray-800 text-center text-lg"
+							className="w-full px-3.5 py-3.5 border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800 text-center text-lg"
 						/>
 						<p className="text-xs text-gray-600 text-center">
 							Türkiye telefon numarası girin
@@ -218,7 +218,7 @@ export default function OTPLoginForm({
 								setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
 							}
 							required
-							className="text-center text-lg tracking-widest"
+							className="px-3.5 py-3.5 border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white text-center text-lg tracking-widest"
 							maxLength={6}
 						/>
 					</div>

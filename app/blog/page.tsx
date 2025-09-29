@@ -153,7 +153,7 @@ export default function Blog() {
 			date: "8 Mart 2024",
 			image: "/press-womens-day.png",
 			readTime: "3 dk okuma",
-			slug: "il-tarim-mudurlugu-kadinlar-gunu",
+			slug: "tarim-mudurlugu",
 		},
 		{
 			title: "Wageningen Üniversitesi Dikey Tarım Programı",
@@ -162,7 +162,7 @@ export default function Blog() {
 			date: "5 Mart 2024",
 			image: "/press-university-program.png",
 			readTime: "4 dk okuma",
-			slug: "wageningen-universitesi-dikey-tarim",
+			slug: "wagenigen",
 		},
 		{
 			title: "Anadolu Ajansı Skycrops'ta",
@@ -170,7 +170,7 @@ export default function Blog() {
 			date: "2 Mart 2024",
 			image: "/press-anadolu-agency.png",
 			readTime: "2 dk okuma",
-			slug: "anadolu-ajansi-skycrops",
+			slug: "anadolu-ajans",
 		},
 	];
 
