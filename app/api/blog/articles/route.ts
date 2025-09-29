@@ -35,10 +35,13 @@ export async function GET(req: Request) {
 		}
 
 		// Use Strapi public articles endpoint (auth: false) to avoid permission issues
-		const res = await fetch(`${STRAPI_URL}/api/articles/public?${qs.toString()}`, {
-			headers,
-			cache: "no-store",
-		});
+		const res = await fetch(
+			`${STRAPI_URL}/api/articles/public?${qs.toString()}`,
+			{
+				headers,
+				cache: "no-store",
+			},
+		);
 
 		if (!res.ok) {
 			const txt = await res.text();

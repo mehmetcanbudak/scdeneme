@@ -27,12 +27,12 @@ import { useEffect, useRef, useState } from "react";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 
 type UiPost = {
-  title: string;
-  excerpt?: string;
-  date?: string;
-  image?: string | null;
-  readTime?: string;
-  slug: string;
+	title: string;
+	excerpt?: string;
+	date?: string;
+	image?: string | null;
+	readTime?: string;
+	slug: string;
 };
 
 export default function Home() {
@@ -655,7 +655,7 @@ export default function Home() {
 							{blogPosts.map((post, index) => (
 								<Link
 									key={index}
-										href={`/blog/${post.slug}`}
+									href={`/blog/${post.slug}`}
 									className="flex-shrink-0 w-80"
 								>
 									<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
