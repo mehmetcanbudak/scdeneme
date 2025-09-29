@@ -1,33 +1,33 @@
 {
-  "recommendations": [
-    // TypeScript & JavaScript
-    "ms-vscode.vscode-typescript-next",
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "bradlc.vscode-tailwindcss",
-    "formulahendry.auto-rename-tag",
-    "christian-kohler.path-intellisense",
+	"recommendations": [
+		// TypeScript & JavaScript
+		"ms-vscode.vscode-typescript-next",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"bradlc.vscode-tailwindcss",
+		"formulahendry.auto-rename-tag",
+		"christian-kohler.path-intellisense",
 
-    // React & Next.js
-    "ms-vscode.vscode-json",
-    "bradlc.vscode-tailwindcss",
-    "formulahendry.auto-rename-tag",
-    "ms-vscode.vscode-typescript-next",
+		// React & Next.js
+		"ms-vscode.vscode-json",
+		"bradlc.vscode-tailwindcss",
+		"formulahendry.auto-rename-tag",
+		"ms-vscode.vscode-typescript-next",
 
-    // Git
-    "mhutchie.git-graph",
-    "donjayamanne.githistory",
+		// Git
+		"mhutchie.git-graph",
+		"donjayamanne.githistory",
 
-    // Productivity
-    "ms-vscode.vscode-json",
-    "redhat.vscode-yaml",
-    "ms-vscode-remote.remote-containers",
+		// Productivity
+		"ms-vscode.vscode-json",
+		"redhat.vscode-yaml",
+		"ms-vscode-remote.remote-containers",
 
-    // Testing (if needed later)
-    "ms-vscode.vscode-jest",
+		// Testing (if needed later)
+		"ms-vscode.vscode-jest",
 
-    // Docker (if needed)
-    "ms-azuretools.vscode-docker"
-  ],
-  "unwantedRecommendations": ["ms-vscode.vscode-typescript", "hookyqr.beautify"]
+		// Docker (if needed)
+		"ms-azuretools.vscode-docker"
+	],
+	"unwantedRecommendations": ["ms-vscode.vscode-typescript", "hookyqr.beautify"]
 }

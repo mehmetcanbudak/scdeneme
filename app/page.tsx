@@ -1,13 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { useProducts } from "@/contexts/product-context";
-import { useCart } from "@/contexts/cart-context";
 import HeroHeader from "@/components/hero-header";
 import {
 	Accordion,
@@ -15,6 +7,14 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/cart-context";
+import { useProducts } from "@/contexts/product-context";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
 	const router = useRouter();
@@ -312,7 +312,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className="min-h-screen bg-white relative overflow-x-hidden">
+		<div className="min-h-screen bg-[#E7EBDE] relative overflow-x-hidden">
 			{/* Hero Header Component */}
 			<HeroHeader
 				slides={slides}
@@ -322,8 +322,11 @@ export default function Home() {
 			/>
 
 			{/* Biz Ne Yapıyoruz Section */}
-			<section id="biz-ne-yapiyoruz-section" className="py-16 px-6 bg-white relative z-10 overflow-x-hidden">
-				<div className="max-w-6xl mx-auto">
+			<section
+				id="biz-ne-yapiyoruz-section"
+				className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden"
+			>
+				<div className="mx-12">
 					<div className="text-center mb-12">
 						<h2 className="text-4xl md:text-5xl font-light mb-8 tracking-wide text-gray-800">
 							Biz Ne Yapıyoruz
@@ -398,8 +401,8 @@ export default function Home() {
 				</div>
 			</section>
 
-			<section className="py-16 px-6 bg-gray-50 relative z-10 overflow-x-hidden">
-				<div className="max-w-6xl mx-auto">
+			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
+				<div className="mx-12">
 					<div className="text-center mb-12">
 						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
 							Sebze Paketleri
@@ -416,7 +419,7 @@ export default function Home() {
 							{packages.map((pkg, index) => (
 								<div
 									key={index}
-									className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+									className="bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow rounded-product"
 								>
 									{/* Bundle Image - Top */}
 									<div className="aspect-[4/3]">
@@ -429,7 +432,9 @@ export default function Home() {
 
 									{/* Product Info - Bottom */}
 									<div className="p-6">
-										<h3 className="font-medium text-2xl mb-3 text-gray-800">{pkg.name}</h3>
+										<h3 className="font-medium text-2xl mb-3 text-gray-800">
+											{pkg.name}
+										</h3>
 										<p className="text-gray-600 text-base mb-6 leading-relaxed">
 											{pkg.description}
 										</p>
@@ -444,7 +449,7 @@ export default function Home() {
 											</div>
 										</div>
 										<Button
-											className="w-full bg-gray-600 hover:bg-gray-700 text-white uppercase tracking-wide py-3 text-base font-medium"
+											className="w-full uppercase tracking-wide py-3 text-base rounded-product-sm"
 											onClick={() => {
 												if (pkg.id) {
 													addItem(pkg.id, 1);
@@ -459,7 +464,7 @@ export default function Home() {
 						</div>
 
 						{/* FAQ Accordion - Right Side */}
-						<div className="bg-white rounded-lg p-8 shadow-sm">
+						<div className="bg-white p-8 shadow-sm rounded-product">
 							<h3 className="text-3xl font-medium mb-8 text-gray-700">
 								Paketlerimiz Hakkında
 							</h3>
@@ -469,9 +474,10 @@ export default function Home() {
 										Paketlerimiz nasıl hazırlanır?
 									</AccordionTrigger>
 									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Her paket, taze hasat edilmiş sebzelerimizden özenle seçilerek hazırlanır.
-										Kalite kontrolümüzden geçen ürünler, hijyenik koşullarda paketlenir ve
-										en kısa sürede teslim edilmek üzere hazır hale getirilir.
+										Her paket, taze hasat edilmiş sebzelerimizden özenle
+										seçilerek hazırlanır. Kalite kontrolümüzden geçen ürünler,
+										hijyenik koşullarda paketlenir ve en kısa sürede teslim
+										edilmek üzere hazır hale getirilir.
 									</AccordionContent>
 								</AccordionItem>
 
@@ -480,9 +486,10 @@ export default function Home() {
 										Teslimat süresi ne kadardır?
 									</AccordionTrigger>
 									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Siparişleriniz genellikle 24 saat içinde hazırlanır ve İstanbul içi teslimat
-										için 2-3 iş günü, diğer bölgeler için 3-5 iş günü sürer. Hafta sonu
-										siparişleri pazartesi günü işleme alınır.
+										Siparişleriniz genellikle 24 saat içinde hazırlanır ve
+										İstanbul içi teslimat için 2-3 iş günü, diğer bölgeler için
+										3-5 iş günü sürer. Hafta sonu siparişleri pazartesi günü
+										işleme alınır.
 									</AccordionContent>
 								</AccordionItem>
 
@@ -491,9 +498,9 @@ export default function Home() {
 										Ürünlerin tazeliği nasıl korunur?
 									</AccordionTrigger>
 									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve teslimata
-										kadar bu koşullarda muhafaza edilir. Her paket, teslimattan önce taze
-										kalite kontrolünden geçer.
+										Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve
+										teslimata kadar bu koşullarda muhafaza edilir. Her paket,
+										teslimattan önce taze kalite kontrolünden geçer.
 									</AccordionContent>
 								</AccordionItem>
 
@@ -502,9 +509,10 @@ export default function Home() {
 										Paket içeriği değiştirilebilir mi?
 									</AccordionTrigger>
 									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Evet, özel ihtiyaçlarınıza göre paket içeriğini kişiselleştirebilirsiniz.
-										Alerji durumunuz, tercih ettiğiniz sebzeler veya miktar değişiklikleri
-										için müşteri hizmetlerimizle iletişime geçebilirsiniz.
+										Evet, özel ihtiyaçlarınıza göre paket içeriğini
+										kişiselleştirebilirsiniz. Alerji durumunuz, tercih ettiğiniz
+										sebzeler veya miktar değişiklikleri için müşteri
+										hizmetlerimizle iletişime geçebilirsiniz.
 									</AccordionContent>
 								</AccordionItem>
 
@@ -513,9 +521,9 @@ export default function Home() {
 										İptal ve iade koşulları nelerdir?
 									</AccordionTrigger>
 									<AccordionContent className="text-gray-600 leading-relaxed text-base pb-4">
-										Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi ile ilgili
-										sorunlarınızı bildirebilirsiniz. Kalite garantisi kapsamındaki ürünler
-										için tam geri ödeme yapılır.
+										Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi
+										ile ilgili sorunlarınızı bildirebilirsiniz. Kalite garantisi
+										kapsamındaki ürünler için tam geri ödeme yapılır.
 									</AccordionContent>
 								</AccordionItem>
 							</Accordion>
@@ -526,9 +534,9 @@ export default function Home() {
 
 			<section
 				id="vegetables-section"
-				className="py-16 bg-white relative z-10 overflow-x-hidden"
+				className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden"
 			>
-				<div className="max-w-6xl mx-auto px-6">
+				<div className="mx-12">
 					<div className="text-center mb-12">
 						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
 							Farmımızda Yetişen Sebzeler
@@ -619,8 +627,8 @@ export default function Home() {
 				</div>
 			</section>
 
-			<section className="py-16 px-6 bg-white relative z-10 overflow-x-hidden">
-				<div className="max-w-6xl mx-auto">
+			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
+				<div className="mx-12">
 					<div className="text-center mb-12">
 						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
 							Blog - Basında Biz
@@ -695,10 +703,7 @@ export default function Home() {
 
 					<div className="text-center mt-8">
 						<Link href="/blog">
-							<Button
-								variant="outline"
-								className="border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white px-8 py-3 uppercase tracking-widest bg-transparent"
-							>
+							<Button className="px-8 py-3 uppercase tracking-widest">
 								Tümünü Gör
 							</Button>
 						</Link>
@@ -707,8 +712,8 @@ export default function Home() {
 			</section>
 
 			{/* Category Grid */}
-			<section className="py-16 px-6 bg-white relative z-10 overflow-x-hidden">
-				<div className="max-w-6xl mx-auto relative z-10">
+			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
+				<div className="mx-12 relative z-10">
 					{/* Desktop Grid View */}
 					<div className="hidden md:grid md:grid-cols-3 gap-6">
 						{[

@@ -1,43 +1,48 @@
-import { memo } from "react"
-import { ShoppingBag } from "lucide-react"
-import { useCart } from "@/contexts/cart-context"
+import { useCart } from "@/contexts/cart-context";
+import { ShoppingBag } from "lucide-react";
+import { memo } from "react";
 
 interface MobileActionIconsProps {
-  shouldBeTransparent: boolean
-  className?: string
+	shouldBeTransparent: boolean;
+	className?: string;
 }
 
-const MobileActionIcons = memo(function MobileActionIcons({ 
-  shouldBeTransparent, 
-  className = "" 
+const MobileActionIcons = memo(function MobileActionIcons({
+	shouldBeTransparent,
+	className = "",
 }: MobileActionIconsProps) {
-  const { totalItems } = useCart()
-  
-  const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${
-    shouldBeTransparent ? "text-white" : "text-gray-600"
-  }`
+	const { totalItems } = useCart();
 
-  const handleCartClick = () => {
-    // Navigate to cart page or open cart sidebar
-    window.location.href = '/cart'
-  }
+	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${
+		shouldBeTransparent ? "text-white" : "text-gray-600"
+	}`;
 
-  return (
-    <div className={`flex items-center ${className}`}>
-      <div className="relative">
-        <ShoppingBag 
-          className={iconClass} 
-          aria-label="Sepet"
-          onClick={handleCartClick}
-        />
-        {totalItems > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-            {totalItems > 99 ? '99+' : totalItems}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-})
+	const handleCartClick = () => {
+		// Navigate to cart page or open cart sidebar
+		window.location.href = "/cart";
+	};
 
-export default MobileActionIcons
+	return (
+		<div className={`flex items-center ${className}`}>
+			<div className="relative">
+				<button
+					type="button"
+					className="group flex h-6 w-6 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60"
+					onClick={handleCartClick}
+					aria-label="Sepet"
+				>
+					<ShoppingBag
+						className={`transition-colors group-hover:opacity-80 ${iconClass}`}
+					/>
+				</button>
+				{totalItems > 0 && (
+					<div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+						{totalItems > 99 ? "99+" : totalItems}
+					</div>
+				)}
+			</div>
+		</div>
+	);
+});
+
+export default MobileActionIcons;

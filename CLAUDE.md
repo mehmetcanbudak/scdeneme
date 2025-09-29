@@ -5,31 +5,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Commands
 
 Development workflow:
-- `npm run dev` - Start development server on port 3000
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Run ESLint with auto-fixes
-- `npm run type-check` - Run TypeScript type checking
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check Prettier formatting
-- `npm run test` - Run Jest tests
-- `npm run test:watch` - Run Jest tests in watch mode
-- `npm run test:coverage` - Run Jest tests with coverage
+- `pnpm dev` - Start development server on port 3000
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run Biome linting
+- `pnpm lint:fix` - Run Biome linting with auto-fixes
+- `pnpm type-check` - Run TypeScript type checking
+- `pnpm format` - Format code with Biome
+- `pnpm format:check` - Check Biome formatting
+- `pnpm test` - Run Jest tests
+- `pnpm test:watch` - Run Jest tests in watch mode
+- `pnpm test:coverage` - Run Jest tests with coverage
 
 Build analysis and maintenance:
-- `npm run analyze` - Analyze bundle size with ANALYZE=true
-- `npm run clean` - Clean build artifacts (.next, out, dist, .turbo)
-- `npm run clean:all` - Clean all artifacts including node_modules
+- `pnpm analyze` - Analyze bundle size with ANALYZE=true
+- `pnpm clean` - Clean build artifacts (.next, out, dist, .turbo)
+- `pnpm clean:all` - Clean all artifacts including node_modules
 
 Git shortcuts:
-- `npm run git:status` - Show git status
-- `npm run git:add` - Add all files to git
-- `npm run git:commit` - Commit with message (use: npm run git:commit "message")
-- `npm run git:push` - Push to main branch
-- `npm run git:pull` - Pull from main branch
-- `npm run git:log` - Show recent commit history
-- `npm run git:diff` - Show staged changes
+- `pnpm git:status` - Show git status
+- `pnpm git:add` - Add all files to git
+- `pnpm git:commit` - Commit with message (use: pnpm git:commit "message")
+- `pnpm git:push` - Push to main branch
+- `pnpm git:pull` - Pull from main branch
+- `pnpm git:log` - Show recent commit history
+- `pnpm git:diff` - Show staged changes
 
 ## Architecture Overview
 
@@ -98,7 +98,7 @@ hooks/                  # Custom React hooks
 **TypeScript Configuration**:
 - Path mapping with `@/*` for root-level imports
 - Strict mode enabled with incremental compilation
-- ESLint and build errors ignored in config (development setting)
+- Biome and build errors ignored in config (development setting)
 
 **Tailwind Configuration**:
 - Custom CSS variables for theming system

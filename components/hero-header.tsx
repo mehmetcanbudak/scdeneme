@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { useState, useEffect, useCallback, memo, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "./navigation-context";
 
 export interface HeroSlide {
@@ -36,6 +36,8 @@ interface HeroHeaderProps {
 	contentClassName?: string;
 	overlayClassName?: string;
 	showScrollButton?: boolean;
+	mediaFit?: "cover" | "contain";
+	backgroundColor?: string;
 }
 
 const HeroHeader = memo(function HeroHeader({
@@ -51,6 +53,8 @@ const HeroHeader = memo(function HeroHeader({
 	contentClassName = "",
 	overlayClassName = "",
 	showScrollButton = true,
+	mediaFit = "cover",
+	backgroundColor = "transparent",
 }: HeroHeaderProps) {
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [progress, setProgress] = useState(0);
@@ -135,6 +139,8 @@ const HeroHeader = memo(function HeroHeader({
 
 	const currentSlideData = validSlides[currentSlide] || validSlides[0];
 	const hasMultipleSlides = totalSlides > 1;
+	const mediaFitClass =
+		mediaFit === "contain" ? "object-contain" : "object-cover";
 
 	// Keyboard navigation
 	useEffect(() => {
@@ -166,19 +172,35 @@ const HeroHeader = memo(function HeroHeader({
 	}, [currentSlideData]);
 
 	return (
-		<section
-			className={`relative ${className}`}
-			style={{ height: customHeight }}
+		<header
+			className={`relative w-full ${className}`}
+			style={{
+				height: customHeight,
+				backgroundColor,
+				minWidth: "100vw",
+				marginLeft: "calc(50% - 50vw)",
+				marginRight: "calc(50% - 50vw)",
+			}}
 			role="banner"
 			aria-label="Hero section"
 		>
 			{/* Background media */}
-			<div className="absolute inset-0">
+			<div
+				className="absolute inset-0"
+				style={{
+					backgroundColor,
+					width: "100vw",
+					left: "50%",
+					right: "50%",
+					marginLeft: "-50vw",
+					marginRight: "-50vw",
+				}}
+			>
 				{currentSlideData.video ? (
 					<video
 						key={currentSlideData.video}
 						src={currentSlideData.video}
-						className="w-full h-full object-cover transition-opacity duration-1000"
+						className={`w-full h-full ${mediaFitClass} transition-opacity duration-1000`}
 						autoPlay
 						muted
 						loop
@@ -196,7 +218,7 @@ const HeroHeader = memo(function HeroHeader({
 						key={currentSlideData.image || currentSlideData.title}
 						src={currentSlideData.image || "/placeholder.svg"}
 						alt={currentSlideData.alt || currentSlideData.title}
-						className="w-full h-full object-cover transition-opacity duration-1000"
+						className={`w-full h-full ${mediaFitClass} transition-opacity duration-1000`}
 						loading={currentSlide === 0 ? "eager" : "lazy"}
 						onError={(e) => {
 							console.warn("Image failed to load:", currentSlideData.image);
@@ -207,7 +229,7 @@ const HeroHeader = memo(function HeroHeader({
 				)}
 				{/* Overlay */}
 				<div
-					className={`absolute inset-0 bg-black/50 ${overlayClassName}`}
+					className={`absolute inset-0 bg-black/25 ${overlayClassName}`}
 					aria-hidden="true"
 				/>
 			</div>
@@ -234,10 +256,9 @@ const HeroHeader = memo(function HeroHeader({
 						{showButton && currentSlideData.buttonText && (
 							<Button
 								type="button"
-								variant="outline"
 								size="lg"
 								onClick={handleButtonClick}
-								className="bg-transparent border-white text-white hover:bg-white hover:text-black focus:bg-white focus:text-black px-8 py-3 uppercase tracking-widest transition-all duration-300 animate-fade-in focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
+								className="px-8 py-3 uppercase tracking-widest transition-all duration-300 animate-fade-in"
 								aria-label={`${currentSlideData.buttonText} - ${currentSlideData.title}`}
 							>
 								{currentSlideData.buttonText}
@@ -311,7 +332,7 @@ const HeroHeader = memo(function HeroHeader({
 					</p>
 				)}
 			</div>
-		</section>
+		</header>
 	);
 });
 

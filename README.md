@@ -12,21 +12,67 @@ A modern, responsive Next.js frontend application for SkyCrops, featuring an opt
 - **Accessibility**: ARIA labels and semantic HTML structure
 - **Turkish Localization**: Full Turkish language support
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-- **Framework**: Next.js 15.2.4
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 3.4.17
-- **UI Components**: shadcn/ui with Radix UI primitives
-- **State Management**: React Context (Auth, Cart, Product, Subscription)
-- **Form Handling**: React Hook Form with Zod validation
-- **Icons**: Lucide React
-- **Charts**: Recharts
-- **Carousel**: Embla Carousel
-- **Fonts**: Geist Sans & Geist Mono
-- **Analytics**: Vercel Analytics
-- **Notifications**: Sonner
-- **API**: Strapi CMS Integration
+### **Core Technology Stack**
+
+**Package Manager:** pnpm
+**Code Quality:** Biome v2.2.4 (linting and formatting)
+**Framework:** Next.js v15.2.4
+**Language:** TypeScript v5
+**Runtime:** Node.js v18.17.0
+**Styling:** Tailwind CSS v3.4.17
+
+### **UI & Component Libraries**
+
+**Component System:** shadcn/ui (New York style)
+**Icon Library:** Lucide React v0.454.0
+**Radix UI Primitives:** Complete set including:
+- Accordion, Alert Dialog, Avatar, Checkbox
+- Dialog, Dropdown Menu, Hover Card, Label
+- Navigation Menu, Popover, Progress, Radio Group
+- Scroll Area, Select, Separator, Slider, Switch
+- Tabs, Toast, Toggle, Tooltip
+
+### **Additional Libraries & Tools**
+
+**Form Handling:** React Hook Form v7.60.0 + Hookform Resolvers v3.10.0
+**Validation:** Zod v3.25.67
+**Styling Utilities:**
+- class-variance-authority v0.7.1
+- clsx v2.1.1
+- tailwind-merge v2.5.5
+- tailwindcss-animate v1.0.7
+
+**Animation & Graphics:**
+- GSAP v3.13.0
+- Three.js v0.165.0
+- Framer Motion (via tailwindcss-animate)
+
+**Charts & Data Visualization:** Recharts (latest)
+**Date Handling:** date-fns v4.1.0
+**Carousel:** Embla Carousel v8.5.1 (with autoplay & wheel gestures)
+**Resizable Panels:** react-resizable-panels v2.1.7
+**Command Palette:** cmdk v1.0.4
+**Virtual Scrolling:** sonner v1.7.4
+
+### **Development & Build Tools**
+
+**CSS Processing:**
+- PostCSS v8.5.6
+- Autoprefixer v10.4.21
+
+**Theming:** next-themes v0.4.6
+**Analytics:** Vercel Analytics v1.3.1
+**Input Components:** input-otp v1.4.1
+**Mobile Detection:** Custom hook (use-mobile.ts)
+
+### **Development Features**
+
+**Linting:** Biome with recommended rules
+**Type Checking:** TypeScript strict mode
+**Import Organization:** Biome assist enabled
+**Git Integration:** Custom npm scripts for git operations
 
 ## 📁 Project Structure
 
@@ -80,7 +126,7 @@ skycrops-frontend/
 ### Prerequisites
 
 - Node.js 18+
-- pnpm (recommended) or npm/yarn
+- pnpm (recommended)
 
 ### Installation
 
@@ -93,19 +139,11 @@ skycrops-frontend/
 2. **Install dependencies**
    ```bash
    pnpm install
-   # or
-   npm install
-   # or
-   yarn install
    ```
 
 3. **Run the development server**
    ```bash
-   pnpm run dev
-   # or
-   npm run dev
-   # or
-   yarn dev
+   pnpm dev
    ```
 
 4. **Open your browser**
@@ -114,35 +152,35 @@ skycrops-frontend/
 ## 📝 Available Scripts
 
 ### Development
-- `pnpm dev` / `npm run dev` - Start development server
-- `pnpm build` / `npm run build` - Build for production
-- `pnpm start` / `npm run start` - Start production server
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
 
 ### Code Quality
-- `pnpm lint` / `npm run lint` - Run ESLint
-- `pnpm lint:fix` / `npm run lint:fix` - Run ESLint with auto-fix
-- `pnpm type-check` / `npm run type-check` - Run TypeScript type checking
-- `pnpm format` / `npm run format` - Format code with Prettier
-- `pnpm format:check` / `npm run format:check` - Check code formatting
+- `pnpm lint` - Run Biome linting
+- `pnpm lint:fix` - Run Biome linting with auto-fix
+- `pnpm type-check` - Run TypeScript type checking
+- `pnpm format` - Format code with Biome
+- `pnpm format:check` - Check code formatting
 
 ### Testing
-- `pnpm test` / `npm run test` - Run tests
-- `pnpm test:watch` / `npm run test:watch` - Run tests in watch mode
-- `pnpm test:coverage` / `npm run test:coverage` - Run tests with coverage
+- `pnpm test` - Run tests
+- `pnpm test:watch` - Run tests in watch mode
+- `pnpm test:coverage` - Run tests with coverage
 
 ### Maintenance
-- `pnpm clean` / `npm run clean` - Clean build artifacts
-- `pnpm clean:all` / `npm run clean:all` - Clean all artifacts including node_modules
-- `pnpm analyze` / `npm run analyze` - Analyze bundle size
+- `pnpm clean` - Clean build artifacts
+- `pnpm clean:all` - Clean all artifacts including node_modules
+- `pnpm analyze` - Analyze bundle size
 
 ### Git Helpers
-- `pnpm git:status` / `npm run git:status` - Show git status
-- `pnpm git:add` / `npm run git:add` - Stage all changes
-- `pnpm git:commit` / `npm run git:commit` - Commit with message
-- `pnpm git:push` / `npm run git:push` - Push to main branch
-- `pnpm git:pull` / `npm run git:pull` - Pull from main branch
-- `pnpm git:log` / `npm run git:log` - Show recent commits
-- `pnpm git:diff` / `npm run git:diff` - Show staged changes
+- `pnpm git:status` - Show git status
+- `pnpm git:add` - Stage all changes
+- `pnpm git:commit` - Commit with message
+- `pnpm git:push` - Push to main branch
+- `pnpm git:pull` - Pull from main branch
+- `pnpm git:log` - Show recent commits
+- `pnpm git:diff` - Show staged changes
 
 ## 🎨 Component Architecture
 
@@ -469,8 +507,7 @@ await apiClient.addToCart({
 
 ### Code Style
 - Follow TypeScript best practices
-- Use Prettier for formatting
-- Follow ESLint rules
+- Use Biome for formatting and linting
 - Write meaningful commit messages
 
 ## 📄 License

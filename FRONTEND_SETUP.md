@@ -1,74 +1,89 @@
-# 🚀 SkyCrops Frontend - State Management & Authentication Setup
+# SkyCrops Frontend Setup
 
-Bu dokümantasyon, SkyCrops frontend projesinde kurulan state management yapısını ve OTP tabanlı authentication sistemini açıklar.
+Modern Next.js application with TypeScript, Tailwind CSS, and comprehensive state management.
 
-## 📋 Kurulum
+## Environment Setup
 
-### 1. Environment Variables
+### Required Environment Variables
 
-Proje kök dizininde `.env.local` dosyası oluşturun:
+Create `.env.local` in project root:
 
 ```bash
 # Strapi API Configuration
-# Production URL (default fallback)
 NEXT_PUBLIC_API_URL=https://dynamic-spirit-b1c4404b11.strapiapp.com
 
-# Development/Production Environment
+# Environment
 NODE_ENV=development
 ```
 
-**Not:** Production ortamında `NEXT_PUBLIC_API_URL` environment variable'ı set edilmezse, sistem otomatik olarak production Strapi URL'ini kullanır.
+**Note:** Production uses the default Strapi URL if no environment variable is set.
 
-### 2. Dependencies
+### Package Manager
 
-Gerekli paketler zaten `package.json`'da mevcut. Eğer eksikse:
+Project uses **pnpm** as the primary package manager:
 
 ```bash
-npm install
-# veya
-yarn install
-# veya
+# Install dependencies
 pnpm install
+
+# Development server
+pnpm run dev
+
+# Production build
+pnpm run build
+
+# Start production server
+pnpm run start
 ```
 
-### 3. Available Scripts
+### Alternative Package Managers
+
+```bash
+# npm
+npm install && npm run dev
+
+# yarn
+yarn install && yarn dev
+```
+
+## Available Scripts
 
 ```bash
 # Development
-npm run dev          # Development server başlat
-npm run build        # Production build oluştur
-npm run start        # Production server başlat
+pnpm dev              # Start development server
+pnpm build            # Create production build
+pnpm start            # Start production server
 
 # Code Quality
-npm run lint         # ESLint kontrolü
-npm run lint:fix     # ESLint hatalarını düzelt
-npm run type-check   # TypeScript tip kontrolü
-npm run format       # Prettier ile formatla
+pnpm lint            # Biome check
+pnpm lint:fix        # Fix Biome issues
+pnpm type-check      # TypeScript type checking
+pnpm format          # Format with Biome
 
 # Maintenance
-npm run clean        # Build dosyalarını temizle
-npm run analyze      # Bundle analyzer ile analiz et
+pnpm run clean        # Clean build artifacts
+pnpm run analyze      # Bundle analysis
 
-# Git Helpers
-npm run git:status   # Git status göster
-npm run git:add      # Tüm dosyaları stage'e ekle
-npm run git:commit   # Commit oluştur (interactive)
-npm run git:push     # Main branch'e push et
+# Git Operations
+pnpm run git:status   # Show git status
+pnpm run git:add      # Stage all files
+pnpm run git:commit   # Interactive commit
+pnpm run git:push     # Push to main branch
 ```
 
-## 🏗️ State Management Yapısı
+## State Management
 
-### Context Providers Hierarchy
+### Context Architecture
+
+Provider hierarchy in `/app/layout.tsx`:
 
 ```tsx
-<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+<ThemeProvider>
   <AuthProvider>
     <ProductProvider>
       <CartProvider>
         <SubscriptionProvider>
-          <NavigationProvider>
-            {/* App Content */}
-          </NavigationProvider>
+          <NavigationProvider>{/* App Content */}</NavigationProvider>
         </SubscriptionProvider>
       </CartProvider>
     </ProductProvider>
@@ -76,385 +91,212 @@ npm run git:push     # Main branch'e push et
 </ThemeProvider>
 ```
 
-**Not:** ThemeProvider en üst seviyede konumlandırılmıştır ve tüm uygulama için tema yönetimini sağlar.
+### Core Contexts
 
-### 1. AuthContext (`/contexts/auth-context.tsx`)
+#### Authentication (`/contexts/auth-context.tsx`)
 
-OTP tabanlı authentication yönetimi:
+- OTP-based phone verification
+- JWT token management
+- User session handling
+- Auto token refresh
 
-```tsx
-import { useAuth } from '@/contexts/auth-context'
+#### Products (`/contexts/product-context.tsx`)
 
-const { 
-  user, 
-  token, 
-  isAuthenticated, 
-  isLoading,
-  login, 
-  sendOTP, 
-  resendOTP, 
-  checkPhone, 
-  logout, 
-  error, 
-  clearError 
-} = useAuth()
-```
+- Product catalog management
+- Category and tag filtering
+- Search functionality
+- Featured product curation
 
-**Özellikler:**
-- JWT token yönetimi
-- OTP gönderme/doğrulama
-- Kullanıcı bilgileri
-- Otomatik token yenileme
-- localStorage entegrasyonu
+#### Shopping Cart (`/contexts/cart-context.tsx`)
 
-### 2. ProductContext (`/contexts/product-context.tsx`)
+- Session-based cart persistence
+- Real-time total calculations
+- Item management operations
+- LocalStorage integration
 
-Ürün yönetimi:
+#### Subscriptions (`/contexts/subscription-context.tsx`)
 
-```tsx
-import { useProducts } from '@/contexts/product-context'
+- Subscription plan management
+- User subscription tracking
+- Payment processing
+- Billing cycle management
 
-const { 
-  products, 
-  categories, 
-  tags, 
-  featuredProducts,
-  isLoading,
-  loadProducts, 
-  loadProduct, 
-  searchProducts, 
-  filterProducts 
-} = useProducts()
-```
+#### Navigation (`/components/navigation-context.tsx`)
 
-**Özellikler:**
-- Ürün listesi yönetimi
-- Kategori ve etiket yönetimi
-- Arama ve filtreleme
-- Öne çıkan ürünler
-- Otomatik veri yükleme
+- Scroll-based transparency
+- Mobile sidebar state
+- Responsive navigation controls
 
-### 3. CartContext (`/contexts/cart-context.tsx`)
+#### Theme (`/components/theme-provider.tsx`)
 
-Sepet yönetimi:
+- Light/Dark/System themes
+- System preference detection
+- CSS custom property integration
+
+## Authentication System
+
+### Components
 
 ```tsx
-import { useCart } from '@/contexts/cart-context'
+// OTP Login Form
+<OTPLoginForm onSuccess={handleSuccess} onCancel={handleCancel} />
 
-const { 
-  items, 
-  totalItems, 
-  totalPrice,
-  isLoading,
-  addItem, 
-  updateItem, 
-  removeItem, 
-  clearCart, 
-  loadCart 
-} = useCart()
-```
+// Authentication Modal
+<AuthModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
-**Özellikler:**
-- Session tabanlı sepet
-- Otomatik toplam hesaplama
-- Ürün ekleme/çıkarma/güncelleme
-- localStorage session yönetimi
-
-### 4. SubscriptionContext (`/contexts/subscription-context.tsx`)
-
-Abonelik yönetimi:
-
-```tsx
-import { useSubscriptions } from '@/contexts/subscription-context'
-
-const {
-  plans,
-  subscriptions,
-  activeSubscription,
-  isLoading,
-  loadPlans,
-  loadSubscriptions,
-  createSubscription,
-  cancelSubscription,
-  retryPayment
-} = useSubscriptions()
-```
-
-**Özellikler:**
-- Abonelik planları
-- Kullanıcı abonelikleri
-- Aktif abonelik takibi
-- Ödeme işlemleri
-
-### 5. NavigationContext (`/components/navigation-context.tsx`)
-
-Navigation ve UI state yönetimi:
-
-```tsx
-import { useNavigation } from '@/components/navigation-context'
-
-const {
-  isTransparent,
-  setIsTransparent,
-  isMobileSidebarOpen,
-  setIsMobileSidebarOpen
-} = useNavigation()
-```
-
-**Özellikler:**
-- Navigation bar transparency kontrolü
-- Mobile sidebar aç/kapa durumu
-- Responsive navigation yönetimi
-
-### 6. ThemeProvider (`/components/theme-provider.tsx`)
-
-Tema yönetimi (next-themes entegrasyonu):
-
-```tsx
-import { ThemeProvider } from '@/components/theme-provider'
-
-// Kullanım örneği
-<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-  {/* App Content */}
-</ThemeProvider>
-```
-
-**Özellikler:**
-- Light/Dark/System tema desteği
-- Otomatik sistem tema algılama
-- CSS class-based tema geçişi
-
-## 🔐 Authentication Flow
-
-### 1. OTP Login Form
-
-```tsx
-import OTPLoginForm from '@/components/auth/otp-login-form'
-
-<OTPLoginForm 
-  onSuccess={() => console.log('Login successful')}
-  onCancel={() => console.log('Login cancelled')}
-/>
-```
-
-### 2. Auth Modal
-
-```tsx
-import AuthModal from '@/components/auth/auth-modal'
-
-<AuthModal 
-  isOpen={isOpen} 
-  onClose={() => setIsOpen(false)} 
-/>
-```
-
-### 3. Protected Routes
-
-```tsx
-import ProtectedRoute from '@/components/auth/protected-route'
-
+// Protected Route Wrapper
 <ProtectedRoute>
-  <YourProtectedComponent />
+  <ProtectedComponent />
 </ProtectedRoute>
 ```
 
-## 🌐 API Client
+### Current Status
 
-### Kullanım
+- **OTP-based authentication** via phone verification
+- **Session management** with automatic token refresh
+- **Authentication headers temporarily disabled** in API client
+- **Public endpoints active** for core e-commerce functionality
+
+## API Integration
+
+### API Client (`/lib/api-client.ts`)
 
 ```tsx
-import { apiClient } from '@/lib/api-client'
+import { apiClient } from '@/lib/api-client';
 
-// Public endpoints (authentication gerekmez)
-const products = await apiClient.getPublicProducts()
-const product = await apiClient.getPublicProduct(1)
-const categories = await apiClient.getPublicCategories()
+// Public Endpoints (Active)
+const products = await apiClient.getPublicProducts();
+const categories = await apiClient.getPublicCategories();
+const cartItems = await apiClient.getCartItems(sessionId);
 
-// Authenticated endpoints (şu anda devre dışı)
-const orders = await apiClient.getMyOrders()
-const newOrder = await apiClient.createOrder(orderData)
+// Cart Operations
+await apiClient.addToCart(productId, quantity);
+await apiClient.updateCartItem(itemId, quantity);
+await apiClient.removeCartItem(itemId);
+
+// Authenticated Endpoints (Headers Disabled)
+const orders = await apiClient.getMyOrders();
+const subscriptions = await apiClient.getMySubscriptions();
 ```
 
-### Mevcut Durum
+### Backend Integration
 
-**⚠️ Authentication Devre Dışı:** API client'ta authentication header'ları geçici olarak yorum satırı yapılmıştır.
+- **Strapi CMS** as headless backend
+- **Production URL**: `https://dynamic-spirit-b1c4404b11.strapiapp.com`
+- **Session-based cart** persistence
+- **Public API access** for core functionality
 
-```tsx
-// Şu anda yorum satırında (lib/api-client.ts:36-38)
-// if (this.token) {
-//   (headers as any).Authorization = `Bearer ${this.token}`
-// }
-```
+## E-commerce Features
 
-### Endpoint Türleri
-
-1. **Public Endpoints** (Authentication gerektirmez):
-   - `getPublicProducts()` - Ürün listesi
-   - `getPublicProduct(id)` - Tek ürün detayı
-   - `getPublicCategories()` - Kategori listesi
-   - `getCartItems(sessionId)` - Sepet öğeleri
-   - `addToCart()`, `updateCartItem()`, `removeCartItem()` - Sepet işlemleri
-
-2. **Authenticated Endpoints** (Authentication gerekli, şu anda devre dışı):
-   - `getMyOrders()`, `createOrder()` - Sipariş işlemleri
-   - `getMySubscriptions()`, `createSubscription()` - Abonelik işlemleri
-
-## 🛒 E-commerce Integration
-
-### Sepete Ürün Ekleme
+### Cart Management
 
 ```tsx
-import { useCart } from '@/contexts/cart-context'
+import { useCart } from '@/contexts/cart-context';
 
-const { addItem } = useCart()
+const { addItem, totalItems, totalPrice } = useCart();
 
 const handleAddToCart = async (productId: number) => {
-  const result = await addItem(productId, 1)
-  if (result.success) {
-    // Başarılı
-  }
-}
+  await addItem(productId, 1);
+};
 ```
 
-### Sipariş Oluşturma
+### Order Processing
 
 ```tsx
-import { apiClient } from '@/lib/api-client'
-
 const orderData = {
   cartItems: [{ productId: 1, quantity: 2 }],
-  billingAddress: { /* address data */ },
-  shippingAddress: { /* address data */ },
-  paymentMethod: "credit_card"
-}
+  billingAddress: {
+    /* address data */
+  },
+  shippingAddress: {
+    /* address data */
+  },
+  paymentMethod: 'credit_card',
+};
 
-const order = await apiClient.createOrder(orderData)
+const order = await apiClient.createOrder(orderData);
 ```
 
-## 📱 Navigation Integration
+## UI Components
 
-Navigation bileşenleri otomatik olarak:
-- Kullanıcı giriş durumunu gösterir
-- Sepet item sayısını gösterir
-- Auth modal'ı açar
-- Kullanıcı profil linklerini sağlar
+### Navigation Integration
 
-## 🆕 Yeni Bileşenler ve Özellikler
+- User authentication status display
+- Cart item counter
+- Authentication modal trigger
+- User profile access
 
-### 1. ScrollToTop Component (`/components/scroll-to-top.tsx`)
+### Enhanced Features
 
-Otomatik sayfa başı kaydırma:
+- **ScrollToTop**: Automatic page scrolling on route changes
+- **Vercel Analytics**: Page view tracking and performance monitoring
+- **shadcn/ui v4**: Modern component library with full accessibility
+- **Responsive Design**: Mobile-first approach with breakpoint optimization
 
-```tsx
-// Route değiştiğinde otomatik olarak sayfa başına kaydırır
-// Initial page load'da da çalışır
-<ScrollToTop />
+## Data Flow
+
+### Public Access (Active)
+
+```
+User → Context → API Client (Public) → Strapi
+- ProductContext → Product endpoints
+- CartContext → Cart operations
+- NavigationContext → UI state
 ```
 
-### 2. Analytics Integration
+### Authenticated Access (Headers Disabled)
 
-Vercel Analytics entegrasyonu aktif:
-- Sayfa görüntüleme takibi
-- User interaction analizi
-- Performance monitoring
-
-### 3. Enhanced UI Components
-
-Güncel shadcn/ui v4 bileşenleri:
-- Modern design system
-- Accessibility uyumlu
-- TypeScript desteği
-- Responsive tasarım
-
-## 🔄 Data Flow
-
-### 1. Public Access (Mevcut Aktif Sistem)
 ```
-User → ProductContext → API Client (Public Endpoints) → Strapi
-User → CartContext → API Client (Public Endpoints) → Strapi
-User → NavigationContext → UI State Management
+User → AuthContext → API Client (No Auth) → Strapi
+- User sessions and subscriptions
+- Order management
 ```
 
-### 2. Authenticated Access (Şu Anda Devre Dışı)
+### Theme Management
+
 ```
-User → AuthContext → API Client (Token Disabled) → Strapi
-User → SubscriptionContext → API Client (Token Disabled) → Strapi
+User → ThemeProvider → next-themes → CSS Variables → UI
 ```
 
-### 3. Theme Management
-```
-User → ThemeProvider → next-themes → CSS Classes → UI
-```
+## Development
 
-## 🚀 Development
-
-### 1. Start Development Server
+### Quick Start
 
 ```bash
-npm run dev
-# veya
-yarn dev
+# Install and start development
+pnpm install && pnpm run dev
+
+# Production build
+pnpm run build && pnpm run start
 ```
 
-### 2. Build for Production
+### Backend Integration
 
-```bash
-npm run build
-# veya
-yarn build
-```
+- **Production**: Strapi CMS at `https://dynamic-spirit-b1c4404b11.strapiapp.com`
+- **Development**: Local Strapi instance (optional)
+- **Default**: Production URL used if no environment variable set
 
-### 3. Environment Setup
+## Testing
 
-Strapi backend bağlantısı:
-- Production Backend: `https://dynamic-spirit-b1c4404b11.strapiapp.com`
-- Development: `http://localhost:3000`
+### Development Testing
 
-**Not:** Sistem production Strapi URL'ini varsayılan olarak kullanır. Development için local Strapi backend kurabilirsiniz.
+- OTP codes logged to console (no real SMS in development)
+- API endpoints testable via Postman or similar tools
+- Session-based cart testing available
 
-## 🧪 Testing
+## Current Status
 
-### OTP Test (Development)
+**Active Features:**
 
-Development modunda gerçek SMS gönderilmez, console'da OTP kodu görüntülenir.
+- ✅ Public product catalog and cart operations
+- ✅ Theme switching (Light/Dark/System)
+- ✅ Responsive navigation and mobile UI
+- ✅ Session-based shopping cart
+- ✅ Strapi CMS integration
 
-### API Test
+**Disabled Features:**
 
-Postman veya benzeri araçlarla API endpoint'lerini test edebilirsiniz:
+- ⚠️ Authentication headers in API client
+- ⚠️ User-specific authenticated endpoints
 
-```bash
-# OTP gönder
-POST http://localhost:1337/api/auth/send-otp
-{
-  "phone": "+905551234567"
-}
-
-# OTP doğrula
-POST http://localhost:1337/api/auth/verify-otp
-{
-  "phone": "+905551234567",
-  "otpCode": "123456"
-}
-```
-
-## 📝 Notes
-
-- Tüm state management CSR (Client-Side Rendering) tabanlıdır
-- SSR gerekmez, Next.js App Router kullanılır
-- JWT token sistemi mevcut ancak geçici olarak devre dışı
-- Session tabanlı sepet yönetimi aktif
-- Public API endpoints authentication gerektirmez
-- next-themes ile tema desteği aktif
-- NavigationContext ile responsive UI yönetimi
-- ScrollToTop component ile otomatik sayfa başı kaydırma
-- TypeScript ile tip güvenliği
-- Production Strapi backend entegrasyonu aktif
-
-**Mevcut Durum Özeti:**
-- ✅ Public ürün görüntüleme ve sepet işlemleri
-- ✅ Tema değişimi (Light/Dark/System)
-- ✅ Responsive navigation
-- ⚠️ Authentication sistemi devre dışı (yorum satırında)
-- ⚠️ Authenticated endpoints erişilemez durumda
-
-Bu yapı ile SkyCrops frontend'i public e-commerce özellikleri ile çalışır durumda. Authentication sistemi aktifleştirildiğinde tam e-commerce deneyimi sağlanacaktır.
+The application provides full e-commerce functionality for public users with authentication system ready for activation.

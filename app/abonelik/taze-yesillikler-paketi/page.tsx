@@ -1069,8 +1069,8 @@ export default function TazeYesilliklerPaketi() {
 			</div>
 
 			{/* Section 2: Info Left, Video/Picture Right */}
-			<div className="py-16 px-6 bg-gray-50">
-				<div className="max-w-7xl mx-auto">
+			<div className="py-16 bg-gray-50">
+				<div className="mx-12">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 						{/* Left - Info */}
 						<div className="space-y-6">
@@ -1145,7 +1145,7 @@ export default function TazeYesilliklerPaketi() {
 			</div>
 
 			{/* Section 3: Gallery Slider */}
-			<div className="py-16 px-6">
+			<div className="py-16">
 				<div className="max-w-7xl mx-auto">
 					<div className="text-center mb-12">
 						<h2 className="text-3xl font-light text-gray-800 mb-4">

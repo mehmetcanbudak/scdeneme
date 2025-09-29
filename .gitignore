@@ -155,6 +155,12 @@ logs
 # Sentry Config File
 .sentryclirc
 
+# Cursor IDE
+.cursor/
+
+# Playwright MCP
+.playwright-mcp/
+
 # Storybook build outputs
 .out
 .storybook-out

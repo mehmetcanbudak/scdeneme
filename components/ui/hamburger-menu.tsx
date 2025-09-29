@@ -1,33 +1,34 @@
-import { memo } from "react"
-import { Menu } from "lucide-react"
-import { Button } from "./button"
+import { Menu } from "lucide-react";
+import { type ButtonHTMLAttributes, memo } from "react";
+import { Button } from "./button";
 
-interface HamburgerMenuProps {
-  onClick: () => void
-  shouldBeTransparent: boolean
-  className?: string
+interface HamburgerMenuProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	onClick: () => void;
+	shouldBeTransparent: boolean;
 }
 
 const HamburgerMenu = memo(function HamburgerMenu({
-  onClick,
-  shouldBeTransparent,
-  className = ""
+	onClick,
+	shouldBeTransparent,
+	className = "",
+	...buttonProps
 }: HamburgerMenuProps) {
-  const iconClass = `w-5 h-5 transition-colors ${
-    shouldBeTransparent ? "text-white" : "text-gray-600"
-  }`
+	const iconClass = `w-5 h-5 transition-colors ${
+		shouldBeTransparent ? "text-white" : "text-gray-600"
+	}`;
 
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={onClick}
-      className={`h-8 w-8 md:hidden ${className}`}
-      aria-label="Open menu"
-    >
-      <Menu className={iconClass} />
-    </Button>
-  )
-})
+	return (
+		<Button
+			variant="ghost"
+			size="icon"
+			onClick={onClick}
+			className={`h-8 w-8 md:hidden ${className}`}
+			aria-label="Open menu"
+			{...buttonProps}
+		>
+			<Menu className={iconClass} />
+		</Button>
+	);
+});
 
-export default HamburgerMenu
+export default HamburgerMenu;
