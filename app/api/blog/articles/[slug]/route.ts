@@ -19,6 +19,8 @@ export async function GET(
 
 		const qs = new URLSearchParams();
 		qs.set("populate[0]", "cover");
+		// Filter by slug field
+		qs.set("filters[slug][$eq]", slug);
 
 		// Build headers with optional authentication
 		const headers: HeadersInit = {
@@ -28,9 +30,9 @@ export async function GET(
 			headers.Authorization = `Bearer ${TOKEN}`;
 		}
 
-		// Use Strapi public slug endpoint: /api/articles/:slug
+		// Use Strapi public articles endpoint with slug filter
 		const res = await fetch(
-			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}?${qs.toString()}`,
+			`${STRAPI_URL}/api/articles/public?${qs.toString()}`,
 			{
 				headers,
 				cache: "no-store",
@@ -88,16 +90,19 @@ export async function GET(
 
 		const json = await res.json();
 
-		// If the API call fails or returns no data, return 404
-		if (!res.ok || !json?.data) {
+		// Strapi returns array of articles, get the first one (should be only one with slug filter)
+		const article = json?.data?.[0];
+
+		// If no article found, return 404
+		if (!article) {
 			return NextResponse.json({ data: null }, { status: 404 });
 		}
 
-		// Strapi returns single article object at json.data
-		return NextResponse.json({ data: json.data }, { status: 200 });
-	} catch (err: any) {
+		// Return the article object (not array)
+		return NextResponse.json({ data: article }, { status: 200 });
+	} catch (err: unknown) {
 		return NextResponse.json(
-			{ error: "Server error", message: err?.message },
+			{ error: "Server error", message: (err as Error)?.message },
 			{ status: 500 },
 		);
 	}

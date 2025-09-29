@@ -33,7 +33,7 @@ async function fetchArticle(slug: string) {
 					continue;
 				}
 				return json?.data || null;
-			} catch (e) {
+			} catch {
 				// try next candidate
 				continue;
 			}
@@ -57,9 +57,10 @@ export async function generateMetadata({
 		const TOKEN = process.env.STRAPI_API_TOKEN;
 		if (!STRAPI_URL) return {};
 		const qs = new URLSearchParams();
-		qs.set("populate", "cover");
+		qs.set("populate[0]", "cover");
+		qs.set("filters[slug][$eq]", slug);
 		const res = await fetch(
-			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}?${qs.toString()}`,
+			`${STRAPI_URL}/api/articles/public?${qs.toString()}`,
 			{
 				headers: TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {},
 				cache: "force-cache",
@@ -67,7 +68,7 @@ export async function generateMetadata({
 		);
 		if (!res.ok) return {};
 		const json = await res.json();
-		const a = json?.data || {};
+		const a = json?.data?.[0] || {};
 		const API_URL = STRAPI_URL;
 		const imgUrl = a?.cover?.url
 			? a.cover.url.startsWith("http")
