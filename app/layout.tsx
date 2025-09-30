@@ -1,7 +1,6 @@
 import Footer from "@/components/footer";
 import Navigation from "@/components/navigation";
 import { NavigationProvider } from "@/components/navigation-context";
-import WavyFooterWithContext from "@/components/wavy-footer-with-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
 import { PageBackgroundProvider } from "@/contexts/page-background-context";
@@ -43,7 +42,6 @@ export default function RootLayout({
 										<ScrollToTop />
 										<Navigation />
 										{children}
-										<WavyFooterWithContext />
 										<Footer />
 									</NavigationProvider>
 								</SubscriptionProvider>

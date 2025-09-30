@@ -7,7 +7,7 @@ interface LogoProps {
 }
 
 const Logo = memo(function Logo({
-	className = "h-8 w-auto",
+	className = "h-16 w-auto",
 	shouldBeTransparent = false,
 }: LogoProps) {
 	//const logoSrc = shouldBeTransparent ? "/sclogo.svg" : "/sclogoblack.svg";

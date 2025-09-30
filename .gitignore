@@ -187,3 +187,6 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Moat task system
+.moat/

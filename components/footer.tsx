@@ -18,7 +18,7 @@ const Footer = memo(function Footer({
 }: FooterProps) {
 	const renderFooterSection = (section: FooterSection, _index: number) => (
 		<div key={section.title} className="space-y-4">
-			<h3 className="font-medium text-gray-800 text-sm uppercase tracking-wide">
+			<h3 className="font-medium text-gray-800 text-base uppercase tracking-wide">
 				{section.title}
 			</h3>
 			<nav className="space-y-2" aria-label={`${section.title} menüsü`}>
@@ -29,7 +29,7 @@ const Footer = memo(function Footer({
 					const linkProps = {
 						href: link.href,
 						className:
-							"block text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline",
+							"block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline",
 						"aria-label": link.ariaLabel,
 						...(isExternal &&
 							!isSpecialType && {

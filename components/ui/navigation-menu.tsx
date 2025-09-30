@@ -31,7 +31,7 @@ const NavigationMenu = memo(function NavigationMenu({
 
 	return (
 		<div
-			className={`hidden md:flex items-center gap-3 text-sm uppercase tracking-wide font-medium ${className}`}
+			className={`hidden md:flex items-center gap-6 text-sm uppercase tracking-wide font-medium ${className}`}
 		>
 			{items.map((item) => {
 				const active = isActive(item.href);
@@ -48,7 +48,7 @@ const NavigationMenu = memo(function NavigationMenu({
 									: "primary"
 						}
 						offset
-						className="px-6 py-2 text-xs tracking-[0.2em]"
+						className="px-4 py-1.5 text-xs tracking-[0.2em]"
 						asChild
 					>
 						<Link href={item.href} aria-current={active ? "page" : undefined}>

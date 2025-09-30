@@ -1,9 +1,9 @@
 "use client";
 
+import { NAVIGATION_ITEMS } from "@/lib/navigation-config";
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { NAVIGATION_ITEMS } from "@/lib/navigation-config";
 import { useNavigation } from "./navigation-context";
 import ActionIcons from "./ui/action-icons";
 import HamburgerMenu from "./ui/hamburger-menu";
@@ -133,7 +133,7 @@ const Navigation = memo(function Navigation({
 						src="/celenk.svg"
 						alt="SkyCrops dekoratif ayracı"
 						width={1440}
-						height={120}
+						height={60}
 						className="w-full h-auto select-none"
 						aria-hidden="true"
 						priority

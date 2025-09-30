@@ -1,5 +1,6 @@
 "use client";
 
+import MarqueeAlongSvgPath from "@/components/fancy/blocks/marquee-along-svg-path";
 import HeroHeader from "@/components/hero-header";
 import {
 	Accordion,
@@ -12,6 +13,7 @@ import { useCart } from "@/contexts/cart-context";
 import { usePageBackground } from "@/contexts/page-background-context";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -24,7 +26,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 
 type UiPost = {
 	title: string;
@@ -92,6 +93,10 @@ export default function Home() {
 			image: "/yagli-yaprak.png",
 		},
 	];
+
+	// SVG path for marquee animation
+	const vegetablesMarqueePath =
+		"M1 209.434C58.5872 255.935 387.926 325.938 482.583 209.434C600.905 63.8051 525.516 -43.2211 427.332 19.9613C329.149 83.1436 352.902 242.723 515.041 267.302C644.752 286.966 943.56 181.94 995 156.5";
 
 	// Use real products for packages, fallback to static data
 	const packages =
@@ -430,7 +435,7 @@ export default function Home() {
 			</section>
 
 			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
-				<div className="mx-12">
+				<div className="mx-6">
 					<div className="text-center mb-12">
 						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
 							Sebze Paketleri
@@ -538,7 +543,8 @@ export default function Home() {
 
 			<section
 				id="vegetables-section"
-				className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden"
+				className="py-16 bg-[#E7EBDE] relative z-10"
+				style={{ overflow: "hidden" }}
 			>
 				<div className="mx-12">
 					<div className="text-center mb-12">
@@ -552,11 +558,55 @@ export default function Home() {
 					</div>
 				</div>
 
-				<div className="relative w-full pl-16 pr-16">
-					{/* Mobile: Horizontal scrollable herbs */}
+				{/* Desktop: Marquee Along SVG Path */}
+				<div
+					className="hidden md:block h-[500px] relative"
+					style={{
+						width: "100vw",
+						marginLeft: "calc(-50vw + 50%)",
+						marginRight: "calc(-50vw + 50%)",
+					}}
+				>
+					<MarqueeAlongSvgPath
+						path={vegetablesMarqueePath}
+						baseVelocity={8}
+						slowdownOnHover={true}
+						draggable={true}
+						repeat={3}
+						dragSensitivity={0.1}
+						className="w-full h-full"
+						grabCursor
+						viewBox="0 0 1000 300"
+						preserveAspectRatio="xMidYMid slice"
+					>
+						{vegetables.map((vegetable) => (
+							<div
+								key={vegetable.name}
+								className="w-24 h-24 hover:scale-150 duration-300 ease-in-out group"
+							>
+								<div className="relative w-full h-full">
+									<img
+										src={vegetable.image || "/placeholder.svg"}
+										alt={vegetable.name}
+										className="w-full h-full object-cover rounded-full shadow-md"
+										draggable={false}
+									/>
+									<div className="absolute bottom-[-40px] left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+										<p className="text-xs font-medium text-gray-800 bg-white/90 px-2 py-1 rounded shadow-sm">
+											{vegetable.name}
+										</p>
+									</div>
+								</div>
+							</div>
+						))}
+					</MarqueeAlongSvgPath>
+				</div>
+
+				{/* Mobile: Horizontal scrollable herbs */}
+				<div className="md:hidden relative w-full pl-16 pr-16">
 					<div
 						ref={herbsScrollRef}
-						className="flex space-x-8 overflow-x-auto pb-4 px-6 herbs-scroll md:hidden"
+						className="flex space-x-8 overflow-x-auto pb-4 px-6 herbs-scroll"
 						onScroll={handleHerbsScroll}
 						onTouchStart={handleHerbsTouchStart}
 						onTouchEnd={handleHerbsTouchEnd}
@@ -585,30 +635,9 @@ export default function Home() {
 						))}
 					</div>
 
-					{/* Desktop: Grid layout herbs */}
-					<div className="hidden md:grid md:grid-cols-4 lg:grid-cols-8 gap-8 px-6">
-						{vegetables.map((vegetable, index) => (
-							<div key={index} className="text-center group cursor-pointer">
-								<div className="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto">
-									<img
-										src={vegetable.image || "/placeholder.svg"}
-										alt={vegetable.name}
-										className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-									/>
-								</div>
-								<h3 className="font-medium text-sm mb-1 tracking-wide">
-									{vegetable.name}
-								</h3>
-								<p className="text-xs text-gray-600 uppercase tracking-widest">
-									{vegetable.subtitle}
-								</p>
-							</div>
-						))}
-					</div>
-
 					{/* Herbs Navigation Buttons - Mobile Only */}
 					{showHerbsLeftButton && (
-						<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30 md:hidden">
+						<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
 							<button
 								onClick={scrollHerbsLeft}
 								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
@@ -619,7 +648,7 @@ export default function Home() {
 					)}
 
 					{showHerbsRightButton && (
-						<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30 md:hidden">
+						<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
 							<button
 								onClick={scrollHerbsRight}
 								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
