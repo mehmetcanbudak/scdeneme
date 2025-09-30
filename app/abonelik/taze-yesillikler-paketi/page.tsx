@@ -113,13 +113,13 @@ export default function TazeYesilliklerPaketi() {
 
 	// Delivery days configuration
 	const deliveryDays = [
-		{ id: 1, name: "Pazartesi", shortName: "Pzt" },
-		{ id: 2, name: "Salı", shortName: "Sal" },
-		{ id: 3, name: "Çarşamba", shortName: "Çar" },
-		{ id: 4, name: "Perşembe", shortName: "Per" },
-		{ id: 5, name: "Cuma", shortName: "Cum" },
-		{ id: 6, name: "Cumartesi", shortName: "Cmt" },
-		{ id: 7, name: "Pazar", shortName: "Paz" },
+		{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
+		{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
+		{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
+		{ id: 4, name: "Perşembe", shortName: "Per", alwaysInactive: false },
+		{ id: 5, name: "Cuma", shortName: "Cum", alwaysInactive: false },
+		{ id: 6, name: "Cumartesi", shortName: "Cmt", alwaysInactive: false },
+		{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
 	];
 
 	const [product, setProduct] = useState<Product | null>(null);
@@ -131,9 +131,12 @@ export default function TazeYesilliklerPaketi() {
 		useState<PurchaseType>("subscription");
 	const [selectedInterval, setSelectedInterval] =
 		useState<SubscriptionInterval | null>(null);
-	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(1); // 1 = Pazartesi
+	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2); // Default to Salı (Tuesday) since Pzt is inactive
 	const [addingToCart, setAddingToCart] = useState(false);
 	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+	const [deliveryDayStock, setDeliveryDayStock] = useState<
+		Record<number, number>
+	>({});
 
 	// Refs for scrolling functionality
 	const galleryScrollRef = useRef<HTMLDivElement>(null);
@@ -142,6 +145,18 @@ export default function TazeYesilliklerPaketi() {
 
 	// Enable navigation transparency
 	useNavigationTransparency(false);
+
+	// Fetch delivery day stock
+	const fetchDeliveryDayStock = useCallback(async () => {
+		try {
+			const response = await apiClient.getDeliveryDayStock();
+			if (response.data) {
+				setDeliveryDayStock(response.data);
+			}
+		} catch (err) {
+			console.error("Error fetching delivery day stock:", err);
+		}
+	}, []);
 
 	// Fetch Taze Yeşillikler Paketi product by slug
 	const fetchProduct = useCallback(async () => {
@@ -195,7 +210,16 @@ export default function TazeYesilliklerPaketi() {
 
 	useEffect(() => {
 		fetchProduct();
-	}, [fetchProduct]);
+		fetchDeliveryDayStock();
+	}, [fetchProduct, fetchDeliveryDayStock]);
+
+	// Reset quantity when delivery day changes to prevent stock issues
+	useEffect(() => {
+		const dayStock = deliveryDayStock[selectedDeliveryDay] ?? 0;
+		if (quantity > dayStock) {
+			setQuantity(Math.min(1, dayStock));
+		}
+	}, [selectedDeliveryDay, deliveryDayStock, quantity]);
 
 	// Get product images
 	const getProductImages = () => {
@@ -812,18 +836,24 @@ export default function TazeYesilliklerPaketi() {
 																								</span>
 																								<button
 																									type="button"
-																									onClick={() =>
+																									onClick={() => {
+																										const dayStock =
+																											deliveryDayStock[
+																												selectedDeliveryDay
+																											] ?? 0;
 																										setQuantity(
 																											Math.min(
-																												product.stock_quantity,
+																												dayStock,
 																												quantity + 1,
 																											),
-																										)
-																									}
+																										);
+																									}}
 																									className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
 																									disabled={
 																										quantity >=
-																										product.stock_quantity
+																										(deliveryDayStock[
+																											selectedDeliveryDay
+																										] ?? 0)
 																									}
 																								>
 																									<Plus className="w-4 h-4" />
@@ -833,7 +863,7 @@ export default function TazeYesilliklerPaketi() {
 
 																						{/* Delivery Day */}
 																						<div>
-																							<div className="flex items-center justify-between mb-3">
+																							<div className="flex items-center justify-between mb-2">
 																								<span className="font-medium text-gray-700">
 																									Teslimat Günü:
 																								</span>
@@ -847,26 +877,84 @@ export default function TazeYesilliklerPaketi() {
 																									}
 																								</span>
 																							</div>
+																							<p className="text-xs text-gray-500 mb-3">
+																								Tercih ettiğiniz günleri
+																								seçebilirsiniz, üretim planına
+																								göre gönderimler yapılacaktır.
+																							</p>
 																							<div className="grid grid-cols-7 gap-2">
-																								{deliveryDays.map((day) => (
-																									<button
-																										key={day.id}
-																										type="button"
-																										onClick={() =>
-																											setSelectedDeliveryDay(
-																												day.id,
-																											)
-																										}
-																										className={`p-3 text-sm rounded border transition-colors ${
-																											selectedDeliveryDay ===
-																											day.id
-																												? "border-gray-600 bg-gray-600 text-white"
-																												: "border-gray-200 hover:border-gray-300 text-gray-700"
-																										}`}
-																									>
-																										{day.shortName}
-																									</button>
-																								))}
+																								{deliveryDays.map((day) => {
+																									const stock =
+																										deliveryDayStock[day.id] ??
+																										0;
+																									const remainingStock =
+																										day.id ===
+																										selectedDeliveryDay
+																											? Math.max(
+																													0,
+																													stock - quantity,
+																												)
+																											: stock;
+																									const isInactive =
+																										day.alwaysInactive ||
+																										stock === 0;
+																									const isSelected =
+																										selectedDeliveryDay ===
+																										day.id;
+
+																									return (
+																										<div
+																											key={day.id}
+																											className="flex flex-col"
+																										>
+																											<button
+																												type="button"
+																												onClick={() =>
+																													!isInactive &&
+																													setSelectedDeliveryDay(
+																														day.id,
+																													)
+																												}
+																												disabled={isInactive}
+																												className={`p-3 text-sm rounded border transition-colors relative ${
+																													isInactive
+																														? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
+																														: isSelected
+																															? "border-gray-600 bg-gray-600 text-white"
+																															: "border-gray-200 hover:border-gray-300 text-gray-700"
+																												}`}
+																											>
+																												<span
+																													className={
+																														isInactive
+																															? "line-through"
+																															: ""
+																													}
+																												>
+																													{day.shortName}
+																												</span>
+																											</button>
+																											{day.alwaysInactive &&
+																											day.id === 1 ? (
+																												<span className="text-xs text-center mt-1 text-gray-600 font-medium">
+																													Kalan Stok:
+																												</span>
+																											) : !day.alwaysInactive ? (
+																												<span
+																													className={`text-xs text-center mt-1 ${
+																														remainingStock === 0
+																															? "text-red-500 font-medium"
+																															: "text-gray-500"
+																													}`}
+																												>
+																													{remainingStock > 0
+																														? `${remainingStock} kota`
+																														: "Stok yok"}
+																												</span>
+																											) : null}
+																										</div>
+																									);
+																								})}
 																							</div>
 																						</div>
 																					</div>

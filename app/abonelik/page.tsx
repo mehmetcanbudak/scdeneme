@@ -15,7 +15,7 @@ import { apiClient } from "@/lib/api-client";
 import { Award, Leaf, Minus, Plus, Shield, Truck } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 
 const API_BASE_URL =
 	process.env.NEXT_PUBLIC_API_URL ||
@@ -23,6 +23,7 @@ const API_BASE_URL =
 
 export default function Abonelik() {
 	const router = useRouter();
+	const mainContentId = useId();
 
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
@@ -39,30 +40,37 @@ export default function Abonelik() {
 	);
 	const [_isImageLoading, setIsImageLoading] = useState(false);
 
+	// State for product data from API
+	const [bundleProduct, setBundleProduct] = useState<any | null>(null);
+	const [bundleLoading, setBundleLoading] = useState(true);
+
 	// State for interactive elements
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [selectedPurchaseOption, setSelectedPurchaseOption] = useState<
 		"subscription" | "oneTime"
 	>("subscription");
 	const [quantity, setQuantity] = useState(1);
-	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(1);
+	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2); // Default to Salı (Tuesday)
 	const [deliveryFrequency, setDeliveryFrequency] = useState<
 		"oneTime" | "weekly" | "biweekly"
 	>("weekly");
+	const [deliveryDayStock, setDeliveryDayStock] = useState<
+		Record<number, number>
+	>({});
 
 	// Delivery days configuration
 	const deliveryDays = [
-		{ id: 1, name: "Pazartesi", shortName: "Pzt" },
-		{ id: 2, name: "Salı", shortName: "Sal" },
-		{ id: 3, name: "Çarşamba", shortName: "Çar" },
-		{ id: 4, name: "Perşembe", shortName: "Per" },
-		{ id: 5, name: "Cuma", shortName: "Cum" },
-		{ id: 6, name: "Cumartesi", shortName: "Cmt" },
-		{ id: 7, name: "Pazar", shortName: "Paz" },
+		{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
+		{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
+		{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
+		{ id: 4, name: "Perşembe", shortName: "Per", alwaysInactive: false },
+		{ id: 5, name: "Cuma", shortName: "Cum", alwaysInactive: false },
+		{ id: 6, name: "Cumartesi", shortName: "Cmt", alwaysInactive: false },
+		{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
 	];
 
 	const scrollToContent = useCallback(() => {
-		const contentSection = document.querySelector("#main-content");
+		const contentSection = document.getElementById(mainContentId);
 		if (contentSection) {
 			const headerHeight = 64;
 			const elementPosition =
@@ -74,92 +82,73 @@ export default function Abonelik() {
 				behavior: "smooth",
 			});
 		}
-	}, []);
+	}, [mainContentId]);
 
-	// Fetch product images from API
+	// Fetch product data from API
 	useEffect(() => {
-		const fetchProductImages = async () => {
+		const fetchBundleProduct = async () => {
 			try {
-				setIsImageLoading(true);
+				setBundleLoading(true);
+				const response = await apiClient.getProductBySlug(
+					"taze-yesillikler-paketi",
+					{
+						populate: "*",
+					},
+				);
 
-				// Fetch products with populate to get images
-				const response = await apiClient.getProducts({
-					populate: "*",
-				});
+				if (response.data) {
+					setBundleProduct(response.data);
 
-				if (
-					response.data &&
-					Array.isArray(response.data) &&
-					response.data.length > 0
-				) {
-					const products = response.data as any[];
+					// Set product image
+					const productData = response.data as any;
+					let imageUrl = null;
 
-					// Find Taze Yeşillikler Paketi for the subscription section
-					const tazeYesilliklerPaketi = products.find(
-						(p) => p.name === "Taze Yeşillikler Paketi",
-					);
-					if (tazeYesilliklerPaketi) {
-						let imageUrl = null;
-
-						// Check if product has images array
-						if (
-							tazeYesilliklerPaketi.images &&
-							Array.isArray(tazeYesilliklerPaketi.images) &&
-							tazeYesilliklerPaketi.images.length > 0
-						) {
-							imageUrl = tazeYesilliklerPaketi.images[0].url;
-						} else if (tazeYesilliklerPaketi.image?.url) {
-							// Fallback to single image field
-							imageUrl = tazeYesilliklerPaketi.image.url;
-						}
-
-						if (imageUrl) {
-							const fullImageUrl = imageUrl.startsWith("http")
-								? imageUrl
-								: `${API_BASE_URL}${imageUrl}`;
-							setTazeYesilliklerImage(fullImageUrl);
-						}
+					if (
+						productData.images &&
+						Array.isArray(productData.images) &&
+						productData.images.length > 0
+					) {
+						imageUrl = productData.images[0].url;
+					} else if (productData.image?.url) {
+						imageUrl = productData.image.url;
 					}
 
-					// Find Sebze Paketleri for the main subscription package
-					const sebzePaketi = products.find(
-						(p) =>
-							p.name === "Sebze Paketleri" ||
-							p.name === "Taze Yeşillikler Paketi",
-					);
-					if (sebzePaketi) {
-						let imageUrl = null;
-
-						// Check if product has images array
-						if (
-							sebzePaketi.images &&
-							Array.isArray(sebzePaketi.images) &&
-							sebzePaketi.images.length > 0
-						) {
-							imageUrl = sebzePaketi.images[0].url;
-						} else if (sebzePaketi.image?.url) {
-							// Fallback to single image field
-							imageUrl = sebzePaketi.image.url;
-						}
-
-						if (imageUrl) {
-							const fullImageUrl = imageUrl.startsWith("http")
-								? imageUrl
-								: `${API_BASE_URL}${imageUrl}`;
-							setSebzePaketiImage(fullImageUrl);
-						}
+					if (imageUrl) {
+						const fullImageUrl = imageUrl.startsWith("http")
+							? imageUrl
+							: `${API_BASE_URL}${imageUrl}`;
+						setSebzePaketiImage(fullImageUrl);
 					}
 				}
 			} catch (error) {
-				console.error("Error fetching product images:", error);
-				// Keep the default images on error
+				console.error("Error fetching bundle product:", error);
 			} finally {
-				setIsImageLoading(false);
+				setBundleLoading(false);
 			}
 		};
 
-		fetchProductImages();
+		const fetchDeliveryDayStock = async () => {
+			try {
+				const response = await apiClient.getDeliveryDayStock();
+				if (response.data) {
+					setDeliveryDayStock(response.data);
+				}
+			} catch (err) {
+				console.error("Error fetching delivery day stock:", err);
+			}
+		};
+
+		fetchBundleProduct();
+		fetchDeliveryDayStock();
 	}, []);
+
+	// Reset quantity when delivery day changes to prevent stock issues
+	useEffect(() => {
+		const dayStock = deliveryDayStock[selectedDeliveryDay] ?? 0;
+		if (quantity > dayStock) {
+			setQuantity(Math.min(1, dayStock));
+		}
+	}, [selectedDeliveryDay, deliveryDayStock, quantity]);
 
 	// Subscription packages from Skycrops content
 	const _subscriptionPackages = [
@@ -318,7 +307,7 @@ export default function Abonelik() {
 			/>
 
 			{/* Main content */}
-			<main id="main-content" className="relative z-10 bg-white">
+			<main id={mainContentId} className="relative z-10 bg-white">
 				{/* Hero Content Section */}
 				<Section className="py-20 bg-gray-50">
 					<div className="mx-12">
@@ -560,7 +549,8 @@ export default function Abonelik() {
 										"/organic-farming-greenhouse-vegetables.png",
 									].map((img, index) => (
 										<button
-											key={index}
+											key={img}
+											type="button"
 											onClick={() => setSelectedImage(index)}
 											className={`flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer ${
 												selectedImage === index
@@ -587,16 +577,24 @@ export default function Abonelik() {
 
 							{/* Right Column - Product Info */}
 							<div className="space-y-6">
-								<div>
-									<h1 className="text-3xl md:text-4xl font-light mb-2 text-gray-800">
-										Taze Yeşillikler Paketi
-									</h1>
-									<p className="text-gray-600 text-lg italic leading-relaxed">
-										Dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın.
-										Her hafta 8 adet özenle seçilmiş taptaze yeşillik kapınıza
-										gelir.
-									</p>
-								</div>
+								{bundleLoading ? (
+									<div className="animate-pulse space-y-4">
+										<div className="h-8 bg-gray-200 rounded w-3/4"></div>
+										<div className="h-4 bg-gray-200 rounded w-full"></div>
+										<div className="h-4 bg-gray-200 rounded w-5/6"></div>
+									</div>
+								) : (
+									<div>
+										<h1 className="text-3xl md:text-4xl font-light mb-2 text-gray-800">
+											{bundleProduct?.name || "Taze Yeşillikler Paketi"}
+										</h1>
+										<p className="text-gray-600 text-lg italic leading-relaxed">
+											{bundleProduct?.description ||
+												bundleProduct?.short_description ||
+												"Dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın. Her hafta 8 adet özenle seçilmiş taptaze yeşillik kapınıza gelir."}
+										</p>
+									</div>
+								)}
 
 								{/* Purchase Options */}
 								<div className="space-y-3">
@@ -619,15 +617,23 @@ export default function Abonelik() {
 														Abonelik
 													</div>
 													<div className="text-sm text-gray-600">
-														Düzenli teslimat ile %35 tasarruf et
+														{bundleProduct &&
+														bundleProduct.subscription_intervals?.length > 0
+															? `Düzenli teslimat ile %${Math.round(bundleProduct.subscription_intervals[0].discount)} tasarruf et`
+															: "Düzenli teslimat ile %35 tasarruf et"}
 													</div>
 												</div>
 												<div className="text-right">
 													<div className="text-lg font-medium text-red-600">
-														₺299.00
+														{bundleProduct &&
+														bundleProduct.subscription_intervals?.length > 0
+															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.subscription_intervals[0].price.toFixed(2)}`
+															: "₺299.00"}
 													</div>
 													<div className="text-sm text-gray-500 line-through">
-														₺450.00
+														{bundleProduct?.price
+															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.price.toFixed(2)}`
+															: "₺450.00"}
 													</div>
 												</div>
 											</div>
@@ -663,8 +669,20 @@ export default function Abonelik() {
 														}
 														className="w-full p-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-gray-200 focus:border-gray-400"
 													>
-														<option value="weekly">Haftada bir</option>
-														<option value="biweekly">2 haftada bir</option>
+														{bundleProduct?.subscription_intervals?.map(
+															(interval: any) => (
+																<option key={interval.key} value={interval.key}>
+																	{interval.name} -{" "}
+																	{bundleProduct.currency === "TRY" ? "₺" : ""}
+																	{interval.price.toFixed(2)}
+																</option>
+															),
+														) || (
+															<>
+																<option value="weekly">Haftada bir</option>
+																<option value="biweekly">2 haftada bir</option>
+															</>
+														)}
 													</select>
 												</div>
 
@@ -689,11 +707,16 @@ export default function Abonelik() {
 														</span>
 														<button
 															type="button"
-															onClick={() =>
-																setQuantity(Math.min(10, quantity + 1))
-															}
+															onClick={() => {
+																const dayStock =
+																	deliveryDayStock[selectedDeliveryDay] ?? 0;
+																setQuantity(Math.min(dayStock, quantity + 1));
+															}}
 															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-															disabled={quantity >= 10}
+															disabled={
+																quantity >=
+																(deliveryDayStock[selectedDeliveryDay] ?? 0)
+															}
 														>
 															<Plus className="w-3 h-3" />
 														</button>
@@ -714,21 +737,66 @@ export default function Abonelik() {
 															}
 														</span>
 													</div>
+													<p className="text-xs text-gray-500 mb-2">
+														Tercih ettiğiniz günleri seçebilirsiniz, üretim
+														planına göre gönderimler yapılacaktır.
+													</p>
 													<div className="grid grid-cols-7 gap-1">
-														{deliveryDays.map((day) => (
-															<button
-																key={day.id}
-																type="button"
-																onClick={() => setSelectedDeliveryDay(day.id)}
-																className={`p-2 text-xs rounded border transition-colors ${
-																	selectedDeliveryDay === day.id
-																		? "border-gray-600 bg-gray-600 text-white"
-																		: "border-gray-200 hover:border-yellow-400 text-gray-700"
-																}`}
-															>
-																{day.shortName}
-															</button>
-														))}
+														{deliveryDays.map((day) => {
+															const stock = deliveryDayStock[day.id] ?? 0;
+															const remainingStock =
+																day.id === selectedDeliveryDay
+																	? Math.max(0, stock - quantity)
+																	: stock;
+															const isInactive =
+																day.alwaysInactive || stock === 0;
+															const isSelected = selectedDeliveryDay === day.id;
+
+															return (
+																<div key={day.id} className="flex flex-col">
+																	<button
+																		type="button"
+																		onClick={() =>
+																			!isInactive &&
+																			setSelectedDeliveryDay(day.id)
+																		}
+																		disabled={isInactive}
+																		className={`p-2 text-xs rounded border transition-colors ${
+																			isInactive
+																				? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
+																				: isSelected
+																					? "border-gray-600 bg-gray-600 text-white"
+																					: "border-gray-200 hover:border-gray-300 text-gray-700"
+																		}`}
+																	>
+																		<span
+																			className={
+																				isInactive ? "line-through" : ""
+																			}
+																		>
+																			{day.shortName}
+																		</span>
+																	</button>
+																	{day.alwaysInactive && day.id === 1 ? (
+																		<span className="text-[10px] text-center mt-0.5 text-gray-600 font-medium">
+																			Kalan Stok:
+																		</span>
+																	) : !day.alwaysInactive ? (
+																		<span
+																			className={`text-[10px] text-center mt-0.5 ${
+																				remainingStock === 0
+																					? "text-red-500 font-medium"
+																					: "text-gray-500"
+																			}`}
+																		>
+																			{remainingStock > 0
+																				? `${remainingStock}`
+																				: "Yok"}
+																		</span>
+																	) : null}
+																</div>
+															);
+														})}
 													</div>
 												</div>
 
@@ -781,7 +849,11 @@ export default function Abonelik() {
 												</div>
 												<div className="text-right">
 													<div className="text-lg font-medium text-gray-800">
-														₺450.00
+														{bundleProduct?.sale_price
+															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.sale_price.toFixed(2)}`
+															: bundleProduct?.price
+																? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.price.toFixed(2)}`
+																: "₺450.00"}
 													</div>
 												</div>
 											</div>
@@ -801,7 +873,10 @@ export default function Abonelik() {
 
 								{/* Product Details Link */}
 								<div className="text-center">
-									<button className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors">
+									<button
+										type="button"
+										className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors"
+									>
 										Ürün detaylarını gör
 									</button>
 								</div>
@@ -819,7 +894,7 @@ export default function Abonelik() {
 					<Grid cols={4}>
 						{benefits.map((benefit, index) => (
 							<BenefitCard
-								key={index}
+								key={benefit.title}
 								icon={benefit.icon}
 								title={benefit.title}
 								description={benefit.description}
@@ -864,7 +939,7 @@ export default function Abonelik() {
 					<Grid cols={4}>
 						{testimonials.map((testimonial, index) => (
 							<TestimonialCard
-								key={index}
+								key={testimonial.name}
 								name={testimonial.name}
 								comment={testimonial.comment}
 								rating={testimonial.rating}

@@ -40,7 +40,9 @@ class ApiClient {
 		this.isInitialized = true;
 
 		// Notify any waiting callbacks
-		this.initializationCallbacks.forEach((callback) => callback());
+		this.initializationCallbacks.forEach((callback) => {
+			callback();
+		});
 		this.initializationCallbacks = [];
 	}
 
@@ -659,6 +661,26 @@ class ApiClient {
 	async retrySubscriptionPayment(id: number) {
 		return this.request(`/api/subscribers/${id}/retry-payment`, {
 			method: "POST",
+		});
+	}
+
+	// Delivery Stock endpoints
+	async getDeliveryDayStock(_productId?: number) {
+		// For now, return mock data. Can be connected to backend API later
+		// When connecting to real API, uncomment the line below and remove the mock data
+		// return this.request(`/api/delivery-stock${_productId ? `?productId=${_productId}` : ''}`);
+
+		// Mock data - replace with actual API call
+		return Promise.resolve({
+			data: {
+				1: 0, // Pazartesi - disabled by default
+				2: 15, // Salı
+				3: 8, // Çarşamba
+				4: 20, // Perşembe
+				5: 0, // Cuma - no stock
+				6: 12, // Cumartesi
+				7: 0, // Pazar - disabled by default
+			},
 		});
 	}
 }

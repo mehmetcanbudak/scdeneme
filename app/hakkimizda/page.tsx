@@ -1,9 +1,10 @@
 "use client";
-import { memo, useCallback, useEffect } from "react";
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { usePageBackground } from "@/contexts/page-background-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import Image from "next/image";
+import { memo, useCallback, useEffect, useId } from "react";
 
 const Hakkimizda = memo(function Hakkimizda() {
 	// Enable transparent navigation for hero section
@@ -11,6 +12,9 @@ const Hakkimizda = memo(function Hakkimizda() {
 
 	// Set the background color for this page
 	const { setBackgroundColor } = usePageBackground();
+
+	// Generate unique ID for main content
+	const mainContentId = useId();
 
 	useEffect(() => {
 		setBackgroundColor("#AD3911");
@@ -26,7 +30,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 	];
 
 	const scrollToContent = useCallback(() => {
-		const contentSection = document.querySelector("#main-content");
+		const contentSection = document.getElementById(mainContentId);
 		if (contentSection) {
 			const headerHeight = 64;
 			const elementPosition =
@@ -38,7 +42,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 				behavior: "smooth",
 			});
 		}
-	}, []);
+	}, [mainContentId]);
 
 	return (
 		<div className="min-h-screen relative bg-[#AD3911]">
@@ -59,7 +63,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 				backgroundColor="#E74B14"
 			/>
 
-			<main id="main-content" className="py-12 relative z-10">
+			<main id={mainContentId} className="py-12 relative z-10">
 				<div className="mx-12">
 					{/* Page Header */}
 					<div className="text-center mb-12">
@@ -208,10 +212,12 @@ const Hakkimizda = memo(function Hakkimizda() {
 								</p>
 							</div>
 							<div className="relative">
-								<img
+								<Image
 									src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
 									alt="Modern sera tarımı"
-									className="w-full h-80 object-cover rounded-lg"
+									width={400}
+									height={320}
+									className="w-full h-80 rounded-lg"
 									loading="lazy"
 								/>
 							</div>
@@ -220,10 +226,12 @@ const Hakkimizda = memo(function Hakkimizda() {
 						{/* Taze, Sağlıklı Section */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
 							<div className="relative order-2 md:order-1">
-								<img
+								<Image
 									src="/organic-farming-greenhouse-vegetables.png"
 									alt="Organik tarım"
-									className="w-full h-80 object-cover rounded-lg"
+									width={400}
+									height={320}
+									className="w-full h-80 rounded-lg"
 									loading="lazy"
 								/>
 							</div>
@@ -258,10 +266,12 @@ const Hakkimizda = memo(function Hakkimizda() {
 								</p>
 							</div>
 							<div className="relative">
-								<img
+								<Image
 									src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
 									alt="Modern sera tarımı"
-									className="w-full h-80 object-cover rounded-lg"
+									width={400}
+									height={320}
+									className="w-full h-80 rounded-lg"
 									loading="lazy"
 								/>
 							</div>
@@ -270,10 +280,12 @@ const Hakkimizda = memo(function Hakkimizda() {
 						{/* Lezzetli Section */}
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
 							<div className="relative order-2 md:order-1">
-								<img
+								<Image
 									src="/organic-farming-greenhouse-vegetables.png"
 									alt="Organik tarım"
-									className="w-full h-80 object-cover rounded-lg"
+									width={400}
+									height={320}
+									className="w-full h-80 rounded-lg"
 									loading="lazy"
 								/>
 							</div>
@@ -309,10 +321,12 @@ const Hakkimizda = memo(function Hakkimizda() {
 								</p>
 							</div>
 							<div className="relative">
-								<img
+								<Image
 									src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
 									alt="Modern sera tarımı"
-									className="w-full h-80 object-cover rounded-lg"
+									width={400}
+									height={320}
+									className="w-full h-80 rounded-lg"
 									loading="lazy"
 								/>
 							</div>
