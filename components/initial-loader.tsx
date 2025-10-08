@@ -1,12 +1,12 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LoadingScreen from "./loading-screen";
 
 const FADE_OUT_DURATION = 400;
-const IMAGE_WAIT_TIMEOUT = 3000;
+const IMAGE_WAIT_TIMEOUT = 800;
 const ASSET_READY_KEY = "skycrops-assets-ready";
+const LOADER_SKIP_KEY = "skycrops-loader-skip";
 
 const ASSET_MANIFEST = [
 	"/skycrops-logo.svg",
@@ -25,7 +25,6 @@ const ASSET_MANIFEST = [
  * @returns {React.ReactElement | null} The initial loader component or null
  */
 const InitialLoader = memo(function InitialLoader() {
-	const pathname = usePathname();
 	const [isVisible, setIsVisible] = useState(true);
 	const [isFading, setIsFading] = useState(false);
 	const assetManifest = useMemo(() => ASSET_MANIFEST, []);
@@ -38,12 +37,21 @@ const InitialLoader = memo(function InitialLoader() {
 		return localStorage.getItem(ASSET_READY_KEY) === "true";
 	}, []);
 
+	const shouldSkipLoader = useCallback(() => {
+		if (typeof window === "undefined") {
+			return false;
+		}
+
+		return localStorage.getItem(LOADER_SKIP_KEY) === "true";
+	}, []);
+
 	const markAssetsReady = useCallback(() => {
 		if (typeof window === "undefined") {
 			return;
 		}
 
 		localStorage.setItem(ASSET_READY_KEY, "true");
+		localStorage.setItem(LOADER_SKIP_KEY, "true");
 	}, []);
 
 	const isMountedRef = useRef(true);
@@ -53,10 +61,14 @@ const InitialLoader = memo(function InitialLoader() {
 	const cleanupCallbacksRef = useRef<Array<() => void>>([]);
 
 	const clearTimersAndListeners = useCallback(() => {
-		timeoutIdsRef.current.forEach((id) => window.clearTimeout(id));
+		timeoutIdsRef.current.forEach((id) => {
+			window.clearTimeout(id);
+		});
 		timeoutIdsRef.current = [];
 
-		cleanupCallbacksRef.current.forEach((cleanup) => cleanup());
+		cleanupCallbacksRef.current.forEach((cleanup) => {
+			cleanup();
+		});
 		cleanupCallbacksRef.current = [];
 	}, []);
 
@@ -70,7 +82,7 @@ const InitialLoader = memo(function InitialLoader() {
 			return;
 		}
 
-		if (isAssetReady()) {
+		if (isAssetReady() || shouldSkipLoader()) {
 			setIsVisible(false);
 			return;
 		}
@@ -146,12 +158,24 @@ const InitialLoader = memo(function InitialLoader() {
 					if (asset.endsWith(".svg") || asset.endsWith(".png")) {
 						const image = new Image();
 						await new Promise<void>((resolveImage, rejectImage) => {
-							image.addEventListener("load", () => resolveImage(), {
-								once: true,
-							});
-							image.addEventListener("error", (e) => rejectImage(e), {
-								once: true,
-							});
+							image.addEventListener(
+								"load",
+								() => {
+									resolveImage();
+								},
+								{
+									once: true,
+								},
+							);
+							image.addEventListener(
+								"error",
+								(e) => {
+									rejectImage(e);
+								},
+								{
+									once: true,
+								},
+							);
 							image.src = asset;
 						});
 						return;
@@ -169,79 +193,16 @@ const InitialLoader = memo(function InitialLoader() {
 				});
 		});
 
-		const waitForImages = new Promise<void>((resolve) => {
-			if (typeof window === "undefined") {
-				resolve();
-				return;
-			}
-
-			requestAnimationFrame(() => {
-				const images = Array.from(document.images).filter(
-					(img) => !img.complete || img.naturalWidth === 0,
-				);
-
-				if (images.length === 0) {
-					resolve();
-					return;
-				}
-
-				let remaining = images.length;
-				let settled = false;
-				const listenerCleanups: Array<() => void> = [];
-				let fallbackTimeout: number | null = null;
-
-				const settle = () => {
-					if (settled) {
-						return;
-					}
-
-					settled = true;
-					listenerCleanups.forEach((cleanup) => cleanup());
-
-					if (fallbackTimeout !== null) {
-						window.clearTimeout(fallbackTimeout);
-					}
-
-					resolve();
-				};
-
-				const handleImageEvent = () => {
-					remaining -= 1;
-
-					if (remaining <= 0) {
-						settle();
-					}
-				};
-
-				images.forEach((image) => {
-					const onLoad = () => handleImageEvent();
-					const onError = () => handleImageEvent();
-
-					image.addEventListener("load", onLoad, { once: true });
-					image.addEventListener("error", onError, { once: true });
-
-					listenerCleanups.push(() => {
-						image.removeEventListener("load", onLoad);
-						image.removeEventListener("error", onError);
-					});
-				});
-
-				cleanupCallbacksRef.current.push(() => {
-					listenerCleanups.forEach((cleanup) => cleanup());
-				});
-
-				fallbackTimeout = window.setTimeout(() => {
-					settle();
-				}, IMAGE_WAIT_TIMEOUT);
-
-				timeoutIdsRef.current.push(fallbackTimeout);
-			});
-		});
-
-		Promise.all([waitForDocumentReady, waitForManifestAssets, waitForImages])
+		Promise.all([waitForDocumentReady, waitForManifestAssets])
 			.catch(() => null)
 			.then(() => settleAndHide());
-	}, [clearTimersAndListeners]);
+	}, [
+		clearTimersAndListeners,
+		assetManifest,
+		markAssetsReady,
+		isAssetReady,
+		shouldSkipLoader,
+	]);
 
 	useEffect(() => {
 		startLoadingCycle();
@@ -259,7 +220,7 @@ const InitialLoader = memo(function InitialLoader() {
 		}
 
 		startLoadingCycle();
-	}, [pathname, startLoadingCycle]);
+	}, [startLoadingCycle]);
 
 	if (!isVisible) {
 		return null;

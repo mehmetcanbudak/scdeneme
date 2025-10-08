@@ -20,17 +20,19 @@ export const metadata: Metadata = {
 	generator: "Next.js",
 };
 
-// Configure Google Fonts
+// Configure Google Fonts with display swap for better performance
 const roboto = Roboto({
 	subsets: ["latin"],
 	weight: ["300", "400", "500", "700"],
 	variable: "--font-roboto",
+	display: "swap",
 });
 
 const poppins = Poppins({
 	subsets: ["latin"],
 	weight: ["300", "400", "500", "600", "700"],
 	variable: "--font-poppins",
+	display: "swap",
 });
 
 export default function RootLayout({
@@ -42,17 +44,48 @@ export default function RootLayout({
 		<html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
 			<head>
 				<script src="https://accounts.google.com/gsi/client" async></script>
-				<link rel="preload" as="image" href="/skycrops-logo.svg" />
-				<link rel="preload" as="image" href="/skycrops.svg" />
-				<link rel="preload" as="image" href="/skycrops-package-product.png" />
+				{/* Preconnect to external domains for faster loading */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link
+					rel="preconnect"
+					href="https://fonts.gstatic.com"
+					crossOrigin="anonymous"
+				/>
+				<link
+					rel="preconnect"
+					href="https://dynamic-spirit-b1c4404b11.strapiapp.com"
+				/>
+				<link
+					rel="dns-prefetch"
+					href="https://dynamic-spirit-b1c4404b11.media.strapiapp.com"
+				/>
+
+				{/* Preload critical above-the-fold images only */}
+				<link
+					rel="preload"
+					as="image"
+					href="/skycrops-logo.svg"
+					fetchPriority="high"
+				/>
+				<link
+					rel="preload"
+					as="image"
+					href="/skycrops.svg"
+					fetchPriority="high"
+				/>
+				<link
+					rel="preload"
+					as="image"
+					href="/skycrops-package-product.png"
+					fetchPriority="high"
+				/>
 				<link rel="preload" as="image" href="/celenk.svg" />
 				<link
 					rel="preload"
 					as="image"
 					href="/farmımızda_yetisen_sebzeler/biz_skycrops.svg"
 				/>
-				<link rel="preload" as="video" href="/skycrops-web.mp4" />
-				<link rel="preload" as="video" href="/skycrops-compressed.mp4" />
+				{/* Removed video preloads as they're heavy and not critical for initial load */}
 			</head>
 			<body
 				className={`font-sans ${roboto.variable} ${poppins.variable} overflow-x-hidden`}

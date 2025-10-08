@@ -3,12 +3,12 @@
 import { apiClient } from "@/lib/api-client";
 import {
 	createContext,
-	type ReactNode,
 	useCallback,
 	useContext,
 	useEffect,
 	useRef,
 	useState,
+	type ReactNode,
 } from "react";
 
 interface Product {
@@ -81,6 +81,22 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
+// Simple cache implementation
+const cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+
+const getCachedData = (key: string) => {
+	const cached = cache.get(key);
+	if (cached && Date.now() - cached.timestamp < cached.ttl) {
+		return cached.data;
+	}
+	cache.delete(key);
+	return null;
+};
+
+const setCachedData = (key: string, data: any, ttl: number = 5 * 60 * 1000) => {
+	cache.set(key, { data, timestamp: Date.now(), ttl });
+};
+
 export function ProductProvider({ children }: { children: ReactNode }) {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -101,11 +117,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 				setIsLoading(true);
 				setError(null);
 
+				// Create cache key
+				const cacheKey = `products-${JSON.stringify(params)}`;
+				const cachedData = getCachedData(cacheKey);
+
+				if (cachedData) {
+					setProducts(cachedData);
+					setIsLoading(false);
+					return;
+				}
+
+				const controller = new AbortController();
+				const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
 				const response = await apiClient.getProducts({
 					populate: params?.populate || "*",
 					filters: params?.filters,
 					pagination: params?.pagination,
 				});
+
+				clearTimeout(timeoutId);
 
 				if (response.error) {
 					// If it's an authentication error, log it but don't fail
@@ -124,20 +155,30 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 					throw new Error(response.error.message);
 				}
 
-				setProducts(response.data || []);
+				const productsData = response.data || [];
+				setProducts(productsData);
+				setCachedData(cacheKey, productsData);
 			} catch (err) {
-				const errorMessage =
-					err instanceof Error ? err.message : "Ürünler yüklenemedi";
-				// Don't set error state for authentication issues
-				if (
-					errorMessage.includes("giriş yapmanız gerekiyor") ||
-					errorMessage.includes("Authentication")
-				) {
-					console.warn("Products load requires authentication, skipping:", err);
-					setProducts([]);
+				if (err instanceof Error && err.name === "AbortError") {
+					console.warn("Products request timed out");
+					setError("Ürünler yüklenirken zaman aşımı oluştu");
 				} else {
-					setError(errorMessage);
-					console.error("Products load error:", err);
+					const errorMessage =
+						err instanceof Error ? err.message : "Ürünler yüklenemedi";
+					// Don't set error state for authentication issues
+					if (
+						errorMessage.includes("giriş yapmanız gerekiyor") ||
+						errorMessage.includes("Authentication")
+					) {
+						console.warn(
+							"Products load requires authentication, skipping:",
+							err,
+						);
+						setProducts([]);
+					} else {
+						setError(errorMessage);
+						console.error("Products load error:", err);
+					}
 				}
 			} finally {
 				setIsLoading(false);
@@ -328,7 +369,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 		didInitRef.current = true;
 		const initializeData = async () => {
 			await Promise.all([
-				loadProducts({ populate: "*", pagination: { page: 1, pageSize: 20 } }),
+				loadProducts({ populate: "*", pagination: { page: 1, pageSize: 10 } }),
 				loadCategories(),
 				loadTags(),
 			]);

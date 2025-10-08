@@ -4,11 +4,11 @@ import { initializeApiClient } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 import {
 	createContext,
-	type ReactNode,
 	useCallback,
 	useContext,
 	useEffect,
 	useState,
+	type ReactNode,
 } from "react";
 
 interface User {
@@ -81,13 +81,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			tokenToValidate: string,
 		): Promise<{ valid: boolean; user?: User }> => {
 			try {
+				const controller = new AbortController();
+				const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+
 				const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${tokenToValidate}`,
 						"Content-Type": "application/json",
 					},
+					signal: controller.signal,
 				});
+
+				clearTimeout(timeoutId);
 
 				if (!response.ok) {
 					if (response.status === 401) {
@@ -100,7 +106,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				const data = await response.json();
 				return { valid: true, user: data.user || data };
 			} catch (error) {
-				console.error("Error validating token:", error);
+				if (error instanceof Error && error.name === "AbortError") {
+					console.warn("Token validation timed out, treating as invalid");
+				} else {
+					console.error("Error validating token:", error);
+				}
 				return { valid: false };
 			}
 		},

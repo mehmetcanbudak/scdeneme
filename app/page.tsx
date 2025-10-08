@@ -1,12 +1,53 @@
 "use client";
 
 import HeroHeader from "@/components/hero-header";
-import BlogSection, { type UiPost } from "@/components/home/blog-section";
-import CategoryGridSection from "@/components/home/category-grid-section";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
 import SubscriptionBenefitsSection from "@/components/home/subscription-benefits-section";
 import SustainabilityCTASection from "@/components/home/sustainability-cta-section";
-import VegetablesSection from "@/components/home/vegetables-section";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+// Lazy load non-critical sections
+const BlogSection = dynamic(
+	() =>
+		import("@/components/home/blog-section").then((mod) => ({
+			default: mod.default,
+		})),
+	{
+		loading: () => (
+			<div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+		),
+		ssr: false,
+	},
+);
+
+const CategoryGridSection = dynamic(
+	() =>
+		import("@/components/home/category-grid-section").then((mod) => ({
+			default: mod.default,
+		})),
+	{
+		loading: () => (
+			<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+		),
+		ssr: false,
+	},
+);
+
+const VegetablesSection = dynamic(
+	() =>
+		import("@/components/home/vegetables-section").then((mod) => ({
+			default: mod.default,
+		})),
+	{
+		loading: () => (
+			<div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+		),
+		ssr: false,
+	},
+);
+
+import type { UiPost } from "@/components/home/blog-section";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
@@ -73,7 +114,7 @@ const Home: React.FC = memo(() => {
 	}, [featuredProducts]);
 
 	/**
-	 * Fetch blog posts from API
+	 * Fetch blog posts from API with caching
 	 */
 	useEffect(() => {
 		let cancelled = false;
@@ -81,7 +122,26 @@ const Home: React.FC = memo(() => {
 			try {
 				setBlogLoading(true);
 				setBlogError(null);
-				const json = await getArticles({ page: 1, pageSize: 8, preview: true });
+
+				// Check cache first
+				const cacheKey = "blog-posts";
+				const cachedData = localStorage.getItem(cacheKey);
+				const cacheTimestamp = localStorage.getItem(`${cacheKey}-timestamp`);
+				const cacheTTL = 5 * 60 * 1000; // 5 minutes
+
+				if (
+					cachedData &&
+					cacheTimestamp &&
+					Date.now() - parseInt(cacheTimestamp) < cacheTTL
+				) {
+					if (!cancelled) {
+						setBlogPosts(JSON.parse(cachedData));
+						setBlogLoading(false);
+					}
+					return;
+				}
+
+				const json = await getArticles({ page: 1, pageSize: 4, preview: true }); // Reduced from 8 to 4
 				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
 					const a = item?.attributes ?? item ?? {};
 					const coverUrl = getStrapiMediaUrl(a.cover);
@@ -100,7 +160,12 @@ const Home: React.FC = memo(() => {
 						slug: a.slug,
 					} as UiPost;
 				});
-				if (!cancelled) setBlogPosts(mapped);
+				if (!cancelled) {
+					setBlogPosts(mapped);
+					// Cache the results
+					localStorage.setItem(cacheKey, JSON.stringify(mapped));
+					localStorage.setItem(`${cacheKey}-timestamp`, Date.now().toString());
+				}
 			} catch (e: any) {
 				if (!cancelled) setBlogError(e?.message || "İçerik yüklenemedi");
 			} finally {
@@ -144,7 +209,11 @@ const Home: React.FC = memo(() => {
 			/>
 
 			{/* Vegetables Section - Farmımızda Yetişen Sebzeler */}
-			<VegetablesSection />
+			<Suspense
+				fallback={<div className="h-96 bg-gray-100 animate-pulse rounded-lg" />}
+			>
+				<VegetablesSection />
+			</Suspense>
 
 			{/* Packages FAQ Section - Sebze Paketleri */}
 			<PackagesFAQSection packageImage={packageImage} />
@@ -156,10 +225,22 @@ const Home: React.FC = memo(() => {
 			<SustainabilityCTASection />
 
 			{/* Blog Section */}
-			<BlogSection posts={blogPosts} loading={blogLoading} error={blogError} />
+			<Suspense
+				fallback={<div className="h-96 bg-gray-100 animate-pulse rounded-lg" />}
+			>
+				<BlogSection
+					posts={blogPosts}
+					loading={blogLoading}
+					error={blogError}
+				/>
+			</Suspense>
 
 			{/* Category Grid Section */}
-			<CategoryGridSection />
+			<Suspense
+				fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}
+			>
+				<CategoryGridSection />
+			</Suspense>
 		</div>
 	);
 });

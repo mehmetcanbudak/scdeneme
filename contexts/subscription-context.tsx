@@ -1,15 +1,15 @@
 "use client";
 
+import { apiClient } from "@/lib/api-client";
 import {
 	createContext,
-	type ReactNode,
 	useCallback,
 	useContext,
 	useEffect,
 	useRef,
 	useState,
+	type ReactNode,
 } from "react";
-import { apiClient } from "@/lib/api-client";
 
 interface SubscriptionPlan {
 	id: number;
@@ -115,6 +115,29 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
 	undefined,
 );
 
+// Simple cache implementation for subscription data
+const subscriptionCache = new Map<
+	string,
+	{ data: any; timestamp: number; ttl: number }
+>();
+
+const getCachedSubscriptionData = (key: string) => {
+	const cached = subscriptionCache.get(key);
+	if (cached && Date.now() - cached.timestamp < cached.ttl) {
+		return cached.data;
+	}
+	subscriptionCache.delete(key);
+	return null;
+};
+
+const setCachedSubscriptionData = (
+	key: string,
+	data: any,
+	ttl: number = 5 * 60 * 1000,
+) => {
+	subscriptionCache.set(key, { data, timestamp: Date.now(), ttl });
+};
+
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
 	const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
 	const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -130,11 +153,26 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 			setIsLoading(true);
 			setError(null);
 
+			// Check cache first
+			const cacheKey = "subscription-plans";
+			const cachedData = getCachedSubscriptionData(cacheKey);
+
+			if (cachedData) {
+				setPlans(cachedData);
+				setIsLoading(false);
+				return;
+			}
+
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
 			// First try without filters since the API seems to have issues with filter syntax
 			const response = await apiClient.getSubscriptionPlans({
 				populate: "*",
 				// filters: { isActive: true }, // Commented out due to API filter issues
 			});
+
+			clearTimeout(timeoutId);
 
 			if (response.error) {
 				throw new Error(response.error.message);
@@ -155,11 +193,17 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 			);
 
 			setPlans(activePlans);
+			setCachedSubscriptionData(cacheKey, activePlans);
 		} catch (err) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Abonelik planları yüklenemedi";
-			setError(errorMessage);
-			console.error("Subscription plans load error:", err);
+			if (err instanceof Error && err.name === "AbortError") {
+				console.warn("Subscription plans request timed out");
+				setError("Abonelik planları yüklenirken zaman aşımı oluştu");
+			} else {
+				const errorMessage =
+					err instanceof Error ? err.message : "Abonelik planları yüklenemedi";
+				setError(errorMessage);
+				console.error("Subscription plans load error:", err);
+			}
 		} finally {
 			setIsLoading(false);
 		}
