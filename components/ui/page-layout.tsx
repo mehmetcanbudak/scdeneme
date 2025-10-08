@@ -38,7 +38,11 @@ export const Section = memo(function Section({
 }: SectionProps) {
 	return (
 		<section className={`py-12 relative z-10 ${className}`}>
-			<div className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${containerClassName}`}>{children}</div>
+			<div
+				className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${containerClassName}`}
+			>
+				{children}
+			</div>
 		</section>
 	);
 });

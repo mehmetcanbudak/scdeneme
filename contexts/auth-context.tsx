@@ -17,6 +17,8 @@ interface User {
 	email: string;
 	phone: string;
 	phoneVerified: boolean;
+	emailVerified?: boolean;
+	isProfileComplete?: boolean;
 	confirmed: boolean;
 	blocked: boolean;
 	firstName?: string;
@@ -46,6 +48,25 @@ interface AuthContextType {
 	) => Promise<{ exists: boolean; verified: boolean }>;
 	validateToken: () => Promise<{ valid: boolean; user?: User }>;
 	refreshUserInfo: () => Promise<{ success: boolean; message?: string }>;
+	sendEmailVerification: (
+		email: string,
+	) => Promise<{ success: boolean; message?: string }>;
+	verifyEmail: (
+		email: string,
+		verificationCode: string,
+	) => Promise<{ success: boolean; message?: string }>;
+	updateProfile: (data: {
+		firstName?: string;
+		lastName?: string;
+		email?: string;
+	}) => Promise<{ success: boolean; message?: string }>;
+	updateUsername: (
+		username: string,
+	) => Promise<{ success: boolean; message?: string }>;
+	changePassword: (
+		currentPassword: string,
+		newPassword: string,
+	) => Promise<{ success: boolean; message?: string }>;
 	logout: (redirect?: boolean) => void;
 	forceLogout: (reason?: string) => void;
 	error: string | null;
@@ -407,6 +428,194 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const sendEmailVerification = async (
+		email: string,
+	): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+			const response = await fetch(
+				`${API_BASE_URL}/api/auth/send-email-verification`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email }),
+				},
+			);
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(
+					data.error?.message || "Email verification code could not be sent",
+				);
+			}
+
+			return { success: true, message: data.message };
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
+	const verifyEmail = async (
+		email: string,
+		verificationCode: string,
+	): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+			const response = await fetch(`${API_BASE_URL}/api/auth/verify-email`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, verificationCode }),
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error?.message || "Email verification failed");
+			}
+
+			// Update user data and token if provided
+			if (data.user) {
+				setUser(data.user);
+				localStorage.setItem("user", JSON.stringify(data.user));
+			}
+			if (data.jwt) {
+				setToken(data.jwt);
+				localStorage.setItem("token", data.jwt);
+				// Initialize API client with new token
+				initializeApiClient(data.jwt);
+			}
+
+			return { success: true, message: data.message };
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
+	const updateProfile = async (data: {
+		firstName?: string;
+		lastName?: string;
+		email?: string;
+	}): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+			const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			const responseData = await response.json();
+
+			if (!response.ok) {
+				throw new Error(responseData.error?.message || "Profile update failed");
+			}
+
+			// Update user data and token if provided
+			if (responseData.user) {
+				setUser(responseData.user);
+				localStorage.setItem("user", JSON.stringify(responseData.user));
+			}
+			if (responseData.jwt) {
+				setToken(responseData.jwt);
+				localStorage.setItem("token", responseData.jwt);
+				// Initialize API client with new token
+				initializeApiClient(responseData.jwt);
+			}
+
+			return { success: true, message: responseData.message };
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
+	const updateUsername = async (
+		username: string,
+	): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+			const response = await fetch(`${API_BASE_URL}/api/auth/update-username`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ username }),
+			});
+
+			const responseData = await response.json();
+
+			if (!response.ok) {
+				throw new Error(
+					responseData.error?.message || "Username update failed",
+				);
+			}
+
+			// Update user data if provided
+			if (responseData.user) {
+				setUser(responseData.user);
+				localStorage.setItem("user", JSON.stringify(responseData.user));
+			}
+
+			return { success: true, message: responseData.message };
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
+	const changePassword = async (
+		currentPassword: string,
+		newPassword: string,
+	): Promise<{ success: boolean; message?: string }> => {
+		try {
+			setError(null);
+			const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ currentPassword, newPassword }),
+			});
+
+			const responseData = await response.json();
+
+			if (!response.ok) {
+				throw new Error(
+					responseData.error?.message || "Password change failed",
+				);
+			}
+
+			return { success: true, message: responseData.message };
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(errorMessage);
+			return { success: false, message: errorMessage };
+		}
+	};
+
 	const login = verifyOTP;
 
 	const logout = (redirect: boolean = true) => {
@@ -435,6 +644,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		checkPhone,
 		validateToken,
 		refreshUserInfo,
+		sendEmailVerification,
+		verifyEmail,
+		updateProfile,
+		updateUsername,
+		changePassword,
 		logout,
 		forceLogout,
 		error,

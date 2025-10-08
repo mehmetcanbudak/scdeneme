@@ -54,7 +54,9 @@ const ProfileHeader = memo(({ user, isGoogleUser }: ProfileHeaderProps) => {
 				{user.name || user.firstName || "Kullanıcı"}
 			</CardTitle>
 			<CardDescription>
-				{isGoogleUser ? "Google ile giriş yapıldı" : "Telefon ile giriş yapıldı"}
+				{isGoogleUser
+					? "Google ile giriş yapıldı"
+					: "Telefon ile giriş yapıldı"}
 			</CardDescription>
 		</CardHeader>
 	);
@@ -176,6 +178,13 @@ const ProfileContent = memo(() => {
 		router.push("/subscriptions");
 	}, [router]);
 
+	/**
+	 * Navigates to profile settings page
+	 */
+	const handleNavigateToProfileSettings = useCallback(() => {
+		router.push("/profile/settings");
+	}, [router]);
+
 	if (!user) {
 		return null;
 	}
@@ -254,6 +263,13 @@ const ProfileContent = memo(() => {
 
 						{/* Actions */}
 						<div className="pt-6 border-t space-y-3">
+							<Button
+								variant="default"
+								className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+								onClick={handleNavigateToProfileSettings}
+							>
+								Profil Ayarları
+							</Button>
 							<Button
 								variant="outline"
 								className="w-full"

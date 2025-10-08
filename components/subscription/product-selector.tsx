@@ -119,7 +119,9 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 
 				if (imageUrl) {
 					images.push(
-						imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`,
+						imageUrl.startsWith("http")
+							? imageUrl
+							: `${API_BASE_URL}${imageUrl}`,
 					);
 				}
 			});
@@ -262,7 +264,9 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 						{purchaseType === "subscription" && (
 							<div className="space-y-3 mt-3 pt-3 border-t border-gray-200">
 								<div className="space-y-2 text-sm text-gray-700">
-									<div>+ %35 indirim ilk üç siparişte, sonrasında %20 indirim</div>
+									<div>
+										+ %35 indirim ilk üç siparişte, sonrasında %20 indirim
+									</div>
 									<div>+ Ücretsiz teslimat</div>
 									<div>+ İstediğiniz zaman duraklatın veya iptal edin</div>
 									<div>+ Abonelik yaptığınızda özel hediyeler</div>
@@ -271,7 +275,11 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 								{/* Delivery Frequency Selector */}
 								<div>
 									<select
-										value={selectedInterval?.key || product.subscription_intervals?.[0]?.key || "weekly"}
+										value={
+											selectedInterval?.key ||
+											product.subscription_intervals?.[0]?.key ||
+											"weekly"
+										}
 										onChange={(e) => {
 											const interval = product.subscription_intervals?.find(
 												(i) => i.key === e.target.value,
@@ -284,7 +292,8 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 									>
 										{product.subscription_intervals?.map((interval) => (
 											<option key={interval.key} value={interval.key}>
-												{interval.name} - {product.currency === "TRY" ? "₺" : ""}
+												{interval.name} -{" "}
+												{product.currency === "TRY" ? "₺" : ""}
 												{interval.price.toFixed(2)}
 											</option>
 										))}
@@ -293,7 +302,9 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 
 								{/* Quantity Selector */}
 								<div className="flex items-center justify-between">
-									<span className="text-sm font-medium text-gray-700">Adet:</span>
+									<span className="text-sm font-medium text-gray-700">
+										Adet:
+									</span>
 									<div className="flex items-center space-x-3">
 										<button
 											type="button"
@@ -303,12 +314,16 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 										>
 											<Minus className="w-3 h-3" />
 										</button>
-										<span className="w-12 text-center font-medium">{quantity}</span>
+										<span className="w-12 text-center font-medium">
+											{quantity}
+										</span>
 										<button
 											type="button"
 											onClick={handleIncreaseQuantity}
 											className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-											disabled={quantity >= (deliveryDayStock[selectedDeliveryDay] ?? 0)}
+											disabled={
+												quantity >= (deliveryDayStock[selectedDeliveryDay] ?? 0)
+											}
 										>
 											<Plus className="w-3 h-3" />
 										</button>
@@ -322,7 +337,10 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 											Teslimat Günü:
 										</span>
 										<span className="text-xs text-gray-500">
-											{deliveryDays.find((d) => d.id === selectedDeliveryDay)?.name}
+											{
+												deliveryDays.find((d) => d.id === selectedDeliveryDay)
+													?.name
+											}
 										</span>
 									</div>
 									<div className="grid grid-cols-7 gap-1">
@@ -339,7 +357,9 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 												<div key={day.id} className="flex flex-col">
 													<button
 														type="button"
-														onClick={() => !isInactive && onDeliveryDayChange(day.id)}
+														onClick={() =>
+															!isInactive && onDeliveryDayChange(day.id)
+														}
 														disabled={isInactive}
 														className={`p-2 text-xs rounded border transition-colors ${
 															isInactive
@@ -378,9 +398,14 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 								<div className="bg-gray-50 p-3 rounded text-sm">
 									<p className="text-gray-700">
 										<strong>{quantity} adet</strong> ürün,{" "}
-										<strong>{selectedInterval?.name?.toLowerCase() || "haftalık"}</strong>{" "}
 										<strong>
-											{deliveryDays.find((d) => d.id === selectedDeliveryDay)?.name}
+											{selectedInterval?.name?.toLowerCase() || "haftalık"}
+										</strong>{" "}
+										<strong>
+											{
+												deliveryDays.find((d) => d.id === selectedDeliveryDay)
+													?.name
+											}
 										</strong>{" "}
 										günleri teslimat edilecek.
 									</p>

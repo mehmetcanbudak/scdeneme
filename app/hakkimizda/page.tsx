@@ -61,7 +61,9 @@ const ContentSection = memo(function ContentSection({
 });
 
 interface FeatureCardProps {
-	icon: string;
+	icon?: string;
+	iconSrc?: string;
+	iconAlt?: string;
 	title: string;
 	items: string[];
 	bgColor: string;
@@ -72,6 +74,8 @@ interface FeatureCardProps {
  */
 const FeatureCard = memo(function FeatureCard({
 	icon,
+	iconSrc,
+	iconAlt,
 	title,
 	items,
 	bgColor,
@@ -81,7 +85,18 @@ const FeatureCard = memo(function FeatureCard({
 			<div
 				className={`w-16 h-16 ${bgColor} rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6`}
 			>
-				<span className="text-2xl">{icon}</span>
+				{iconSrc ? (
+					<Image
+						src={iconSrc}
+						alt={iconAlt || title}
+						width={32}
+						height={32}
+						className="w-8 h-8 object-contain"
+						unoptimized
+					/>
+				) : (
+					<span className="text-2xl">{icon}</span>
+				)}
 			</div>
 			<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-4 text-gray-700">
 				{title}
@@ -154,7 +169,8 @@ const Hakkimizda = memo(function Hakkimizda() {
 	const featureCards = useMemo(
 		() => [
 			{
-				icon: "🌿",
+				iconSrc: "/urun_kalitesi.svg",
+				iconAlt: "Ürün Kalitesi",
 				title: "Ürün Kalitesi",
 				bgColor: "bg-green-100",
 				items: [
@@ -164,7 +180,8 @@ const Hakkimizda = memo(function Hakkimizda() {
 				],
 			},
 			{
-				icon: "🌍",
+				iconSrc: "/cevre_dostu.svg",
+				iconAlt: "Çevre Dostu",
 				title: "Çevre Dostu",
 				bgColor: "bg-green-100",
 				items: [
@@ -173,7 +190,8 @@ const Hakkimizda = memo(function Hakkimizda() {
 				],
 			},
 			{
-				icon: "🚀",
+				iconSrc: "/gelecegin_tarimi.svg",
+				iconAlt: "Geleceğin Tarımı",
 				title: "Geleceğin Tarımı",
 				bgColor: "bg-purple-100",
 				items: [

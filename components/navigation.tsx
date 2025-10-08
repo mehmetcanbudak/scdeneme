@@ -83,53 +83,53 @@ const Navigation = memo(function Navigation({
 				} ${className}`}
 				aria-label="Ana navigasyon"
 			>
-			<nav
-				className="relative grid grid-cols-[auto_1fr_auto] nav:grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-2"
-				aria-label="Ana menü"
-			>
-				{/* Mobile hamburger menu */}
-				<HamburgerMenu
-					onClick={toggleMobileMenu}
-					shouldBeTransparent={shouldBeTransparent}
-					aria-expanded={isMobileSidebarOpen}
-					aria-controls="mobile-sidebar"
-					aria-label={isMobileSidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
-				/>
-
-				{/* Left section - Logo */}
-				<div className="flex items-center pr-20">
-					<Link
-						href="/"
-						className="transition-opacity hover:opacity-80 focus:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60 rounded"
-						aria-label="SkyCrops ana sayfasına git"
-					>
-						<Logo shouldBeTransparent={shouldBeTransparent} />
-					</Link>
-				</div>
-
-				{/* Center section - Navigation Menu - Centered in grid */}
-				<div className="hidden nav:flex items-center justify-center">
-					<NavigationMenu
-						items={NAVIGATION_ITEMS}
+				<nav
+					className="relative grid grid-cols-[auto_1fr_auto] nav:grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-2"
+					aria-label="Ana menü"
+				>
+					{/* Mobile hamburger menu */}
+					<HamburgerMenu
+						onClick={toggleMobileMenu}
 						shouldBeTransparent={shouldBeTransparent}
+						aria-expanded={isMobileSidebarOpen}
+						aria-controls="mobile-sidebar"
+						aria-label={isMobileSidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
 					/>
-				</div>
 
-				{/* Right section - Action icons */}
-				<div className="flex items-center justify-end space-x-4">
-					{/* Desktop action icons */}
-					<div className="hidden nav:block">
-						<ActionIcons shouldBeTransparent={shouldBeTransparent} />
+					{/* Left section - Logo */}
+					<div className="flex items-center pr-20">
+						<Link
+							href="/"
+							className="transition-opacity hover:opacity-80 focus:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60 rounded"
+							aria-label="SkyCrops ana sayfasına git"
+						>
+							<Logo shouldBeTransparent={shouldBeTransparent} />
+						</Link>
 					</div>
 
-					{/* Mobile action icons */}
-					<div className="nav:hidden">
-						<MobileActionIcons shouldBeTransparent={shouldBeTransparent} />
+					{/* Center section - Navigation Menu - Centered in grid */}
+					<div className="hidden nav:flex items-center justify-center">
+						<NavigationMenu
+							items={NAVIGATION_ITEMS}
+							shouldBeTransparent={shouldBeTransparent}
+						/>
 					</div>
-				</div>
-			</nav>
 
-			{/* {!shouldBeTransparent && (
+					{/* Right section - Action icons */}
+					<div className="flex items-center justify-end space-x-4">
+						{/* Desktop action icons */}
+						<div className="hidden nav:block">
+							<ActionIcons shouldBeTransparent={shouldBeTransparent} />
+						</div>
+
+						{/* Mobile action icons */}
+						<div className="nav:hidden">
+							<MobileActionIcons shouldBeTransparent={shouldBeTransparent} />
+						</div>
+					</div>
+				</nav>
+
+				{/* {!shouldBeTransparent && (
 				<div className="w-full">
 					<Image
 						src="/celenk.svg"
@@ -142,7 +142,6 @@ const Navigation = memo(function Navigation({
 					/>
 				</div>
 			)} */}
-
 			</header>
 
 			{/* Mobile sidebar - rendered outside header to avoid z-index stacking context issues */}

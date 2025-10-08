@@ -25,7 +25,7 @@ const ContactInfoItem = memo(function ContactInfoItem({
 }: ContactInfoItemProps) {
 	return (
 		<div className="flex flex-col items-center text-center">
-			<div className="w-12 h-12 bg-[#77A4CE] rounded-full flex items-center justify-center mb-4 transition-transform hover:scale-110">
+			<div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 transition-transform hover:scale-110">
 				{icon}
 			</div>
 			<div>

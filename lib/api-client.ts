@@ -106,7 +106,6 @@ class ApiClient {
 			"/api/categories",
 			"/api/tags",
 			"/api/subscription-plans",
-			"/api/cart",
 			"/api/payment/create-session",
 			"/api/payment/confirm",
 		];
@@ -509,7 +508,7 @@ class ApiClient {
 		);
 	}
 
-	// Cart endpoints (public access)
+	// Cart endpoints (require authentication)
 	async getCartItems(sessionId: string) {
 		return this.request(`/api/cart?sessionId=${sessionId}`);
 	}
@@ -561,6 +560,46 @@ class ApiClient {
 				sessionId,
 				...paymentData,
 			}),
+		});
+	}
+
+	// Email verification endpoints
+	async sendEmailVerification(email: string) {
+		return this.request("/api/auth/send-email-verification", {
+			method: "POST",
+			body: JSON.stringify({ email }),
+		});
+	}
+
+	async verifyEmail(email: string, verificationCode: string) {
+		return this.request("/api/auth/verify-email", {
+			method: "POST",
+			body: JSON.stringify({ email, verificationCode }),
+		});
+	}
+
+	async updateProfile(data: {
+		firstName?: string;
+		lastName?: string;
+		email?: string;
+	}) {
+		return this.request("/api/auth/update-profile", {
+			method: "PUT",
+			body: JSON.stringify(data),
+		});
+	}
+
+	async updateUsername(username: string) {
+		return this.request("/api/auth/update-username", {
+			method: "PUT",
+			body: JSON.stringify({ username }),
+		});
+	}
+
+	async changePassword(currentPassword: string, newPassword: string) {
+		return this.request("/api/auth/change-password", {
+			method: "PUT",
+			body: JSON.stringify({ currentPassword, newPassword }),
 		});
 	}
 

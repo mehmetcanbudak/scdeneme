@@ -2,7 +2,19 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import { CheckCircle, ShoppingCart, X, Heart, Share2, Award, Clock, Leaf, Shield, Truck, Users } from "lucide-react";
+import {
+	CheckCircle,
+	ShoppingCart,
+	X,
+	Heart,
+	Share2,
+	Award,
+	Clock,
+	Leaf,
+	Shield,
+	Truck,
+	Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
@@ -118,12 +130,16 @@ export default function TazeYesilliklerPaketi() {
 	const [error, setError] = useState<string | null>(null);
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [quantity, setQuantity] = useState(1);
-	const [purchaseType, setPurchaseType] = useState<PurchaseType>("subscription");
-	const [selectedInterval, setSelectedInterval] = useState<SubscriptionInterval | null>(null);
+	const [purchaseType, setPurchaseType] =
+		useState<PurchaseType>("subscription");
+	const [selectedInterval, setSelectedInterval] =
+		useState<SubscriptionInterval | null>(null);
 	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2);
 	const [addingToCart, setAddingToCart] = useState(false);
 	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-	const [deliveryDayStock, setDeliveryDayStock] = useState<Record<number, number>>({});
+	const [deliveryDayStock, setDeliveryDayStock] = useState<
+		Record<number, number>
+	>({});
 
 	// Enable navigation transparency
 	useNavigationTransparency(false);
@@ -319,9 +335,12 @@ export default function TazeYesilliklerPaketi() {
 	};
 
 	// Handle interval change
-	const handleIntervalChange = useCallback((interval: SubscriptionInterval | null) => {
-		setSelectedInterval(interval);
-	}, []);
+	const handleIntervalChange = useCallback(
+		(interval: SubscriptionInterval | null) => {
+			setSelectedInterval(interval);
+		},
+		[],
+	);
 
 	// Handle add to cart
 	const handleAddToCart = async () => {

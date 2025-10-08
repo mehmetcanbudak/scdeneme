@@ -124,7 +124,9 @@ const DeliveryOption = memo(({ isSelected }: DeliveryOptionProps) => {
 						<Truck className="w-5 h-5 mr-2 text-gray-600" />
 						Standart Teslimat
 					</h3>
-					<p className="text-gray-600 text-sm mt-1">1-2 iş günü içinde teslimat</p>
+					<p className="text-gray-600 text-sm mt-1">
+						1-2 iş günü içinde teslimat
+					</p>
 				</div>
 				<div className="text-right">
 					<span className="font-semibold text-gray-600">Ücretsiz</span>
@@ -239,7 +241,8 @@ const CheckoutSummary = memo(
 						<div className="flex justify-between text-gray-600">
 							<span>Ara Toplam</span>
 							<span>
-								{summary?.formatted_subtotal || formatPrice(summary?.subtotal || 0)}
+								{summary?.formatted_subtotal ||
+									formatPrice(summary?.subtotal || 0)}
 							</span>
 						</div>
 
@@ -492,11 +495,16 @@ function CheckoutPage() {
 										</div>
 									) : (
 										<div className="space-y-4">
-											<h3 className="font-medium text-gray-900">Yeni Adres Ekle</h3>
+											<h3 className="font-medium text-gray-900">
+												Yeni Adres Ekle
+											</h3>
 											<p className="text-gray-600 text-sm">
 												Adres ekleme formu yakında eklenecek...
 											</p>
-											<Button variant="outline" onClick={handleToggleAddressForm}>
+											<Button
+												variant="outline"
+												onClick={handleToggleAddressForm}
+											>
 												Geri Dön
 											</Button>
 										</div>

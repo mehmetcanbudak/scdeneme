@@ -2,6 +2,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import InitialLoader from "@/components/initial-loader";
 import { NavigationProvider } from "@/components/navigation-context";
+import DebugPanel from "@/components/debug/debug-panel";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
 import { FooterColorProvider } from "@/contexts/footer-color-context";
@@ -102,6 +103,7 @@ export default function RootLayout({
 										<Header />
 										{children}
 										<Footer />
+										<DebugPanel />
 									</NavigationProvider>
 								</FooterColorProvider>
 							</SubscriptionProvider>

@@ -161,7 +161,9 @@ function formatReadTime(readTime: number | undefined): string | undefined {
  * Server-rendered page that displays a single blog article with metadata
  * @param params - Page params containing the article slug
  */
-export default async function BlogArticle({ params: paramsPromise }: PageParams) {
+export default async function BlogArticle({
+	params: paramsPromise,
+}: PageParams) {
 	const params = await paramsPromise;
 	const data = await fetchArticle(params.slug);
 	if (!data) return notFound();

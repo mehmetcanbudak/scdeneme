@@ -61,24 +61,26 @@ const PracticeCard = React.memo<{ practice: SustainablePractice }>(
 				</div>
 			</div>
 		);
-	}
+	},
 );
 PracticeCard.displayName = "PracticeCard";
 
 /**
  * FeatureItem component - Displays a production feature
  */
-const FeatureItem = React.memo<{ feature: ProductionFeature }>(({ feature }) => {
-	return (
-		<div className="flex items-start space-x-3">
-			<div className="flex-shrink-0 mt-1">{feature.icon}</div>
-			<div>
-				<h4 className="font-medium text-gray-700 mb-1">{feature.title}</h4>
-				<p className="text-sm text-gray-600">{feature.description}</p>
+const FeatureItem = React.memo<{ feature: ProductionFeature }>(
+	({ feature }) => {
+		return (
+			<div className="flex items-start space-x-3">
+				<div className="flex-shrink-0 mt-1">{feature.icon}</div>
+				<div>
+					<h4 className="font-medium text-gray-700 mb-1">{feature.title}</h4>
+					<p className="text-sm text-gray-600">{feature.description}</p>
+				</div>
 			</div>
-		</div>
-	);
-});
+		);
+	},
+);
 FeatureItem.displayName = "FeatureItem";
 
 /**
@@ -148,7 +150,7 @@ export default function Uretim() {
 				features: ["Hidroponik sistem", "Akıllı sera", "Otomatik sulama"],
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -181,7 +183,7 @@ export default function Uretim() {
 				icon: <CheckCircle className="w-6 h-6 text-green-600" />,
 			},
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -227,7 +229,10 @@ export default function Uretim() {
 				</div>
 			</div>
 
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">

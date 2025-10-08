@@ -542,68 +542,66 @@ const Abonelik: React.FC = memo(() => {
 				<Section className="py-20 bg-[#DF626B]">
 					{/* Main Hero Title */}
 					<div className="text-center mb-16">
-							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
-								Her Hafta Taptaze Yeşillikler
-								<span className="block text-white/90 font-semibold">
-									Kapınızda!
-								</span>
-							</h1>
-							<p className="text-lg leading-relaxed max-w-4xl mx-auto text-white/80">
-								Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze,
-								en lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
-								kolay yolu.
-							</p>
-							<div className="mt-8">
-								<Button
-									onClick={() =>
-										router.push("/abonelik/taze-yesillikler-paketi")
-									}
-									className="px-10 py-4 text-lg"
-								>
-									Hemen Abone Ol
-								</Button>
-							</div>
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
+							Her Hafta Taptaze Yeşillikler
+							<span className="block text-white/90 font-semibold">
+								Kapınızda!
+							</span>
+						</h1>
+						<p className="text-lg leading-relaxed max-w-4xl mx-auto text-white/80">
+							Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze, en
+							lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
+							kolay yolu.
+						</p>
+						<div className="mt-8">
+							<Button
+								onClick={() => router.push("/abonelik/taze-yesillikler-paketi")}
+								className="px-10 py-4 text-lg"
+							>
+								Hemen Abone Ol
+							</Button>
+						</div>
+					</div>
+
+					{/* Subscription Package - Moved below hero title */}
+					<div className="mb-16">
+						<SubscriptionProductPreview
+							product={product}
+							loading={loading}
+							selectedImage={selectedImage}
+							onImageSelect={setSelectedImage}
+							images={images}
+							deliveryDays={deliveryDays}
+							deliveryDayStock={deliveryDayStock}
+							onAddToCart={() =>
+								router.push("/abonelik/taze-yesillikler-paketi")
+							}
+						/>
+					</div>
+
+					{/* Content Grid */}
+					<div className="grid lg:grid-cols-2 gap-16 items-start">
+						{/* Left Column - Key Features */}
+						<div className="space-y-12">
+							{features.map((feature) => (
+								<FeatureCard
+									key={feature.title}
+									emoji={feature.emoji}
+									title={feature.title}
+									description={feature.description}
+								/>
+							))}
 						</div>
 
-						{/* Subscription Package - Moved below hero title */}
-						<div className="mb-16">
-							<SubscriptionProductPreview
-								product={product}
-								loading={loading}
-								selectedImage={selectedImage}
-								onImageSelect={setSelectedImage}
-								images={images}
-								deliveryDays={deliveryDays}
-								deliveryDayStock={deliveryDayStock}
-								onAddToCart={() =>
+						{/* Right Column - Weekly Programs */}
+						<div className="lg:sticky lg:top-8">
+							<WeeklyProgram
+								onViewPlans={() =>
 									router.push("/abonelik/taze-yesillikler-paketi")
 								}
 							/>
 						</div>
-
-						{/* Content Grid */}
-						<div className="grid lg:grid-cols-2 gap-16 items-start">
-							{/* Left Column - Key Features */}
-							<div className="space-y-12">
-								{features.map((feature) => (
-									<FeatureCard
-										key={feature.title}
-										emoji={feature.emoji}
-										title={feature.title}
-										description={feature.description}
-									/>
-								))}
-							</div>
-
-							{/* Right Column - Weekly Programs */}
-							<div className="lg:sticky lg:top-8">
-								<WeeklyProgram
-									onViewPlans={() =>
-										router.push("/abonelik/taze-yesillikler-paketi")
-									}
-								/>
-							</div>
-						</div>
+					</div>
 				</Section>
 
 				{/* Benefits Section */}

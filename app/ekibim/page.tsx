@@ -88,7 +88,7 @@ export default function Ekibim() {
 				description: "Ürün kalitesi ve güvenliği konusunda sertifikalı uzman",
 			},
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -131,7 +131,10 @@ export default function Ekibim() {
 			</div>
 
 			{/* Main content with id and bg-white */}
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">

@@ -50,9 +50,7 @@ const ProductionVideoSection: React.FC = memo(() => {
 							<div className="flex items-start space-x-3">
 								<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
 								<div>
-									<h4 className="font-medium text-gray-800">
-										Yıl Boyu Üretim
-									</h4>
+									<h4 className="font-medium text-gray-800">Yıl Boyu Üretim</h4>
 									<p className="text-gray-600">
 										Mevsim şartlarından bağımsız sürekli hasat
 									</p>

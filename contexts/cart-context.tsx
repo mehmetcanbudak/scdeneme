@@ -187,15 +187,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
 		}
 
 		const image = product.images[0];
+
+		// Helper function to construct full URL
+		const getFullImageUrl = (url: string) => {
+			// If URL already starts with http/https, return as is
+			if (url.startsWith("http://") || url.startsWith("https://")) {
+				return url;
+			}
+			// Otherwise, prepend the API base URL
+			return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+		};
+
 		// Use medium size if available, otherwise fallback to original
 		if (image.url) {
-			return `${process.env.NEXT_PUBLIC_API_URL}${image.url}`;
+			return getFullImageUrl(image.url);
 		}
 		if (image.formats?.medium?.url) {
-			return `${process.env.NEXT_PUBLIC_API_URL}${image.formats.medium.url}`;
+			return getFullImageUrl(image.formats.medium.url);
 		}
 		if (image.formats?.small?.url) {
-			return `${process.env.NEXT_PUBLIC_API_URL}${image.formats.small.url}`;
+			return getFullImageUrl(image.formats.small.url);
 		}
 		return "/placeholder.svg";
 	};

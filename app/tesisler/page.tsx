@@ -3,12 +3,11 @@
 import HeroHeader from "@/components/hero-header";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { Droplets, Leaf, Shield, Zap } from "lucide-react";
 import type React from "react";
 import { memo, useCallback, useId, useMemo } from "react";
 
 interface FacilityFeature {
-	icon: React.ReactNode;
+	icon?: React.ReactNode;
 	title: string;
 	description: string;
 	content: Array<{
@@ -31,7 +30,7 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 	return (
 		<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow">
 			<div className="flex items-start gap-4 mb-6">
-				<div className="flex-shrink-0">{feature.icon}</div>
+				{feature.icon && <div className="flex-shrink-0">{feature.icon}</div>}
 				<div>
 					<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-3 text-gray-800">
 						{feature.title}
@@ -39,7 +38,7 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 					<p className="text-base leading-relaxed">{feature.description}</p>
 				</div>
 			</div>
-			<div className="ml-0 sm:ml-12 space-y-6">
+			<div className={`space-y-6 ${feature.icon ? "ml-0 sm:ml-12" : ""}`}>
 				{feature.content.map((item, idx) => (
 					<div
 						key={`${item.subtitle}-${idx}`}
@@ -102,7 +101,6 @@ export default function Tesisler() {
 	const facilityFeatures = useMemo<FacilityFeature[]>(
 		() => [
 			{
-				icon: <Leaf className="w-8 h-8 text-green-600" />,
 				title: "1. Sürdürülebilir ve İlaçsız Üretim Yöntemleri",
 				description:
 					"Geleceğin tarımını inşa ederken, doğaya ve insan sağlığına verdiğimiz değeri üretimimizin her aşamasında gösteriyoruz.",
@@ -122,7 +120,6 @@ export default function Tesisler() {
 				],
 			},
 			{
-				icon: <Zap className="w-8 h-8 text-green-600" />,
 				title: "2. Akıllı ve Yüksek Teknolojili Üretim",
 				description:
 					"Dikey tarım tesisimiz, dünyanın en gelişmiş iklim kontrollü üretim alanları arasında yer almaktadır. Çok katlı hidroponik sistemler ile kaynakları verimli kullanıyor ve maksimum verim elde ediyoruz.",
@@ -144,7 +141,6 @@ export default function Tesisler() {
 					"Tüm bu teknolojiler sayesinde bitkilerimizin her gelişim evresinde en sevdikleri koşulları oluşturarak, en yüksek tazelik ve besin değerine ulaşmalarını sağlıyoruz.",
 			},
 			{
-				icon: <Shield className="w-8 h-8 text-yellow-600" />,
 				title: "3. Üretim ve Lojistik Alanımız",
 				description:
 					"Şehir merkezine yakın konumumuz, ürünlerin tazeliğini koruyarak sofralarınıza en hızlı şekilde ulaşmasını sağlar.",
@@ -160,7 +156,6 @@ export default function Tesisler() {
 				],
 			},
 			{
-				icon: <Droplets className="w-8 h-8 text-green-600" />,
 				title: "4. Çevre Dostu ve Sürdürülebilir Yaklaşım",
 				description:
 					"Sürdürülebilirlik ilkemiz tesisimizin her detayında kendini gösterir.",

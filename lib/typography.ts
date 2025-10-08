@@ -18,9 +18,12 @@ export const TYPOGRAPHY = {
 	bodySmall: "text-sm leading-normal",
 
 	// Display text (for hero sections, etc.)
-	displayLarge: "text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none",
-	displayMedium: "text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight",
-	displaySmall: "text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight",
+	displayLarge:
+		"text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none",
+	displayMedium:
+		"text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight",
+	displaySmall:
+		"text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight",
 
 	// Special purpose
 	subtitle: "text-lg md:text-xl font-normal leading-relaxed",
