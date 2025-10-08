@@ -211,7 +211,7 @@ export default function Iletisim() {
 				subtitle: "",
 				buttonText: "",
 				image: "/iletisim.png",
-				mobileImage: "/iletisim.png",
+				mobileImage: "/iletisim_mobile.svg",
 				mobileAlt: "İletişim hero görseli",
 			},
 		],

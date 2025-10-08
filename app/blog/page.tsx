@@ -475,7 +475,7 @@ export default function Blog() {
 				subtitle: "",
 				buttonText: "",
 				image: "/blog.png",
-				mobileImage: "/blog.png",
+				mobileImage: "/blog_mobile.svg",
 				mobileAlt: "Blog hero görseli",
 			},
 		],

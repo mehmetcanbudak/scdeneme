@@ -55,7 +55,7 @@ const Home: React.FC = memo(() => {
 				buttonAction: () => router.push("/abonelik/taze-yesillikler-paketi"),
 				image: "/anasayfa.png",
 				alt: "Skycrops - Yaşayan Sebzeler",
-				mobileImage: "/anasayfa.png",
+				mobileImage: "/anasayfa_mobile.svg",
 				mobileAlt: "Skycrops - Yaşayan Sebzeler",
 			},
 		],

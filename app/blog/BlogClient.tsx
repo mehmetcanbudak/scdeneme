@@ -201,7 +201,7 @@ export default function BlogClient({
 						subtitle: "",
 						buttonText: "",
 						image: "/thelettuceguy.png",
-						mobileImage: "/thelettuceguy.png",
+						mobileImage: "/blog_mobile.svg",
 						mobileAlt: "Blog hero görseli",
 					},
 				]}
