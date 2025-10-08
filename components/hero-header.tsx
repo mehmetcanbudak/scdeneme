@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "./navigation-context";
 
@@ -52,9 +53,8 @@ const HeroHeader = memo(function HeroHeader({
 	autoPlayInterval = 5000,
 	className = "",
 	contentClassName = "",
-	overlayClassName = "",
 	showScrollButton = true,
-	mediaFit = "contain", // other options: "contain"
+	mediaFit = "contain",
 	backgroundColor = "transparent",
 }: HeroHeaderProps) {
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -182,7 +182,6 @@ const HeroHeader = memo(function HeroHeader({
 				marginLeft: "calc(50% - 50vw)",
 				marginRight: "calc(50% - 50vw)",
 			}}
-			aria-label="Hero section"
 		>
 			{/* Background media */}
 			<div
@@ -213,12 +212,15 @@ const HeroHeader = memo(function HeroHeader({
 						}}
 					/>
 				) : (
-					<img
+					<Image
 						key={currentSlideData.image || currentSlideData.title}
 						src={currentSlideData.image || "/placeholder.svg"}
 						alt={currentSlideData.alt || currentSlideData.title}
-						className={`w-full h-full ${mediaFitClass} transition-opacity duration-1000`}
-						loading={currentSlide === 0 ? "eager" : "lazy"}
+						fill
+						className={`${mediaFitClass} transition-opacity duration-1000`}
+						priority={currentSlide === 0}
+						quality={85}
+						sizes="100vw"
 						onError={(e) => {
 							console.warn("Image failed to load:", currentSlideData.image);
 							const target = e.target as HTMLImageElement;
@@ -242,10 +244,14 @@ const HeroHeader = memo(function HeroHeader({
 						{/* Logo or Text Content */}
 						{currentSlideData.logo ? (
 							<div className="flex items-center justify-center mb-8 animate-logo-entrance">
-								<img
+								<Image
 									src={currentSlideData.logo}
 									alt={currentSlideData.alt || currentSlideData.title}
+									width={800}
+									height={400}
 									className="w-full max-w-md md:max-w-2xl h-auto"
+									priority={currentSlide === 0}
+									quality={85}
 								/>
 							</div>
 						) : (
@@ -288,9 +294,10 @@ const HeroHeader = memo(function HeroHeader({
 						role="tablist"
 						aria-label="Slide navigation"
 					>
-						{validSlides.map((_, index) => (
+						{validSlides.map((slide, index) => (
 							<button
-								key={index}
+								key={`slide-${slide.title}-${index}`}
+								type="button"
 								onClick={() => handleSlideChange(index)}
 								className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent ${
 									index === currentSlide
@@ -323,6 +330,7 @@ const HeroHeader = memo(function HeroHeader({
 			{showScrollButton && onScrollToNext && !isMobileSidebarOpen && (
 				<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
 					<button
+						type="button"
 						onClick={handleScrollToNext}
 						className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-1000 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent animate-bounce"
 						aria-label="Sonraki bölüme git"

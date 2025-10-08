@@ -5,6 +5,7 @@ import BlogSection, { type UiPost } from "@/components/home/blog-section";
 import CategoryGridSection from "@/components/home/category-grid-section";
 import FeaturesSection from "@/components/home/features-section";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
+import SubscriptionBenefitsSection from "@/components/home/subscription-benefits-section";
 import VegetablesSection from "@/components/home/vegetables-section";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
@@ -135,10 +136,14 @@ const Home: React.FC = memo(() => {
 				onScrollToNext={scrollToNextSection}
 				singleImage={true}
 				showDots={false}
+				showButton={true}
 			/>
 
 			{/* Features Section */}
 			<FeaturesSection />
+
+			{/* Subscription Benefits Section */}
+			<SubscriptionBenefitsSection />
 
 			{/* Packages FAQ Section */}
 			<PackagesFAQSection packageImage={packageImage} />

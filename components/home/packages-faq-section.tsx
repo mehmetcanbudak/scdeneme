@@ -4,6 +4,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 import type React from "react";
 import { memo, useMemo } from "react";
 
@@ -91,9 +92,11 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 						{/* Package Image - Left Side */}
 						<div className="flex items-center justify-center">
 							<div className="w-full max-w-xs sm:max-w-sm lg:max-w-xs">
-								<img
+								<Image
 									src={packageImage}
 									alt="Taze Yeşillikler Paketi"
+									width={400}
+									height={400}
 									className="w-full h-auto object-cover rounded-product shadow-md"
 								/>
 							</div>
@@ -109,7 +112,7 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 									<AccordionItem
 										key={faq.id}
 										value={faq.id}
-										className="bg-[#477A9B]/50 rounded-xl shadow-sm border border-gray-100 px-5 mb-3 overflow-hidden"
+										className="bg-[#F0F9FF] rounded-xl shadow-sm border border-gray-100 px-5 mb-3 overflow-hidden"
 									>
 										<AccordionTrigger className="hover:no-underline py-4">
 											<h4 className="text-xl md:text-2xl font-medium leading-snug text-left text-gray-800">

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type React from "react";
 import { memo, useCallback, useRef, useState } from "react";
@@ -137,11 +138,14 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 								className="flex-shrink-0 w-80"
 							>
 								<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-									<div className="aspect-video">
-										<img
+									<div className="aspect-video relative">
+										<Image
 											src={post.image || "/placeholder.svg"}
 											alt={post.title}
-											className="w-full h-full object-cover"
+											fill
+											className="object-cover"
+											quality={85}
+											sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 										/>
 									</div>
 									<div className="p-6">

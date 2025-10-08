@@ -1,5 +1,6 @@
+import Image from "next/image";
 import type React from "react";
-import { memo } from "react";
+import { memo, useId } from "react";
 
 /**
  * Props for the FeaturesSection component
@@ -17,9 +18,11 @@ interface FeaturesSectionProps {
  */
 const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 	({ className = "" }) => {
+		const sectionId = useId();
+
 		return (
 			<section
-				id="biz-ne-yapiyoruz-section"
+				id={sectionId}
 				className={`py-16 md:py-20 lg:py-24 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,10 +34,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
 									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<img
-											src="/biz_skycrops.svg"
+										<Image
+											src="/farmımızda_yetisen_sebzeler/biz_skycrops.svg"
 											alt="Biz Skycrops Icon"
-											className="w-48 h-48 object-contain"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
 										/>
 									</div>
 								</div>
@@ -49,10 +55,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
 									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<img
+										<Image
 											src="/kapali_alan.svg"
 											alt="Kapalı Alan Dikey Tarım Icon"
-											className="w-48 h-48 object-contain"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
 										/>
 									</div>
 								</div>
@@ -67,10 +76,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
 									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<img
+										<Image
 											src="/pestisit.svg"
 											alt="Pestisitsiz Hormonsuz Icon"
-											className="w-48 h-48 object-contain"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
 										/>
 									</div>
 									{/* X overlay to indicate no pesticides */}
@@ -80,7 +92,9 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 												className="w-48 h-48 text-red-600"
 												fill="currentColor"
 												viewBox="0 0 24 24"
+												aria-hidden="true"
 											>
+												<title>No pesticides icon</title>
 												<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
 											</svg>
 										</div>
@@ -97,10 +111,13 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
 									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<img
+										<Image
 											src="/taptaze.svg"
 											alt="Taptaze Icon"
-											className="w-48 h-48 object-contain"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
 										/>
 									</div>
 								</div>

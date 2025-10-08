@@ -1,8 +1,8 @@
 "use client";
 
 import HeroHeader from "@/components/hero-header";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { Droplets, Leaf, Shield, Zap } from "lucide-react";
 import type React from "react";
 import { memo, useCallback, useId, useMemo } from "react";
@@ -36,27 +36,24 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 					<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-3 text-gray-800">
 						{feature.title}
 					</h3>
-					<p className="text-base leading-relaxed">
-						{feature.description}
-					</p>
+					<p className="text-base leading-relaxed">{feature.description}</p>
 				</div>
 			</div>
 			<div className="ml-0 sm:ml-12 space-y-6">
 				{feature.content.map((item, idx) => (
-					<div key={`${item.subtitle}-${idx}`} className="border-l-2 border-gray-200 pl-4">
+					<div
+						key={`${item.subtitle}-${idx}`}
+						className="border-l-2 border-gray-200 pl-4"
+					>
 						<h4 className="text-xl md:text-2xl font-medium leading-snug mb-2">
 							{item.subtitle}:
 						</h4>
-						<p className="text-base leading-relaxed">
-							{item.text}
-						</p>
+						<p className="text-base leading-relaxed">{item.text}</p>
 					</div>
 				))}
 				{feature.conclusion && (
 					<div className="mt-6">
-						<p className="text-base leading-relaxed">
-							{feature.conclusion}
-						</p>
+						<p className="text-base leading-relaxed">{feature.conclusion}</p>
 					</div>
 				)}
 			</div>
@@ -77,7 +74,7 @@ export default function Tesisler() {
 	useNavigationTransparency(true);
 
 	// Set footer color to match page background
-	useFooterColorSetter("#AD3811");
+	useFooterColorSetter("#F1C2C4");
 
 	const mainContentId = useId();
 
@@ -191,14 +188,14 @@ export default function Tesisler() {
 				title: "",
 				subtitle: "",
 				buttonText: "",
-				image: "/tesislerimiz.png",
+				image: "/tesisler.png",
 			},
 		],
 		[],
 	);
 
 	return (
-		<div className="min-h-screen bg-[#AD3811] relative">
+		<div className="min-h-screen bg-[#F1C2C4] relative">
 			{/* Hero Section */}
 			<HeroHeader
 				slides={heroSlides}
@@ -212,7 +209,7 @@ export default function Tesisler() {
 			{/* Main Content */}
 			<main
 				id={mainContentId}
-				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-[#AD3811]"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-[#F1C2C4]"
 			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}

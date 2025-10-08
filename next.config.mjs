@@ -7,8 +7,12 @@ const nextConfig = {
 		ignoreBuildErrors: true,
 	},
 	images: {
-		unoptimized: true,
-		domains: ["localhost", "dynamic-spirit-b1c4404b11.strapiapp.com"],
+		domains: [
+			"localhost",
+			"dynamic-spirit-b1c4404b11.strapiapp.com",
+			"dynamic-spirit-b1c4404b11.media.strapiapp.com"
+		],
+		formats: ["image/webp", "image/avif"],
 	},
 	env: {
 		NEXT_PUBLIC_API_URL:

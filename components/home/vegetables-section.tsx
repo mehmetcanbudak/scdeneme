@@ -1,6 +1,17 @@
+import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type React from "react";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	memo,
+	useCallback,
+	useEffect,
+	useId,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 
 /**
  * Vegetable item interface
@@ -27,6 +38,8 @@ interface VegetablesSectionProps {
  */
 const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 	({ className = "" }) => {
+		const router = useRouter();
+		const sectionId = useId();
 		const scrollRef = useRef<HTMLDivElement>(null);
 		const [showLeftButton, setShowLeftButton] = useState(false);
 		const [showRightButton, setShowRightButton] = useState(true);
@@ -233,10 +246,32 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 
 		return (
 			<section
-				id="vegetables-section"
+				id={sectionId}
 				className={`py-16 bg-[#E7EBDE] relative z-10 ${className}`}
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+					{/* Subscription CTA Button */}
+					<div className="text-center mb-12">
+						<div className="bg-[#fbf9d5] rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
+							<h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+								Sürdürülebilir Tarıma Hemen Katılın!
+							</h3>
+							<p className="text-gray-600 mb-6 leading-relaxed">
+								Skycrops abonelik sistemiyle dikey tarım ürünleri ile sağlıklı
+								yaşamın keyfini çıkarın.
+							</p>
+							<p className="text-gray-600 mb-8 leading-relaxed">
+								Çevre dostu üretim ile taze ürünler her hafta kapınızda!
+							</p>
+							<Button
+								onClick={() => router.push("/abonelik/taze-yesillikler-paketi")}
+								className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full border border-gray-300 transition-all duration-300 hover:shadow-lg"
+							>
+								Şimdi Abone Ol
+							</Button>
+						</div>
+					</div>
+
 					<div className="text-center mb-12">
 						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
 							Farmımızda Yetişen Sebzeler
@@ -250,7 +285,7 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 
 				{/* Horizontal scrollable vegetables for all screen sizes */}
 				<div className="relative w-full px-16">
-					<div
+					<section
 						ref={scrollRef}
 						className="flex space-x-8 overflow-x-auto pb-4 px-6 scrollbar-hide"
 						style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -259,32 +294,34 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 						onTouchEnd={handleInteractionEnd}
 						onMouseDown={handleInteractionStart}
 						onMouseUp={handleInteractionEnd}
+						aria-label="Vegetables scrollable list"
 					>
-						{vegetables
-							.concat(vegetables)
-							.concat(vegetables)
-							.map((vegetable, index) => (
-								<div
-									key={`${vegetable.name}-${index}`}
-									className="flex-shrink-0 text-center group cursor-pointer w-32 sm:w-36 md:w-40"
-								>
-									<div className="relative mb-4 overflow-hidden rounded-full w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 mx-auto">
-										<img
-											src={vegetable.image || "/placeholder.svg"}
-											alt={vegetable.name}
-											className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-											draggable={false}
-										/>
-									</div>
-									<h3 className="text-xl md:text-2xl font-medium leading-snug mb-1 tracking-wide">
-										{vegetable.name}
-									</h3>
-									<p className="text-sm text-gray-600 uppercase tracking-widest">
-										{vegetable.subtitle}
-									</p>
+						{vegetables.concat(vegetables).map((vegetable, index) => (
+							<div
+								key={`${vegetable.name}-${index}`}
+								className="flex-shrink-0 text-center group w-40 sm:w-44 md:w-48"
+							>
+								<div className="relative mb-4 overflow-hidden rounded-full w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 mx-auto">
+									<Image
+										src={vegetable.image || "/placeholder.svg"}
+										alt={vegetable.name}
+										width={192}
+										height={192}
+										className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+										quality={85}
+										sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
+										draggable={false}
+									/>
 								</div>
-							))}
-					</div>
+								<h3 className="text-xl md:text-2xl font-medium leading-snug mb-1 tracking-wide">
+									{vegetable.name}
+								</h3>
+								<p className="text-sm text-gray-600 uppercase tracking-widest">
+									{vegetable.subtitle}
+								</p>
+							</div>
+						))}
+					</section>
 
 					{/* Navigation Buttons */}
 					{showLeftButton && (

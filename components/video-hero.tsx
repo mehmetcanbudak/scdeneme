@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-import { memo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigation } from "./navigation-context";
 
 interface Slide {
@@ -25,17 +25,44 @@ const VideoHero = memo(function VideoHero({
 	slides = [],
 	onScrollToNext,
 	customHeight = "100vh",
-	showDots = false,
 	showButton = true,
-	singleImage = false,
 }: VideoHeroProps) {
 	const { isMobileSidebarOpen } = useNavigation();
+	const videoRef = useRef<HTMLVideoElement>(null);
+	const [isInView, setIsInView] = useState(false);
+	const [isLoaded, setIsLoaded] = useState(false);
 
 	const handleScrollToNext = useCallback(() => {
 		if (onScrollToNext) {
 			onScrollToNext();
 		}
 	}, [onScrollToNext]);
+
+	// Intersection Observer for lazy loading
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					setIsInView(true);
+					observer.disconnect();
+				}
+			},
+			{ threshold: 0.1, rootMargin: "50px" },
+		);
+
+		if (videoRef.current) {
+			observer.observe(videoRef.current);
+		}
+
+		return () => observer.disconnect();
+	}, []);
+
+	// Load video when in view
+	useEffect(() => {
+		if (isInView && !isLoaded) {
+			setIsLoaded(true);
+		}
+	}, [isInView, isLoaded]);
 
 	const currentSlideData = slides[0] || {
 		title: "SKYCROPS",
@@ -54,16 +81,26 @@ const VideoHero = memo(function VideoHero({
 			{/* Hero Section */}
 			<section className="relative h-full overflow-visible z-10">
 				<div className="absolute inset-0">
-					<video
-						autoPlay
-						loop
-						muted
-						playsInline
-						className="w-full h-full object-cover"
-					>
-						<source src="/skycrops.mp4" type="video/mp4" />
-						Your browser does not support the video tag.
-					</video>
+					{isLoaded ? (
+						<video
+							ref={videoRef}
+							autoPlay
+							loop
+							muted
+							playsInline
+							className="w-full h-full object-cover"
+							preload="metadata"
+						>
+							<source src="/skycrops-web.mp4" type="video/mp4" />
+							<source src="/skycrops-compressed.mp4" type="video/mp4" />
+							Your browser does not support the video tag.
+						</video>
+					) : (
+						<div
+							ref={videoRef}
+							className="w-full h-full bg-gray-900 animate-pulse"
+						/>
+					)}
 					<div className="absolute inset-0 bg-black/50"></div>
 				</div>
 
