@@ -74,14 +74,15 @@ const Navigation = memo(function Navigation({
 	}, [setIsMobileSidebarOpen]);
 
 	return (
-		<header
-			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
-				shouldBeTransparent
-					? "bg-transparent"
-					: "bg-[#DBEAFE backdrop-blur-lg shadow-lg border-b border-blue-200/30"
-			} ${className}`}
-			aria-label="Ana navigasyon"
-		>
+		<>
+			<header
+				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
+					shouldBeTransparent
+						? "bg-transparent"
+						: "bg-[#DBEAFE backdrop-blur-lg shadow-lg border-b border-blue-200/30"
+				} ${className}`}
+				aria-label="Ana navigasyon"
+			>
 			<nav
 				className="relative grid grid-cols-[auto_1fr_auto] nav:grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-2"
 				aria-label="Ana menü"
@@ -142,14 +143,16 @@ const Navigation = memo(function Navigation({
 				</div>
 			)} */}
 
-			{/* Mobile sidebar */}
+			</header>
+
+			{/* Mobile sidebar - rendered outside header to avoid z-index stacking context issues */}
 			<MobileSidebar
 				isOpen={isMobileSidebarOpen}
 				onClose={closeMobileMenu}
 				items={NAVIGATION_ITEMS}
 				shouldBeTransparent={shouldBeTransparent}
 			/>
-		</header>
+		</>
 	);
 });
 
