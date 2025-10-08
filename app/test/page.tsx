@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ export default function TestPage() {
 		updateProfile,
 		user,
 		isAuthenticated,
+		token,
 	} = useAuth();
 
 	const { addItem, items, loadCart } = useCart();
@@ -46,6 +47,12 @@ export default function TestPage() {
 	const [verificationCode, setVerificationCode] = useState("");
 	const [firstName, setFirstName] = useState("Test");
 	const [lastName, setLastName] = useState("User");
+	const [isClient, setIsClient] = useState(false);
+
+	// Handle client-side hydration
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	const handleSendOTP = async () => {
 		try {
@@ -65,7 +72,7 @@ export default function TestPage() {
 		try {
 			const result = await login(phone, otpCode);
 			console.log("Verify OTP result:", result);
-			console.log("JWT Token:", (result as any)?.jwt?.substring(0, 50) + "...");
+			console.log("JWT Token:", (result as { jwt?: string })?.jwt?.substring(0, 50) + "...");
 			alert("Login successful! Check console for JWT token.");
 		} catch (error) {
 			console.error("Verify OTP error:", error);
@@ -79,7 +86,6 @@ export default function TestPage() {
 	const handleSendEmailVerification = async () => {
 		try {
 			console.log("Sending email verification to:", email);
-			const token = localStorage.getItem("token");
 			console.log("Current auth token:", token?.substring(0, 50) + "...");
 
 			// Test the /api/auth/me endpoint first
@@ -193,16 +199,16 @@ export default function TestPage() {
 						</div>
 						<div>
 							<strong>Token:</strong>{" "}
-							{localStorage.getItem("token")
-								? localStorage.getItem("token")?.substring(0, 50) + "..."
+							{isClient && token
+								? token.substring(0, 50) + "..."
 								: "None"}
 						</div>
-						{localStorage.getItem("token") && (
+						{isClient && token && (
 							<div>
 								<strong>JWT Payload:</strong>
 								<pre className="text-xs mt-1 bg-white p-2 rounded">
 									{JSON.stringify(
-										decodeJWT(localStorage.getItem("token")!),
+										decodeJWT(token),
 										null,
 										2,
 									)}
@@ -276,7 +282,6 @@ export default function TestPage() {
 					<CardContent className="space-y-4">
 						<Button
 							onClick={async () => {
-								const token = localStorage.getItem("token");
 								if (!token) {
 									console.log("No token found");
 									return;
@@ -321,7 +326,6 @@ export default function TestPage() {
 
 						<Button
 							onClick={async () => {
-								const token = localStorage.getItem("token");
 								if (!token) {
 									alert("No token found - please login first");
 									return;
@@ -383,11 +387,12 @@ export default function TestPage() {
 						<Button
 							onClick={() => {
 								// Clear all auth data
-								localStorage.removeItem("token");
-								localStorage.removeItem("user");
-
-								// Force page refresh to reset auth context
-								window.location.reload();
+								if (isClient) {
+									localStorage.removeItem("token");
+									localStorage.removeItem("user");
+									// Force page refresh to reset auth context
+									window.location.reload();
+								}
 							}}
 							className="bg-yellow-600 hover:bg-yellow-700"
 						>
