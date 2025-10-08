@@ -68,7 +68,7 @@ const MobileSidebar = memo(function MobileSidebar({
 		<div className="fixed inset-0 z-[99999] nav:hidden">
 			{/* Backdrop with smooth fade-in */}
 			<div
-				className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+				className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
 				onClick={handleBackdropClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") {
@@ -80,7 +80,7 @@ const MobileSidebar = memo(function MobileSidebar({
 			/>
 
 			{/* Sidebar with slide-in animation */}
-			<div className="absolute left-0 top-0 h-full w-80 bg-white shadow-2xl animate-in slide-in-from-left duration-300 ease-out overflow-y-auto">
+			<div className="absolute left-0 top-0 z-50 h-full w-80 bg-white shadow-2xl animate-in slide-in-from-left duration-300 ease-out overflow-y-auto">
 				<div className="flex flex-col min-h-full">
 					{/* Header with Logo */}
 					<div className="flex items-center justify-between p-6 border-b border-gray-100">
