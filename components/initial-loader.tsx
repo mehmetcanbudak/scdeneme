@@ -1,58 +1,267 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LoadingScreen from "./loading-screen";
+
+const FADE_OUT_DURATION = 400;
+const IMAGE_WAIT_TIMEOUT = 3000;
+const ASSET_READY_KEY = "skycrops-assets-ready";
+
+const ASSET_MANIFEST = [
+	"/skycrops-logo.svg",
+	"/skycrops.svg",
+	"/skycrops-package-product.png",
+	"/skycrops-web.mp4",
+	"/skycrops-compressed.mp4",
+	"/celenk.svg",
+	"/farmımızda_yetisen_sebzeler/biz_skycrops.svg",
+];
 
 /**
  * Initial site loader component
- * Shows on first visit and fades out when the site is loaded
+ * Shows on initial page paint and during route transitions until critical assets load
  *
  * @returns {React.ReactElement | null} The initial loader component or null
  */
 const InitialLoader = memo(function InitialLoader() {
-	const [isLoading, setIsLoading] = useState(true);
+	const pathname = usePathname();
+	const [isVisible, setIsVisible] = useState(true);
 	const [isFading, setIsFading] = useState(false);
+	const assetManifest = useMemo(() => ASSET_MANIFEST, []);
 
-	useEffect(() => {
-		// Check if this is the first load
-		const hasLoaded = sessionStorage.getItem("skycrops-loaded");
+	const isAssetReady = useCallback(() => {
+		if (typeof window === "undefined") {
+			return false;
+		}
 
-		if (hasLoaded) {
-			// If already loaded in this session, don't show loader
-			setIsLoading(false);
+		return localStorage.getItem(ASSET_READY_KEY) === "true";
+	}, []);
+
+	const markAssetsReady = useCallback(() => {
+		if (typeof window === "undefined") {
 			return;
 		}
 
-		// Minimum display time of 1.5 seconds for the animation to play
-		const minDisplayTime = 1500;
-		const startTime = Date.now();
-
-		const handleLoad = () => {
-			const elapsedTime = Date.now() - startTime;
-			const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
-
-			setTimeout(() => {
-				// Start fade out animation
-				setIsFading(true);
-
-				// Remove loader after fade out completes
-				setTimeout(() => {
-					setIsLoading(false);
-					sessionStorage.setItem("skycrops-loaded", "true");
-				}, 500); // Match this with the fade-out duration
-			}, remainingTime);
-		};
-
-		// Wait for the page to be fully loaded
-		if (document.readyState === "complete") {
-			handleLoad();
-		} else {
-			window.addEventListener("load", handleLoad);
-			return () => window.removeEventListener("load", handleLoad);
-		}
+		localStorage.setItem(ASSET_READY_KEY, "true");
 	}, []);
 
-	if (!isLoading) {
+	const isMountedRef = useRef(true);
+	const isFirstRouteRef = useRef(true);
+	const activeCycleRef = useRef(0);
+	const timeoutIdsRef = useRef<number[]>([]);
+	const cleanupCallbacksRef = useRef<Array<() => void>>([]);
+
+	const clearTimersAndListeners = useCallback(() => {
+		timeoutIdsRef.current.forEach((id) => window.clearTimeout(id));
+		timeoutIdsRef.current = [];
+
+		cleanupCallbacksRef.current.forEach((cleanup) => cleanup());
+		cleanupCallbacksRef.current = [];
+	}, []);
+
+	const startLoadingCycle = useCallback(() => {
+		activeCycleRef.current += 1;
+		const cycleId = activeCycleRef.current;
+
+		clearTimersAndListeners();
+
+		if (!isMountedRef.current) {
+			return;
+		}
+
+		if (isAssetReady()) {
+			setIsVisible(false);
+			return;
+		}
+
+		setIsVisible(true);
+		setIsFading(false);
+
+		const settleAndHide = () => {
+			if (!isMountedRef.current || activeCycleRef.current !== cycleId) {
+				return;
+			}
+
+			setIsFading(true);
+
+			const hideTimeout = window.setTimeout(() => {
+				if (!isMountedRef.current || activeCycleRef.current !== cycleId) {
+					return;
+				}
+
+				setIsVisible(false);
+			}, FADE_OUT_DURATION);
+
+			timeoutIdsRef.current.push(hideTimeout);
+		};
+
+		const waitForDocumentReady = new Promise<void>((resolve) => {
+			if (document.readyState === "complete") {
+				resolve();
+				return;
+			}
+
+			const handleLoad = () => {
+				window.removeEventListener("load", handleLoad);
+				resolve();
+			};
+
+			window.addEventListener("load", handleLoad, { once: true });
+			cleanupCallbacksRef.current.push(() =>
+				window.removeEventListener("load", handleLoad),
+			);
+		});
+
+		const waitForManifestAssets = new Promise<void>((resolve) => {
+			if (typeof window === "undefined") {
+				resolve();
+				return;
+			}
+
+			let resolved = false;
+
+			const settle = () => {
+				if (resolved) {
+					return;
+				}
+
+				resolved = true;
+				resolve();
+			};
+
+			const timeoutId = window.setTimeout(() => {
+				settle();
+			}, IMAGE_WAIT_TIMEOUT);
+
+			timeoutIdsRef.current.push(timeoutId);
+
+			Promise.allSettled(
+				assetManifest.map(async (asset) => {
+					if (asset.endsWith(".mp4")) {
+						await fetch(asset, { method: "GET", cache: "force-cache" });
+						return;
+					}
+
+					if (asset.endsWith(".svg") || asset.endsWith(".png")) {
+						const image = new Image();
+						await new Promise<void>((resolveImage, rejectImage) => {
+							image.addEventListener("load", () => resolveImage(), {
+								once: true,
+							});
+							image.addEventListener("error", (e) => rejectImage(e), {
+								once: true,
+							});
+							image.src = asset;
+						});
+						return;
+					}
+
+					await fetch(asset, { cache: "force-cache" });
+				}),
+			)
+				.then(() => {
+					markAssetsReady();
+					settle();
+				})
+				.catch(() => {
+					settle();
+				});
+		});
+
+		const waitForImages = new Promise<void>((resolve) => {
+			if (typeof window === "undefined") {
+				resolve();
+				return;
+			}
+
+			requestAnimationFrame(() => {
+				const images = Array.from(document.images).filter(
+					(img) => !img.complete || img.naturalWidth === 0,
+				);
+
+				if (images.length === 0) {
+					resolve();
+					return;
+				}
+
+				let remaining = images.length;
+				let settled = false;
+				const listenerCleanups: Array<() => void> = [];
+				let fallbackTimeout: number | null = null;
+
+				const settle = () => {
+					if (settled) {
+						return;
+					}
+
+					settled = true;
+					listenerCleanups.forEach((cleanup) => cleanup());
+
+					if (fallbackTimeout !== null) {
+						window.clearTimeout(fallbackTimeout);
+					}
+
+					resolve();
+				};
+
+				const handleImageEvent = () => {
+					remaining -= 1;
+
+					if (remaining <= 0) {
+						settle();
+					}
+				};
+
+				images.forEach((image) => {
+					const onLoad = () => handleImageEvent();
+					const onError = () => handleImageEvent();
+
+					image.addEventListener("load", onLoad, { once: true });
+					image.addEventListener("error", onError, { once: true });
+
+					listenerCleanups.push(() => {
+						image.removeEventListener("load", onLoad);
+						image.removeEventListener("error", onError);
+					});
+				});
+
+				cleanupCallbacksRef.current.push(() => {
+					listenerCleanups.forEach((cleanup) => cleanup());
+				});
+
+				fallbackTimeout = window.setTimeout(() => {
+					settle();
+				}, IMAGE_WAIT_TIMEOUT);
+
+				timeoutIdsRef.current.push(fallbackTimeout);
+			});
+		});
+
+		Promise.all([waitForDocumentReady, waitForManifestAssets, waitForImages])
+			.catch(() => null)
+			.then(() => settleAndHide());
+	}, [clearTimersAndListeners]);
+
+	useEffect(() => {
+		startLoadingCycle();
+
+		return () => {
+			isMountedRef.current = false;
+			clearTimersAndListeners();
+		};
+	}, [startLoadingCycle, clearTimersAndListeners]);
+
+	useEffect(() => {
+		if (isFirstRouteRef.current) {
+			isFirstRouteRef.current = false;
+			return;
+		}
+
+		startLoadingCycle();
+	}, [pathname, startLoadingCycle]);
+
+	if (!isVisible) {
 		return null;
 	}
 

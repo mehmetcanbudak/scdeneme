@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-import type { LucideIcon } from "lucide-react";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import {
 	Award,
 	Bug,
@@ -12,9 +13,7 @@ import {
 	Sun,
 	Trees,
 } from "lucide-react";
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import React, { useCallback, useMemo } from "react";
 
 /**
  * Sustainable practice card data interface
@@ -180,9 +179,11 @@ export default function Sertifikalar() {
 				subtitle: "",
 				buttonText: "",
 				image: "/iso.png",
+				mobileImage: "/iso.png",
+				mobileAlt: "Sertifikalar hero görseli",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -239,7 +240,7 @@ export default function Sertifikalar() {
 				],
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -249,7 +250,8 @@ export default function Sertifikalar() {
 		() => [
 			{
 				title: "Global Gap Sertifikası",
-				description: "Uluslararası kalite standartları onaylı üretim sertifikası",
+				description:
+					"Uluslararası kalite standartları onaylı üretim sertifikası",
 			},
 			{
 				title: "İyi Tarım Uygulamaları",
@@ -272,7 +274,7 @@ export default function Sertifikalar() {
 				description: "Türk Standartları Enstitüsü kalite belgesi",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -305,7 +307,7 @@ export default function Sertifikalar() {
 				description: "Greyfurt ürünlerimizin detaylı analiz sonuçları",
 			},
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -317,10 +319,13 @@ export default function Sertifikalar() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">

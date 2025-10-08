@@ -1,11 +1,11 @@
 "use client";
 
+import { useFooterColor } from "@/contexts/footer-color-context";
 import type { FooterSection } from "@/lib/navigation-config";
 import { FOOTER_POLICY_LINKS, FOOTER_SECTIONS } from "@/lib/navigation-config";
-import { useFooterColor } from "@/contexts/footer-color-context";
 import Image from "next/image";
 import Link from "next/link";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface FooterProps {
 	className?: string;
@@ -79,6 +79,54 @@ const Footer = memo(function Footer({
 	copyrightText = "© 2025 Skycrops. Tüm hakları saklıdır.",
 }: FooterProps) {
 	const { footerColor } = useFooterColor();
+	const DEFAULT_FOOTER_HEIGHT = 500;
+	const footerRef = useRef<HTMLDivElement | null>(null);
+	const [footerHeight, setFooterHeight] = useState(DEFAULT_FOOTER_HEIGHT);
+
+	useEffect(() => {
+		const node = footerRef.current;
+		if (!node) {
+			return;
+		}
+
+		const updateHeight = () => {
+			const currentNode = footerRef.current;
+			if (!currentNode) {
+				return;
+			}
+			const measuredHeight = Math.round(
+				currentNode.getBoundingClientRect().height,
+			);
+			if (measuredHeight) {
+				setFooterHeight((prev) =>
+					prev !== measuredHeight ? measuredHeight : prev,
+				);
+			}
+		};
+
+		updateHeight();
+
+		if (typeof ResizeObserver !== "undefined") {
+			const observer = new ResizeObserver(updateHeight);
+			observer.observe(node);
+			return () => {
+				observer.disconnect();
+			};
+		}
+
+		if (typeof window !== "undefined") {
+			window.addEventListener("resize", updateHeight);
+			return () => {
+				window.removeEventListener("resize", updateHeight);
+			};
+		}
+	}, []);
+
+	const stickyOffset = useMemo(
+		() => `max(0px, calc(100vh - ${footerHeight}px))`,
+		[footerHeight],
+	);
+
 	/**
 	 * Renders a footer section with links
 	 */
@@ -159,22 +207,30 @@ const Footer = memo(function Footer({
 
 	return (
 		<div
-			className="relative h-[500px]"
+			className="relative"
 			style={{
+				height: `${footerHeight}px`,
 				clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
 			}}
 		>
-			<div className="relative h-[calc(100vh+500px)] -top-[100vh]">
-				<div className="h-[500px] sticky top-[calc(100vh-500px)]">
+			<div
+				className="relative"
+				style={{
+					height: `calc(100vh + ${footerHeight}px)`,
+					top: "-100vh",
+				}}
+			>
+				<div className="sticky left-0 right-0" style={{ top: stickyOffset }}>
 					<footer
-						className={`h-full py-6 sm:py-8 px-4 sm:px-6 border-t overflow-x-hidden transition-colors duration-300 ${className}`}
+						ref={footerRef}
+						className={`py-6 sm:py-8 px-4 sm:px-6 border-t overflow-x-hidden transition-colors duration-300 ${className}`}
 						style={{ backgroundColor: footerColor }}
 						role="contentinfo"
 						aria-label="Site footer"
 					>
-						<div className="mx-4 sm:mx-8 md:mx-12 h-full">
+						<div className="mx-4 sm:mx-8 md:mx-12">
 							{/* Footer Content Wrapper */}
-							<div className="flex flex-col h-full space-y-6 sm:space-y-8">
+							<div className="flex flex-col space-y-6 sm:space-y-8">
 								{/* Navigation Sections */}
 								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
 									{footerSections}

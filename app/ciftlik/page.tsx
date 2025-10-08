@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-import Image from "next/image";
 import HeroHeader from "@/components/hero-header";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import Image from "next/image";
+import React, { useCallback, useMemo } from "react";
 
 /**
  * Ciftlik page component - Farm information page
@@ -40,9 +40,11 @@ const Ciftlik = React.memo(() => {
 				subtitle: "",
 				buttonText: "",
 				image: "/agricultural-figures-with-plants-and-sun.png",
+				mobileImage: "/agricultural-figures-with-plants-and-sun.png",
+				mobileAlt: "Çiftlik hero görseli",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -54,7 +56,7 @@ const Ciftlik = React.memo(() => {
 			"Su tasarrufu teknolojileri",
 			"Doğal haşere kontrolü",
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -67,11 +69,14 @@ const Ciftlik = React.memo(() => {
 				showDots={false}
 				showButton={false}
 				singleImage={true}
-				customHeight="52.5vh"
+				customHeight="100vh"
 			/>
 
 			{/* Main content with id and bg-white */}
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">

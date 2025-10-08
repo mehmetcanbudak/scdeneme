@@ -201,12 +201,14 @@ export default function BlogClient({
 						subtitle: "",
 						buttonText: "",
 						image: "/thelettuceguy.png",
+						mobileImage: "/thelettuceguy.png",
+						mobileAlt: "Blog hero görseli",
 					},
 				]}
 				onScrollToNext={scrollToContent}
 				singleImage
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
 			<main

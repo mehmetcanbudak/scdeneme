@@ -189,6 +189,8 @@ export default function Tesisler() {
 				subtitle: "",
 				buttonText: "",
 				image: "/tesisler.png",
+				mobileImage: "/tesisler.png",
+				mobileAlt: "Tesislerimiz hero görseli",
 			},
 		],
 		[],
@@ -203,7 +205,7 @@ export default function Tesisler() {
 				singleImage={true}
 				showDots={false}
 				showButton={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
 			{/* Main Content */}

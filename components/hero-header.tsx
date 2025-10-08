@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -13,8 +14,10 @@ export interface HeroSlide {
 	buttonText?: string;
 	buttonAction?: () => void;
 	image?: string;
+	mobileImage?: string;
 	video?: string;
 	alt?: string;
+	mobileAlt?: string;
 	logo?: string;
 }
 
@@ -60,6 +63,7 @@ const HeroHeader = memo(function HeroHeader({
 	const [currentSlide, setCurrentSlide] = useState(0);
 	const [progress, setProgress] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(autoPlay && !singleImage);
+	const isMobile = useIsMobile();
 	const navigation = useNavigation();
 
 	// Validate slides prop
@@ -139,6 +143,14 @@ const HeroHeader = memo(function HeroHeader({
 	}, [isMobileSidebarOpen, autoPlay, singleImage]);
 
 	const currentSlideData = validSlides[currentSlide] || validSlides[0];
+	const resolvedImage =
+		isMobile && currentSlideData.mobileImage
+			? currentSlideData.mobileImage
+			: currentSlideData.image;
+	const resolvedAlt =
+		isMobile && currentSlideData.mobileAlt
+			? currentSlideData.mobileAlt
+			: currentSlideData.alt || currentSlideData.title;
 	const hasMultipleSlides = totalSlides > 1;
 	const mediaFitClass =
 		mediaFit === "contain" ? "object-contain" : "object-cover";
@@ -179,8 +191,8 @@ const HeroHeader = memo(function HeroHeader({
 				height: customHeight,
 				backgroundColor,
 				minWidth: "100vw",
-				marginLeft: "calc(50% - 50vw)",
-				marginRight: "calc(50% - 50vw)",
+				//marginLeft: "calc(50% - 50vw)",
+				//marginRight: "calc(50% - 50vw)",
 			}}
 		>
 			{/* Background media */}
@@ -189,10 +201,10 @@ const HeroHeader = memo(function HeroHeader({
 				style={{
 					backgroundColor,
 					width: "100vw",
-					left: "50%",
-					right: "50%",
-					marginLeft: "-50vw",
-					marginRight: "-50vw",
+					left: "0%",
+					right: "0%",
+					marginLeft: "0vw",
+					marginRight: "0vw",
 				}}
 			>
 				{currentSlideData.video ? (
@@ -213,9 +225,11 @@ const HeroHeader = memo(function HeroHeader({
 					/>
 				) : (
 					<Image
-						key={currentSlideData.image || currentSlideData.title}
-						src={currentSlideData.image || "/placeholder.svg"}
-						alt={currentSlideData.alt || currentSlideData.title}
+						key={
+							resolvedImage || currentSlideData.image || currentSlideData.title
+						}
+						src={resolvedImage || "/placeholder.svg"}
+						alt={resolvedAlt}
 						fill
 						className={`${mediaFitClass} transition-opacity duration-1000`}
 						priority={currentSlide === 0}
@@ -269,22 +283,24 @@ const HeroHeader = memo(function HeroHeader({
 								</h1>
 							</>
 						)}
-
-						{/* Button */}
-						{showButton && currentSlideData.buttonText && (
-							<Button
-								type="button"
-								size="lg"
-								onClick={handleButtonClick}
-								className="px-8 py-3 uppercase tracking-widest transition-all duration-300 animate-fade-in"
-								aria-label={`${currentSlideData.buttonText} - ${currentSlideData.title}`}
-							>
-								{currentSlideData.buttonText}
-							</Button>
-						)}
 					</div>
 				</div>
 			</div>
+
+			{/* Button positioned above scroll arrow */}
+			{showButton && currentSlideData.buttonText && !isMobileSidebarOpen && (
+				<div className="absolute bottom-28 left-1/2 transform -translate-x-1/2 z-20">
+					<Button
+						type="button"
+						size="lg"
+						onClick={handleButtonClick}
+						className="px-8 py-3 uppercase tracking-widest transition-all duration-300 animate-fade-in"
+						aria-label={`${currentSlideData.buttonText} - ${currentSlideData.title}`}
+					>
+						{currentSlideData.buttonText}
+					</Button>
+				</div>
+			)}
 
 			{/* Navigation dots */}
 			{showDots && hasMultipleSlides && (

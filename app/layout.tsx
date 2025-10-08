@@ -42,6 +42,17 @@ export default function RootLayout({
 		<html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
 			<head>
 				<script src="https://accounts.google.com/gsi/client" async></script>
+				<link rel="preload" as="image" href="/skycrops-logo.svg" />
+				<link rel="preload" as="image" href="/skycrops.svg" />
+				<link rel="preload" as="image" href="/skycrops-package-product.png" />
+				<link rel="preload" as="image" href="/celenk.svg" />
+				<link
+					rel="preload"
+					as="image"
+					href="/farmımızda_yetisen_sebzeler/biz_skycrops.svg"
+				/>
+				<link rel="preload" as="video" href="/skycrops-web.mp4" />
+				<link rel="preload" as="video" href="/skycrops-compressed.mp4" />
 			</head>
 			<body
 				className={`font-sans ${roboto.variable} ${poppins.variable} overflow-x-hidden`}

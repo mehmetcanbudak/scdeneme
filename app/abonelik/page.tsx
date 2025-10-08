@@ -1,21 +1,15 @@
 "use client";
 
-import type React from "react";
-import { memo, useCallback, useEffect, useId, useState, useMemo } from "react";
-import Image from "next/image";
-import { notFound, useRouter } from "next/navigation";
-import { Award, Leaf, Minus, Plus, Shield, Truck, X } from "lucide-react";
 import HeroHeader from "@/components/hero-header";
-import HeroContent from "@/components/subscription/hero-content";
+import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
 import FeatureCard from "@/components/subscription/feature-card";
-import WeeklyProgram from "@/components/subscription/weekly-program";
-import ProductSelector, {
+import {
+	type DeliveryDay,
 	type Product,
 	type SubscriptionInterval,
-	type DeliveryDay,
 } from "@/components/subscription/product-selector";
 import SubscriptionProductPreview from "@/components/subscription/subscription-product-preview";
-import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
+import WeeklyProgram from "@/components/subscription/weekly-program";
 import { Button } from "@/components/ui/button";
 import { Grid, Section, SectionHeader } from "@/components/ui/page-layout";
 import {
@@ -23,9 +17,13 @@ import {
 	CTASection,
 	TestimonialCard,
 } from "@/components/ui/subscription-components";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
+import { Award, Leaf, Shield, Truck, X } from "lucide-react";
+import { notFound, useRouter } from "next/navigation";
+import type React from "react";
+import { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -163,7 +161,8 @@ const Abonelik: React.FC = memo(() => {
 			{
 				icon: <Shield className="w-8 h-8 text-green-600" />,
 				title: "Çevre Dostu",
-				description: "Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
+				description:
+					"Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
 			},
 			{
 				icon: <Truck className="w-8 h-8 text-yellow-600" />,
@@ -527,12 +526,14 @@ const Abonelik: React.FC = memo(() => {
 						buttonAction: () =>
 							router.push("/abonelik/taze-yesillikler-paketi"),
 						image: "/abonelik.png",
+						mobileImage: "/abonelik.png",
+						mobileAlt: "Abonelik hero görseli",
 					},
 				]}
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
 			{/* Main content */}
@@ -602,7 +603,9 @@ const Abonelik: React.FC = memo(() => {
 							images={images}
 							deliveryDays={deliveryDays}
 							deliveryDayStock={deliveryDayStock}
-							onAddToCart={() => router.push("/abonelik/taze-yesillikler-paketi")}
+							onAddToCart={() =>
+								router.push("/abonelik/taze-yesillikler-paketi")
+							}
 						/>
 					</div>
 				</Section>
@@ -632,7 +635,9 @@ const Abonelik: React.FC = memo(() => {
 							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700">
 								Sıkça Sorulan Sorular
 							</h2>
-							<p className="text-base leading-relaxed">Merak ettiklerinizin cevapları</p>
+							<p className="text-base leading-relaxed">
+								Merak ettiklerinizin cevapları
+							</p>
 						</div>
 
 						<BasicAccordion

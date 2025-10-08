@@ -2,8 +2,8 @@
 
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback, useId, useMemo } from "react";
@@ -141,6 +141,8 @@ const Hakkimizda = memo(function Hakkimizda() {
 				subtitle: "",
 				buttonText: "",
 				image: "/hakkimizda.png",
+				mobileImage: "/farmımızda_yetisen_sebzeler/hakkimizda_mobile.svg",
+				mobileAlt: "Skycrops'ın Hakkımızda sayfası mobil görseli",
 			},
 		],
 		[],
@@ -218,7 +220,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 			{
 				title: "Lezzetli",
 				content:
-					"Skycrops'ta bitkiler biyolojilerine en uygun koşullarda yetişir. İhtiyaçları olan besinleri, doğru ısı, nem ve ışık yoğunluğunda alırlar. Skycrops olarak birinci önceliğimiz \"mutlu bitkiler\" yetiştirmek. Tohumlarını özenle seçip, özenle yetiştirdiğimiz ürünler; seçkin restoran ve şefler tarafından tercih edilen, dünya genelinde en çok beğenilen ve keyifle tüketilen türlerdir.",
+					'Skycrops\'ta bitkiler biyolojilerine en uygun koşullarda yetişir. İhtiyaçları olan besinleri, doğru ısı, nem ve ışık yoğunluğunda alırlar. Skycrops olarak birinci önceliğimiz "mutlu bitkiler" yetiştirmek. Tohumlarını özenle seçip, özenle yetiştirdiğimiz ürünler; seçkin restoran ve şefler tarafından tercih edilen, dünya genelinde en çok beğenilen ve keyifle tüketilen türlerdir.',
 				imageSrc: "/organic-farming-greenhouse-vegetables.png",
 				imageAlt: "Organik tarım",
 				imagePosition: "left" as const,
@@ -243,13 +245,16 @@ const Hakkimizda = memo(function Hakkimizda() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 				mediaFit="contain"
 				backgroundColor="#DC4F34"
 			/>
 
 			{/* Main Content */}
-			<main id={mainContentId} className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
+			<main
+				id={mainContentId}
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-8 sm:mb-12">

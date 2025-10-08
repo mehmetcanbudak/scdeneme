@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type React from "react";
-import { memo, useId } from "react";
+import { memo } from "react";
 
 /**
  * Props for the FeaturesSection component
@@ -18,11 +18,10 @@ interface FeaturesSectionProps {
  */
 const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 	({ className = "" }) => {
-		const sectionId = useId();
-
 		return (
+			// biome-ignore lint: Static ID needed for scroll navigation
 			<section
-				id={sectionId}
+				id="biz-ne-yapiyoruz-section"
 				className={`py-16 md:py-20 lg:py-24 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

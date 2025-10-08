@@ -73,7 +73,7 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 							>
 								<div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
 									{/* Icon */}
-									<div className="flex-shrink-0">
+									<div className="flex-shrink-0 mx-auto sm:mx-0">
 										<div className="w-60 h-60 sm:w-72 sm:h-72 md:w-84 md:h-84 rounded-full bg-white border-4 border-gray-800 flex items-center justify-center">
 											<Image
 												src={benefit.icon}

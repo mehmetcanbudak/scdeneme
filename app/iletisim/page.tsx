@@ -2,8 +2,8 @@
 
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -29,7 +29,9 @@ const ContactInfoItem = memo(function ContactInfoItem({
 				{icon}
 			</div>
 			<div>
-				<h3 className="text-xl md:text-2xl font-medium leading-snug mb-2 text-gray-700">{title}</h3>
+				<h3 className="text-xl md:text-2xl font-medium leading-snug mb-2 text-gray-700">
+					{title}
+				</h3>
 				{children}
 			</div>
 		</div>
@@ -73,7 +75,10 @@ const FormInput = memo(function FormInput({
 
 	return (
 		<div>
-			<label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+			<label
+				htmlFor={id}
+				className="block text-sm font-medium text-gray-700 mb-2"
+			>
 				{label} {required && "*"}
 			</label>
 			{hasPhonePrefix ? (
@@ -206,6 +211,8 @@ export default function Iletisim() {
 				subtitle: "",
 				buttonText: "",
 				image: "/iletisim.png",
+				mobileImage: "/iletisim.png",
+				mobileAlt: "İletişim hero görseli",
 			},
 		],
 		[],
@@ -283,7 +290,7 @@ export default function Iletisim() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
 			{/* Main Content */}

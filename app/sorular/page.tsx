@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import type { LucideIcon } from "lucide-react";
 import {
 	Award,
@@ -12,9 +14,7 @@ import {
 	Users,
 } from "lucide-react";
 import Link from "next/link";
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import React, { useCallback, useMemo } from "react";
 
 /**
  * FAQ data interface
@@ -28,28 +28,29 @@ interface FAQData {
 /**
  * FAQCard component - Displays a single FAQ with icon
  */
-const FAQCard = React.memo<{ faq: FAQData; colorClass: { bg: string; text: string } }>(
-	({ faq, colorClass }) => {
-		const IconComponent = faq.icon;
-		return (
-			<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
-				<div className="flex items-start space-x-4">
-					<div
-						className={`w-12 h-12 ${colorClass.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
-					>
-						<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
-					</div>
-					<div>
-						<h3 className="text-xl font-semibold mb-3 text-gray-800">
-							{faq.question}
-						</h3>
-						<p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-					</div>
+const FAQCard = React.memo<{
+	faq: FAQData;
+	colorClass: { bg: string; text: string };
+}>(({ faq, colorClass }) => {
+	const IconComponent = faq.icon;
+	return (
+		<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+			<div className="flex items-start space-x-4">
+				<div
+					className={`w-12 h-12 ${colorClass.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
+				>
+					<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
+				</div>
+				<div>
+					<h3 className="text-xl font-semibold mb-3 text-gray-800">
+						{faq.question}
+					</h3>
+					<p className="text-gray-600 leading-relaxed">{faq.answer}</p>
 				</div>
 			</div>
-		);
-	}
-);
+		</div>
+	);
+});
 FAQCard.displayName = "FAQCard";
 
 /**
@@ -87,9 +88,11 @@ export default function Sorular() {
 				subtitle: "",
 				buttonText: "",
 				image: "/organic-farming-greenhouse-vegetables.png",
+				mobileImage: "/organic-farming-greenhouse-vegetables.png",
+				mobileAlt: "Sıkça sorulan sorular hero görseli",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -134,7 +137,7 @@ export default function Sorular() {
 				icon: FileText,
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -149,7 +152,7 @@ export default function Sorular() {
 			{ bg: "bg-red-100", text: "text-red-600" },
 			{ bg: "bg-indigo-100", text: "text-indigo-600" },
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -161,10 +164,13 @@ export default function Sorular() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">

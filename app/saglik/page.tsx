@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
+import HeroHeader from "@/components/hero-header";
+import { Button } from "@/components/ui/button";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import type { LucideIcon } from "lucide-react";
 import {
 	Apple,
@@ -15,9 +17,7 @@ import {
 	Zap,
 } from "lucide-react";
 import Link from "next/link";
-import HeroHeader from "@/components/hero-header";
-import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import React, { useCallback, useMemo } from "react";
 
 /**
  * Health benefit card data interface
@@ -75,7 +75,7 @@ const BenefitCard = React.memo<{ benefit: HealthBenefit; index: number }>(
 				</div>
 			</div>
 		);
-	}
+	},
 );
 BenefitCard.displayName = "BenefitCard";
 
@@ -160,9 +160,11 @@ export default function Saglik() {
 				subtitle: "",
 				buttonText: "",
 				image: "/fresh-mixed-vegetables-display.png",
+				mobileImage: "/fresh-mixed-vegetables-display.png",
+				mobileAlt: "Sağlık hero görseli",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -203,7 +205,7 @@ export default function Saglik() {
 				iconColor: "text-pink-600",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -240,7 +242,7 @@ export default function Saglik() {
 				calories: "160 kcal",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -264,7 +266,7 @@ export default function Saglik() {
 				iconColor: "text-green-600",
 			},
 		],
-		[]
+		[],
 	);
 
 	/**
@@ -288,7 +290,7 @@ export default function Saglik() {
 				iconColor: "text-red-600",
 			},
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -300,10 +302,13 @@ export default function Saglik() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
-			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+			<main
+				id="main-content"
+				className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white"
+			>
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">
@@ -434,13 +439,19 @@ export default function Saglik() {
 						</p>
 						<div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4">
 							<Link href="/abonelik">
-								<Button variant="inverseOutline" className="text-white w-full sm:w-auto">
+								<Button
+									variant="inverseOutline"
+									className="text-white w-full sm:w-auto"
+								>
 									<Apple className="w-4 h-4 mr-2" />
 									Ürünleri İncele
 								</Button>
 							</Link>
 							<Link href="/abonelik">
-								<Button variant="inverseOutline" className="text-white w-full sm:w-auto">
+								<Button
+									variant="inverseOutline"
+									className="text-white w-full sm:w-auto"
+								>
 									<Heart className="w-4 h-4 mr-2" />
 									Abone Ol
 								</Button>

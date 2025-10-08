@@ -2,8 +2,8 @@
 
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -124,9 +124,7 @@ const ScrollButton = React.memo<ScrollButtonProps>(
 		if (!visible) return null;
 
 		const positionClass =
-			direction === "left"
-				? "-left-2 sm:-left-6"
-				: "-right-2 sm:-right-6";
+			direction === "left" ? "-left-2 sm:-left-6" : "-right-2 sm:-right-6";
 		const Icon = direction === "left" ? ChevronLeft : ChevronRight;
 
 		return (
@@ -477,6 +475,8 @@ export default function Blog() {
 				subtitle: "",
 				buttonText: "",
 				image: "/blog.png",
+				mobileImage: "/blog.png",
+				mobileAlt: "Blog hero görseli",
 			},
 		],
 		[],
@@ -512,7 +512,7 @@ export default function Blog() {
 				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
-				customHeight="65vh"
+				customHeight="100vh"
 			/>
 
 			{/* Main content with id and bg-white */}
