@@ -65,7 +65,7 @@ const MobileSidebar = memo(function MobileSidebar({
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 z-[9999] nav:hidden overflow-x-hidden">
+		<div className="fixed inset-0 z-[99999] nav:hidden">
 			{/* Backdrop with smooth fade-in */}
 			<div
 				className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
@@ -80,8 +80,8 @@ const MobileSidebar = memo(function MobileSidebar({
 			/>
 
 			{/* Sidebar with slide-in animation */}
-			<div className="absolute left-0 top-0 h-full w-80 bg-white shadow-2xl animate-in slide-in-from-left duration-300 ease-out overflow-x-hidden">
-				<div className="flex flex-col h-full overflow-x-hidden">
+			<div className="absolute left-0 top-0 h-full w-80 bg-white shadow-2xl animate-in slide-in-from-left duration-300 ease-out overflow-y-auto">
+				<div className="flex flex-col min-h-full">
 					{/* Header with Logo */}
 					<div className="flex items-center justify-between p-6 border-b border-gray-100">
 						<Link

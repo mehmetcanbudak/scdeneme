@@ -540,9 +540,8 @@ const Abonelik: React.FC = memo(() => {
 			<main id={mainContentId} className="relative z-10 bg-[#DF626B]">
 				{/* Hero Content Section */}
 				<Section className="py-20 bg-[#DF626B]">
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						{/* Main Hero Title */}
-						<div className="text-center mb-16">
+					{/* Main Hero Title */}
+					<div className="text-center mb-16">
 							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
 								Her Hafta Taptaze Yeşillikler
 								<span className="block text-white/90 font-semibold">
@@ -605,7 +604,6 @@ const Abonelik: React.FC = memo(() => {
 								/>
 							</div>
 						</div>
-					</div>
 				</Section>
 
 				{/* Benefits Section */}

@@ -507,7 +507,7 @@ export default function TazeYesilliklerPaketi() {
 			)}
 
 			{/* Section 1: Product Info with Sticky Image */}
-			<div className="flex">
+			<div className="flex flex-col lg:flex-row">
 				{/* Left Side - Sticky Image */}
 				<StickyImageGallery
 					images={images}
@@ -517,7 +517,7 @@ export default function TazeYesilliklerPaketi() {
 				/>
 
 				{/* Right Side - Scrolling Content */}
-				<div className="w-1/2 min-h-screen">
+				<div className="w-full lg:w-1/2 min-h-screen">
 					<ProductInfoSection
 						product={product}
 						currentPrice={getCurrentPrice()}
@@ -528,7 +528,7 @@ export default function TazeYesilliklerPaketi() {
 					/>
 
 					{/* Purchase Options */}
-					<div className="px-8 pb-8 space-y-8">
+					<div className="px-4 sm:px-6 lg:px-8 pb-8 space-y-8">
 						{product && (
 							<PurchaseOptionsPanel
 								product={product}

@@ -77,7 +77,7 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(({
 	}, []);
 
 	return (
-		<div className="p-8 pt-32 pb-16">
+		<div className="p-4 sm:p-6 lg:p-8 pt-24 sm:pt-28 lg:pt-32 pb-8 lg:pb-16">
 			{/* Breadcrumb */}
 			<div className="mb-8">
 				<Link

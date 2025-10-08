@@ -41,7 +41,7 @@ const FAQSection: React.FC<FAQSectionProps> = memo(({ items }) => {
 	];
 
 	return (
-		<div className="py-16 px-6 bg-gray-50">
+		<div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
 			<div className="max-w-4xl mx-auto">
 				<div className="text-center mb-12">
 					<h2 className="text-3xl font-light text-gray-800 mb-4">

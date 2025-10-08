@@ -72,13 +72,13 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 	}, []);
 
 	return (
-		<div className="py-16">
-			<div className="max-w-7xl mx-auto">
-				<div className="text-center mb-12">
-					<h2 className="text-3xl font-light text-gray-800 mb-4">
+		<div className="py-12 sm:py-16">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="text-center mb-8 sm:mb-12">
+					<h2 className="text-2xl sm:text-3xl font-light text-gray-800 mb-4">
 						Paket İçeriği
 					</h2>
-					<p className="text-lg text-gray-600">
+					<p className="text-base sm:text-lg text-gray-600">
 						Taze yeşillikler paketimizde bulunan organik ürünler
 					</p>
 				</div>
@@ -86,14 +86,14 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 				<div className="relative">
 					<div
 						ref={galleryScrollRef}
-						className="flex space-x-6 overflow-x-auto pb-4 horizontal-scroll"
+						className="flex space-x-4 sm:space-x-6 overflow-x-auto pb-4 horizontal-scroll"
 						onScroll={handleScroll}
 						style={{ scrollBehavior: "smooth" }}
 					>
 						{items.map((item, index) => (
 							<div
 								key={`gallery-${item.title}-${index}`}
-								className="flex-shrink-0 w-80"
+								className="flex-shrink-0 w-72 sm:w-80"
 							>
 								<div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 h-full">
 									<div className="relative overflow-hidden">

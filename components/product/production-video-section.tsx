@@ -12,8 +12,8 @@ import { CheckCircle, Play } from "lucide-react";
  */
 const ProductionVideoSection: React.FC = memo(() => {
 	return (
-		<div className="py-16 bg-gray-50">
-			<div className="mx-12">
+		<div className="py-12 sm:py-16 bg-gray-50">
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 					{/* Left - Info */}
 					<div className="space-y-6">

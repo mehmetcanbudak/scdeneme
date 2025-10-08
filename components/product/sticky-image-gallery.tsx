@@ -30,8 +30,8 @@ const StickyImageGallery: React.FC<StickyImageGalleryProps> = memo(({
 	productName,
 }) => {
 	return (
-		<div className="w-1/2 h-screen sticky top-0 bg-gray-50">
-			<div className="h-full flex items-center justify-center p-8">
+		<div className="w-full lg:w-1/2 lg:h-screen lg:sticky lg:top-0 bg-gray-50">
+			<div className="h-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
 				<div className="max-w-md w-full">
 					<img
 						src={images[selectedImage]}

@@ -108,7 +108,7 @@ export default function Ekibim() {
 				</div>
 
 				<div className="relative z-10 h-full flex items-center justify-center text-center text-white">
-					<div className="max-w-4xl mx-auto px-6">
+					<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="mb-8">
 							<h1 className="text-5xl md:text-7xl font-light mb-8 tracking-wide">
 								EKİBİMİZ

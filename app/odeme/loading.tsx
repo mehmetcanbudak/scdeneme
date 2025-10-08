@@ -1,8 +1,8 @@
 export default function Loading() {
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<main className="pt-24 pb-8 px-6">
-				<div className="mx-12">
+			<main className="pt-24 pb-8 px-4 sm:px-6 lg:px-8">
+				<div className="mx-auto max-w-7xl">
 					{/* Header Skeleton */}
 					<div className="flex items-center justify-between mb-8">
 						<div className="flex items-center space-x-4">

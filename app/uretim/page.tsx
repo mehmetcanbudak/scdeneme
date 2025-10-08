@@ -199,7 +199,7 @@ export default function Uretim() {
 				</div>
 
 				<div className="relative z-10 h-full flex items-center justify-center text-center text-white">
-					<div className="max-w-4xl mx-auto px-6">
+					<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="mb-8">
 							<h2 className="text-sm uppercase tracking-[0.3em] mb-4 opacity-90">
 								SÜRDÜRÜLEBİLİR VE ORGANİK
