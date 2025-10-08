@@ -8,9 +8,8 @@ import { FooterColorProvider } from "@/contexts/footer-color-context";
 import { ProductProvider } from "@/contexts/product-context";
 import { SubscriptionProvider } from "@/contexts/subscription-context";
 import { Analytics } from "@vercel/analytics/next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import { Poppins, Roboto } from "next/font/google";
 import ScrollToTop from "../components/scroll-to-top";
 import "./globals.css";
 
@@ -20,6 +19,19 @@ export const metadata: Metadata = {
 		"Skycrops ile taze, organik ve sağlıklı sebze paketlerine abone olun. Dikey tarım teknolojisi ile üretilen kaliteli sebzeler.",
 	generator: "Next.js",
 };
+
+// Configure Google Fonts
+const roboto = Roboto({
+	subsets: ["latin"],
+	weight: ["300", "400", "500", "700"],
+	variable: "--font-roboto",
+});
+
+const poppins = Poppins({
+	subsets: ["latin"],
+	weight: ["300", "400", "500", "600", "700"],
+	variable: "--font-poppins",
+});
 
 export default function RootLayout({
 	children,
@@ -32,7 +44,7 @@ export default function RootLayout({
 				<script src="https://accounts.google.com/gsi/client" async></script>
 			</head>
 			<body
-				className={`font-sans ${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden`}
+				className={`font-sans ${roboto.variable} ${poppins.variable} overflow-x-hidden`}
 				suppressHydrationWarning
 			>
 				<InitialLoader />

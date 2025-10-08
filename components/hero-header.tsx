@@ -252,13 +252,13 @@ const HeroHeader = memo(function HeroHeader({
 							<>
 								{/* Subtitle */}
 								{currentSlideData.subtitle && (
-									<h2 className="text-sm uppercase tracking-[0.3em] mb-4 opacity-90 font-medium animate-fade-in">
+									<h2 className="text-4xl md:text-6xl uppercase tracking-[0.3em] mb-4 opacity-90 font-medium animate-fade-in">
 										{currentSlideData.subtitle}
 									</h2>
 								)}
 
 								{/* Title */}
-								<h1 className="text-4xl md:text-6xl font-light mb-8 tracking-wide leading-tight animate-fade-in">
+								<h1 className="text-16xl md:text-24xl font-light mb-8 tracking-wide leading-tight animate-fade-in">
 									{currentSlideData.title}
 								</h1>
 							</>

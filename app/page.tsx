@@ -1,17 +1,17 @@
 "use client";
 
-import type React from "react";
-import { memo, useEffect, useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import HeroHeader from "@/components/hero-header";
+import BlogSection, { type UiPost } from "@/components/home/blog-section";
+import CategoryGridSection from "@/components/home/category-grid-section";
 import FeaturesSection from "@/components/home/features-section";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
 import VegetablesSection from "@/components/home/vegetables-section";
-import BlogSection, { type UiPost } from "@/components/home/blog-section";
-import CategoryGridSection from "@/components/home/category-grid-section";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 /**
  * Slide interface for hero header
@@ -48,12 +48,11 @@ const Home: React.FC = memo(() => {
 	const slides: Slide[] = useMemo(
 		() => [
 			{
-				title: "SKYCROPS",
-				subtitle: "YAŞAYAN SEBZELER",
+				title: "",
+				subtitle: "",
 				buttonText: "ABONE OL",
 				buttonAction: () => router.push("/abonelik/taze-yesillikler-paketi"),
 				image: "/anasayfa.png",
-				logo: "/skycrops-logo.svg",
 				alt: "Skycrops - Yaşayan Sebzeler",
 			},
 		],
@@ -65,9 +64,9 @@ const Home: React.FC = memo(() => {
 	 */
 	const packageImage = useMemo(() => {
 		if (featuredProducts.length > 0) {
-			return featuredProducts[0]?.images?.[0]?.url || "/bundle4.png";
+			return featuredProducts[0]?.images?.[0]?.url || "/sebze_paketleri.jpeg";
 		}
-		return "/bundle4.png";
+		return "/sebze_paketleri.jpeg";
 	}, [featuredProducts]);
 
 	/**

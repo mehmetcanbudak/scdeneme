@@ -78,7 +78,7 @@ const Navigation = memo(function Navigation({
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
 				shouldBeTransparent
 					? "bg-transparent"
-					: "bg-white/70 backdrop-blur-lg shadow-lg border-b border-white/30"
+					: "bg-[#DBEAFE backdrop-blur-lg shadow-lg border-b border-blue-200/30"
 			} ${className}`}
 			aria-label="Ana navigasyon"
 		>

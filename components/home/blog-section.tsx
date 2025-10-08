@@ -1,8 +1,8 @@
-import type React from "react";
-import { memo, useRef, useState, useCallback } from "react";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import type React from "react";
+import { memo, useCallback, useRef, useState } from "react";
 
 /**
  * Blog post UI type
@@ -79,8 +79,10 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 
 		if (loading) {
 			return (
-				<section className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}>
-					<div className="mx-12">
+				<section
+					className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
+				>
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="text-center">
 							<p className="text-gray-600">Blog yazıları yükleniyor...</p>
 						</div>
@@ -91,8 +93,10 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 
 		if (error) {
 			return (
-				<section className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}>
-					<div className="mx-12">
+				<section
+					className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
+				>
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="text-center">
 							<p className="text-red-600">{error}</p>
 						</div>
@@ -102,82 +106,86 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 		}
 
 		return (
-			<section className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}>
-				<div className="mx-12">
+			<section
+				className={`py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
+			>
+				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-12">
 						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
 							Blog - Basında Biz
 						</h2>
 					</div>
+				</div>
 
-					<div className="relative pl-16 pr-16">
-						<div
-							ref={blogScrollRef}
-							className="flex space-x-6 overflow-x-auto pb-4"
-							onScroll={handleBlogScroll}
-							style={{
-								scrollBehavior: "smooth",
-								scrollbarWidth: "none",
-								msOverflowStyle: "none",
-								maxWidth: "100vw",
-								width: "100%",
-							}}
-						>
-							{posts.map((post, index) => (
-								<Link
-									key={`${post.slug}-${index}`}
-									href={`/blog/${post.slug}`}
-									className="flex-shrink-0 w-80"
-								>
-									<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-										<div className="aspect-video">
-											<img
-												src={post.image || "/placeholder.svg"}
-												alt={post.title}
-												className="w-full h-full object-cover"
-											/>
-										</div>
-										<div className="p-6">
-											<div className="text-sm text-gray-500 mb-2">
-												{post.date}
-											</div>
-											<h3 className="text-xl md:text-2xl font-medium leading-snug mb-3 line-clamp-2">
-												{post.title}
-											</h3>
-											<p className="text-base leading-relaxed line-clamp-3">
-												{post.excerpt}
-											</p>
-										</div>
+				<div className="relative w-full px-16">
+					<div
+						ref={blogScrollRef}
+						className="flex space-x-6 overflow-x-auto pb-4 px-6"
+						onScroll={handleBlogScroll}
+						style={{
+							scrollBehavior: "smooth",
+							scrollbarWidth: "none",
+							msOverflowStyle: "none",
+							maxWidth: "100vw",
+							width: "100%",
+						}}
+					>
+						{posts.map((post, index) => (
+							<Link
+								key={`${post.slug}-${index}`}
+								href={`/blog/${post.slug}`}
+								className="flex-shrink-0 w-80"
+							>
+								<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
+									<div className="aspect-video">
+										<img
+											src={post.image || "/placeholder.svg"}
+											alt={post.title}
+											className="w-full h-full object-cover"
+										/>
 									</div>
-								</Link>
-							))}
-						</div>
-
-						{showLeftButton && (
-							<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
-								<button
-									onClick={scrollBlogLeft}
-									type="button"
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronLeft className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
-
-						{showRightButton && (
-							<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
-								<button
-									onClick={scrollBlogRight}
-									type="button"
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronRight className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
+									<div className="p-6">
+										<div className="text-sm text-gray-500 mb-2">
+											{post.date}
+										</div>
+										<h3 className="text-xl md:text-2xl font-medium leading-snug mb-3 line-clamp-2">
+											{post.title}
+										</h3>
+										<p className="text-base leading-relaxed line-clamp-3">
+											{post.excerpt}
+										</p>
+									</div>
+								</div>
+							</Link>
+						))}
 					</div>
 
+					{showLeftButton && (
+						<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
+							<button
+								onClick={scrollBlogLeft}
+								type="button"
+								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
+							>
+								<ChevronLeft className="w-5 h-5 text-gray-600" />
+							</button>
+						</div>
+					)}
+
+					{showRightButton && (
+						<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
+							<button
+								onClick={scrollBlogRight}
+								type="button"
+								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
+							>
+								<ChevronRight className="w-5 h-5 text-gray-600" />
+							</button>
+						</div>
+					)}
+				</div>
+
+				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center mt-8">
 						<Link href="/blog">
 							<Button className="px-8 py-3 uppercase tracking-widest">

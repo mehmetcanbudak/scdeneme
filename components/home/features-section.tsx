@@ -29,12 +29,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-									<img
-										src="/biz_skycrops.svg"
-										alt="Biz Skycrops Icon"
-										className="w-72 h-72 object-contain"
-									/>
+								<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
+									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
+										<img
+											src="/biz_skycrops.svg"
+											alt="Biz Skycrops Icon"
+											className="w-48 h-48 object-contain"
+										/>
+									</div>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Biz Skycrops
@@ -45,12 +47,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
-									<img
-										src="/kapali_alan.svg"
-										alt="Kapalı Alan Dikey Tarım Icon"
-										className="w-48 h-48 object-contain"
-									/>
+								<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
+									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
+										<img
+											src="/kapali_alan.svg"
+											alt="Kapalı Alan Dikey Tarım Icon"
+											className="w-48 h-48 object-contain"
+										/>
+									</div>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Kapalı Alanda Dikey Tarım
@@ -61,12 +65,26 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
-									<img
-										src="/pestisit.svg"
-										alt="Pestisitsiz Hormonsuz Icon"
-										className="w-72 h-72 object-contain"
-									/>
+								<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
+									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
+										<img
+											src="/pestisit.svg"
+											alt="Pestisitsiz Hormonsuz Icon"
+											className="w-48 h-48 object-contain"
+										/>
+									</div>
+									{/* X overlay to indicate no pesticides */}
+									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+										<div className="w-48 h-48 flex items-center justify-center">
+											<svg
+												className="w-48 h-48 text-red-600"
+												fill="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+											</svg>
+										</div>
+									</div>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Pestisitsiz Hormonsuz
@@ -77,12 +95,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center">
-									<img
-										src="/taptaze.svg"
-										alt="Taptaze Icon"
-										className="w-72 h-72 object-contain"
-									/>
+								<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
+									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
+										<img
+											src="/taptaze.svg"
+											alt="Taptaze Icon"
+											className="w-48 h-48 object-contain"
+										/>
+									</div>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Taptaze Yeşillikleri Ulaştırıyoruz
