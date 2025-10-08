@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 
 // Helper function to decode JWT token
 function decodeJWT(token: string) {
@@ -72,7 +72,10 @@ export default function TestPage() {
 		try {
 			const result = await login(phone, otpCode);
 			console.log("Verify OTP result:", result);
-			console.log("JWT Token:", (result as { jwt?: string })?.jwt?.substring(0, 50) + "...");
+			console.log(
+				"JWT Token:",
+				(result as { jwt?: string })?.jwt?.substring(0, 50) + "...",
+			);
 			alert("Login successful! Check console for JWT token.");
 		} catch (error) {
 			console.error("Verify OTP error:", error);
@@ -108,7 +111,9 @@ export default function TestPage() {
 				console.log("Send email verification result:", result);
 				alert("Email verification sent! Check your email.");
 			} else {
-				alert(`Authentication failed: ${meData.error?.message || "Unknown error"}`);
+				alert(
+					`Authentication failed: ${meData.error?.message || "Unknown error"}`,
+				);
 			}
 		} catch (error) {
 			console.error("Send email verification error:", error);
@@ -199,19 +204,13 @@ export default function TestPage() {
 						</div>
 						<div>
 							<strong>Token:</strong>{" "}
-							{isClient && token
-								? token.substring(0, 50) + "..."
-								: "None"}
+							{isClient && token ? token.substring(0, 50) + "..." : "None"}
 						</div>
 						{isClient && token && (
 							<div>
 								<strong>JWT Payload:</strong>
 								<pre className="text-xs mt-1 bg-white p-2 rounded">
-									{JSON.stringify(
-										decodeJWT(token),
-										null,
-										2,
-									)}
+									{JSON.stringify(decodeJWT(token), null, 2)}
 								</pre>
 							</div>
 						)}
