@@ -118,10 +118,10 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 					</div>
 				</div>
 
-				<div className="relative w-full px-16">
+				<div className="relative w-full px-4 sm:px-8 lg:px-16">
 					<div
 						ref={blogScrollRef}
-						className="flex space-x-6 overflow-x-auto pb-4 px-6"
+						className="flex space-x-6 overflow-x-auto pb-4 px-6 justify-center"
 						onScroll={handleBlogScroll}
 						style={{
 							scrollBehavior: "smooth",
@@ -135,9 +135,9 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 							<Link
 								key={`${post.slug}-${index}`}
 								href={`/blog/${post.slug}`}
-								className="flex-shrink-0 w-80"
+								className="flex-shrink-0 w-80 sm:w-96"
 							>
-								<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
+								<div className="bg-gray-50 rounded-3xl border border-black overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
 									<div className="aspect-video relative">
 										<Image
 											src={post.image || "/placeholder.svg"}
@@ -165,7 +165,7 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 					</div>
 
 					{showLeftButton && (
-						<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
+						<div className="absolute top-1/2 left-4 sm:left-6 transform -translate-y-1/2 z-30">
 							<button
 								onClick={scrollBlogLeft}
 								type="button"
@@ -177,7 +177,7 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 					)}
 
 					{showRightButton && (
-						<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
+						<div className="absolute top-1/2 right-4 sm:right-6 transform -translate-y-1/2 z-30">
 							<button
 								onClick={scrollBlogRight}
 								type="button"

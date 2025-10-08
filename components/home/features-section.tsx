@@ -32,16 +32,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
-									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<Image
-											src="/farmımızda_yetisen_sebzeler/biz_skycrops.svg"
-											alt="Biz Skycrops Icon"
-											width={192}
-											height={192}
-											className="w-full h-full object-contain"
-											quality={85}
-										/>
-									</div>
+									<Image
+										src="/biz_skycrops.svg"
+										alt="Biz Skycrops Icon"
+										width={192}
+										height={192}
+										className="w-full h-full object-contain"
+										quality={85}
+									/>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Biz Skycrops
@@ -53,16 +51,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							</div>
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
-									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<Image
-											src="/kapali_alan.svg"
-											alt="Kapalı Alan Dikey Tarım Icon"
-											width={192}
-											height={192}
-											className="w-full h-full object-contain"
-											quality={85}
-										/>
-									</div>
+									<Image
+										src="/kapalı ortam .svg"
+										alt="Kapalı Alan Dikey Tarım Icon"
+										width={192}
+										height={192}
+										className="w-full h-full object-contain"
+										quality={85}
+									/>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Kapalı Alanda Dikey Tarım
@@ -74,16 +70,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							</div>
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
-									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<Image
-											src="/pestisit.svg"
-											alt="Pestisitsiz Hormonsuz Icon"
-											width={192}
-											height={192}
-											className="w-full h-full object-contain"
-											quality={85}
-										/>
-									</div>
+									<Image
+										src="/pestisitsiz yeni.svg"
+										alt="Pestisitsiz Hormonsuz Icon"
+										width={192}
+										height={192}
+										className="w-full h-full object-contain"
+										quality={85}
+									/>
 									{/* X overlay to indicate no pesticides */}
 									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 										<div className="w-48 h-48 flex items-center justify-center">
@@ -109,16 +103,14 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 							</div>
 							<div className="text-center">
 								<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
-									<div className="w-64 h-64 rounded-full border-4 border-blue-500 flex items-center justify-center">
-										<Image
-											src="/taptaze.svg"
-											alt="Taptaze Icon"
-											width={192}
-											height={192}
-											className="w-full h-full object-contain"
-											quality={85}
-										/>
-									</div>
+									<Image
+										src="/taptaze yeşillikler.svg"
+										alt="Taptaze Icon"
+										width={192}
+										height={192}
+										className="w-full h-full object-contain"
+										quality={85}
+									/>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Taptaze Yeşillikleri Ulaştırıyoruz

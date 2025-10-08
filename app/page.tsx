@@ -3,9 +3,9 @@
 import HeroHeader from "@/components/hero-header";
 import BlogSection, { type UiPost } from "@/components/home/blog-section";
 import CategoryGridSection from "@/components/home/category-grid-section";
-import FeaturesSection from "@/components/home/features-section";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
 import SubscriptionBenefitsSection from "@/components/home/subscription-benefits-section";
+import SustainabilityCTASection from "@/components/home/sustainability-cta-section";
 import VegetablesSection from "@/components/home/vegetables-section";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
@@ -116,7 +116,8 @@ const Home: React.FC = memo(() => {
 	 * Scroll to next section handler
 	 */
 	const scrollToNextSection = useCallback(() => {
-		const nextSection = document.querySelector("#biz-ne-yapiyoruz-section");
+		// Scroll to the vegetables section (first section after hero)
+		const nextSection = document.querySelector("[data-section='vegetables']");
 		if (nextSection) {
 			const headerHeight = 64;
 			const elementPosition =
@@ -142,17 +143,17 @@ const Home: React.FC = memo(() => {
 				customHeight="100vh"
 			/>
 
-			{/* Features Section */}
-			<FeaturesSection />
+			{/* Vegetables Section - Farmımızda Yetişen Sebzeler */}
+			<VegetablesSection />
 
-			{/* Subscription Benefits Section */}
-			<SubscriptionBenefitsSection />
-
-			{/* Packages FAQ Section */}
+			{/* Packages FAQ Section - Sebze Paketleri */}
 			<PackagesFAQSection packageImage={packageImage} />
 
-			{/* Vegetables Section */}
-			<VegetablesSection />
+			{/* Subscription Benefits Section - Her hafta farklı paketler and other 2 boxes */}
+			<SubscriptionBenefitsSection />
+
+			{/* Sustainability CTA Section */}
+			<SustainabilityCTASection />
 
 			{/* Blog Section */}
 			<BlogSection posts={blogPosts} loading={blogLoading} error={blogError} />

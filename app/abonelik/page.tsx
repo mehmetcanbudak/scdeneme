@@ -543,13 +543,13 @@ const Abonelik: React.FC = memo(() => {
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						{/* Main Hero Title */}
 						<div className="text-center mb-16">
-							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
 								Her Hafta Taptaze Yeşillikler
-								<span className="block text-gray-600 font-semibold">
+								<span className="block text-white/90 font-semibold">
 									Kapınızda!
 								</span>
 							</h1>
-							<p className="text-lg leading-relaxed max-w-4xl mx-auto">
+							<p className="text-lg leading-relaxed max-w-4xl mx-auto text-white/80">
 								Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze,
 								en lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
 								kolay yolu.
@@ -564,6 +564,22 @@ const Abonelik: React.FC = memo(() => {
 									Hemen Abone Ol
 								</Button>
 							</div>
+						</div>
+
+						{/* Subscription Package - Moved below hero title */}
+						<div className="mb-16">
+							<SubscriptionProductPreview
+								product={product}
+								loading={loading}
+								selectedImage={selectedImage}
+								onImageSelect={setSelectedImage}
+								images={images}
+								deliveryDays={deliveryDays}
+								deliveryDayStock={deliveryDayStock}
+								onAddToCart={() =>
+									router.push("/abonelik/taze-yesillikler-paketi")
+								}
+							/>
 						</div>
 
 						{/* Content Grid */}
@@ -592,24 +608,6 @@ const Abonelik: React.FC = memo(() => {
 					</div>
 				</Section>
 
-				{/* Subscription Package */}
-				<Section className="py-20 bg-[#DF626B]">
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-						<SubscriptionProductPreview
-							product={product}
-							loading={loading}
-							selectedImage={selectedImage}
-							onImageSelect={setSelectedImage}
-							images={images}
-							deliveryDays={deliveryDays}
-							deliveryDayStock={deliveryDayStock}
-							onAddToCart={() =>
-								router.push("/abonelik/taze-yesillikler-paketi")
-							}
-						/>
-					</div>
-				</Section>
-
 				{/* Benefits Section */}
 				<Section className="bg-[#DF626B]">
 					<SectionHeader
@@ -632,10 +630,10 @@ const Abonelik: React.FC = memo(() => {
 				<Section className="bg-[#DF626B]">
 					<div className="max-w-4xl mx-auto">
 						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-white">
 								Sıkça Sorulan Sorular
 							</h2>
-							<p className="text-base leading-relaxed">
+							<p className="text-base leading-relaxed text-white/80">
 								Merak ettiklerinizin cevapları
 							</p>
 						</div>

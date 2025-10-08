@@ -83,7 +83,7 @@ const Navigation = memo(function Navigation({
 			aria-label="Ana navigasyon"
 		>
 			<nav
-				className="flex items-center justify-between px-6 py-4"
+				className="relative grid grid-cols-[auto_1fr_auto] nav:grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-2"
 				aria-label="Ana menü"
 			>
 				{/* Mobile hamburger menu */}
@@ -95,8 +95,8 @@ const Navigation = memo(function Navigation({
 					aria-label={isMobileSidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
 				/>
 
-				{/* Logo and desktop navigation */}
-				<div className="flex items-center">
+				{/* Left section - Logo */}
+				<div className="flex items-center pr-20">
 					<Link
 						href="/"
 						className="transition-opacity hover:opacity-80 focus:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60 rounded"
@@ -104,25 +104,25 @@ const Navigation = memo(function Navigation({
 					>
 						<Logo shouldBeTransparent={shouldBeTransparent} />
 					</Link>
-
-					{/* Desktop Navigation Menu */}
-					<div className="hidden md:flex items-center ml-8">
-						<NavigationMenu
-							items={NAVIGATION_ITEMS}
-							shouldBeTransparent={shouldBeTransparent}
-						/>
-					</div>
 				</div>
 
-				{/* Action icons */}
-				<div className="flex items-center space-x-4">
+				{/* Center section - Navigation Menu - Centered in grid */}
+				<div className="hidden nav:flex items-center justify-center">
+					<NavigationMenu
+						items={NAVIGATION_ITEMS}
+						shouldBeTransparent={shouldBeTransparent}
+					/>
+				</div>
+
+				{/* Right section - Action icons */}
+				<div className="flex items-center justify-end space-x-4">
 					{/* Desktop action icons */}
-					<div className="hidden md:block">
+					<div className="hidden nav:block">
 						<ActionIcons shouldBeTransparent={shouldBeTransparent} />
 					</div>
 
 					{/* Mobile action icons */}
-					<div className="md:hidden">
+					<div className="nav:hidden">
 						<MobileActionIcons shouldBeTransparent={shouldBeTransparent} />
 					</div>
 				</div>

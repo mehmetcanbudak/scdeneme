@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import type React from "react";
 import {
 	memo,
@@ -38,7 +36,6 @@ interface VegetablesSectionProps {
  */
 const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 	({ className = "" }) => {
-		const router = useRouter();
 		const sectionId = useId();
 		const scrollRef = useRef<HTMLDivElement>(null);
 		const [showLeftButton, setShowLeftButton] = useState(false);
@@ -247,31 +244,10 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 		return (
 			<section
 				id={sectionId}
+				data-section="vegetables"
 				className={`py-16 bg-[#E7EBDE] relative z-10 ${className}`}
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-					{/* Subscription CTA Button */}
-					<div className="text-center mb-12">
-						<div className="bg-[#fbf9d5] rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-							<h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-								Sürdürülebilir Tarıma Hemen Katılın!
-							</h3>
-							<p className="text-gray-600 mb-6 leading-relaxed">
-								Skycrops abonelik sistemiyle dikey tarım ürünleri ile sağlıklı
-								yaşamın keyfini çıkarın.
-							</p>
-							<p className="text-gray-600 mb-8 leading-relaxed">
-								Çevre dostu üretim ile taze ürünler her hafta kapınızda!
-							</p>
-							<Button
-								onClick={() => router.push("/abonelik/taze-yesillikler-paketi")}
-								className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-3 rounded-full border border-gray-300 transition-all duration-300 hover:shadow-lg"
-							>
-								Şimdi Abone Ol
-							</Button>
-						</div>
-					</div>
-
 					<div className="text-center mb-12">
 						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
 							Farmımızda Yetişen Sebzeler

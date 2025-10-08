@@ -29,7 +29,7 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 	feature,
 }: FacilityFeatureCardProps) {
 	return (
-		<div className="bg-white p-6 sm:p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+		<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow">
 			<div className="flex items-start gap-4 mb-6">
 				<div className="flex-shrink-0">{feature.icon}</div>
 				<div>

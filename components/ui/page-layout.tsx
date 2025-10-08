@@ -137,9 +137,9 @@ export const SectionHeader = memo(function SectionHeader({
 }: SectionHeaderProps) {
 	return (
 		<div className={`text-center mb-12 ${className}`}>
-			<h2 className="text-2xl font-medium mb-4 text-gray-700">{title}</h2>
+			<h2 className="text-2xl font-medium mb-4 text-white">{title}</h2>
 			{subtitle && (
-				<p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
+				<p className="text-white/80 max-w-3xl mx-auto leading-relaxed">
 					{subtitle}
 				</p>
 			)}

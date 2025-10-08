@@ -126,7 +126,7 @@ export const BenefitCard = memo(function BenefitCard({
 	description,
 }: BenefitCardProps) {
 	return (
-		<div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center group hover:shadow-md transition-shadow duration-300">
+		<div className="bg-[#FDFBE2] p-8 rounded-3xl shadow-sm border border-black text-center group hover:shadow-md transition-all duration-300">
 			<div className="flex justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
 				{icon}
 			</div>
@@ -148,7 +148,7 @@ export const TestimonialCard = memo(function TestimonialCard({
 	rating,
 }: TestimonialCardProps) {
 	return (
-		<div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+		<div className="bg-[#FDFBE2] p-6 rounded-3xl shadow-sm border border-black hover:shadow-md transition-all duration-300">
 			<div className="flex items-center mb-4">
 				{[...Array(rating)].map((_, i) => (
 					<Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
@@ -234,17 +234,15 @@ export const CTASection = memo(function CTASection({
 	return (
 		<section className={`py-20 px-6 bg-[#DF626B] ${className}`}>
 			<div className="max-w-4xl mx-auto text-center">
-				<div className="bg-white p-12 rounded-lg shadow-sm border border-gray-100">
-					<h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800">
-						{title}
-					</h2>
-					<p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-						{subtitle}
-					</p>
-					<Button onClick={onButtonClick} className="px-8 py-4 text-lg">
-						{buttonText}
-					</Button>
-				</div>
+				<h2 className="text-4xl md:text-5xl font-light mb-6 text-white">
+					{title}
+				</h2>
+				<p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+					{subtitle}
+				</p>
+				<Button onClick={onButtonClick} className="px-8 py-4 text-lg">
+					{buttonText}
+				</Button>
 			</div>
 		</section>
 	);

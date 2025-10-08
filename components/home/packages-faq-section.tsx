@@ -4,7 +4,9 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import type React from "react";
 import { memo, useMemo } from "react";
 
@@ -91,12 +93,12 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
 						{/* Package Image - Left Side */}
 						<div className="flex items-center justify-center">
-							<div className="w-full max-w-xs sm:max-w-sm lg:max-w-xs">
+							<div className="w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg">
 								<Image
 									src={packageImage}
 									alt="Taze Yeşillikler Paketi"
-									width={400}
-									height={400}
+									width={600}
+									height={800}
 									className="w-full h-auto object-cover rounded-product shadow-md"
 								/>
 							</div>
@@ -112,7 +114,7 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 									<AccordionItem
 										key={faq.id}
 										value={faq.id}
-										className="bg-[#F0F9FF] rounded-xl shadow-sm border border-gray-100 px-5 mb-3 overflow-hidden"
+										className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black px-5 mb-3 overflow-hidden hover:shadow-md transition-shadow"
 									>
 										<AccordionTrigger className="hover:no-underline py-4">
 											<h4 className="text-xl md:text-2xl font-medium leading-snug text-left text-gray-800">
@@ -125,6 +127,15 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 									</AccordionItem>
 								))}
 							</Accordion>
+
+							{/* Subscribe Button */}
+							<div className="mt-12 text-center">
+								<Link href="/abonelik/taze-yesillikler-paketi">
+									<Button className="w-full sm:w-auto px-8 py-3">
+										Abone Ol
+									</Button>
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>

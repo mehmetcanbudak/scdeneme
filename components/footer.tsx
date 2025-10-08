@@ -20,6 +20,9 @@ interface FooterLinkProps {
 	ariaLabel?: string;
 	type?: "link" | "email" | "tel";
 	className?: string;
+	textColorClass?: string;
+	textHoverClass?: string;
+	textFocusClass?: string;
 }
 
 /**
@@ -32,6 +35,9 @@ const FooterLink = memo(function FooterLink({
 	ariaLabel,
 	type = "link",
 	className,
+	textColorClass = "text-gray-600",
+	textHoverClass = "hover:text-gray-800",
+	textFocusClass = "focus:text-gray-800",
 }: FooterLinkProps) {
 	const isExternal = external || href.startsWith("http");
 	const isSpecialType = type === "email" || type === "tel";
@@ -39,8 +45,8 @@ const FooterLink = memo(function FooterLink({
 	const linkClassName = useMemo(
 		() =>
 			className ||
-			"block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline",
-		[className],
+			`block text-base ${textColorClass} ${textHoverClass} transition-colors duration-200 ${textFocusClass} focus:outline-none focus:underline`,
+		[className, textColorClass, textHoverClass, textFocusClass],
 	);
 
 	const linkProps = useMemo(
@@ -82,6 +88,22 @@ const Footer = memo(function Footer({
 	const DEFAULT_FOOTER_HEIGHT = 500;
 	const footerRef = useRef<HTMLDivElement | null>(null);
 	const [footerHeight, setFooterHeight] = useState(DEFAULT_FOOTER_HEIGHT);
+
+	// Determine if footer should use white text (for red/pink backgrounds)
+	const isRedBackground = footerColor === "#DC4F34";
+	const isPinkBackground = footerColor === "#DF626B";
+	const shouldUseWhiteText = isRedBackground || isPinkBackground;
+	const textColorClass = shouldUseWhiteText ? "text-white" : "text-gray-600";
+	const textHoverClass = shouldUseWhiteText
+		? "hover:text-gray-200"
+		: "hover:text-gray-800";
+	const textFocusClass = shouldUseWhiteText
+		? "focus:text-gray-200"
+		: "focus:text-gray-800";
+	const titleColorClass = shouldUseWhiteText ? "text-white" : "text-gray-800";
+	const borderColorClass = shouldUseWhiteText
+		? "border-gray-400"
+		: "border-gray-300";
 
 	useEffect(() => {
 		const node = footerRef.current;
@@ -133,7 +155,9 @@ const Footer = memo(function Footer({
 	const renderFooterSection = useCallback(
 		(section: FooterSection, index: number) => (
 			<div key={`${section.title}-${index}`} className="space-y-4">
-				<h3 className="text-xl md:text-2xl font-medium leading-snug text-gray-800 uppercase tracking-wide">
+				<h3
+					className={`text-xl md:text-2xl font-medium leading-snug ${titleColorClass} uppercase tracking-wide`}
+				>
 					{section.title}
 				</h3>
 				<nav className="space-y-2" aria-label={`${section.title} menüsü`}>
@@ -148,7 +172,7 @@ const Footer = memo(function Footer({
 									href={link.href}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+									className={`block text-base ${textColorClass} ${textHoverClass} transition-colors duration-200 ${textFocusClass} focus:outline-none focus:underline`}
 									aria-label={link.ariaLabel}
 								>
 									<div className="space-y-1">
@@ -168,13 +192,16 @@ const Footer = memo(function Footer({
 								external={link.external}
 								ariaLabel={link.ariaLabel}
 								type={link.type}
+								textColorClass={textColorClass}
+								textHoverClass={textHoverClass}
+								textFocusClass={textFocusClass}
 							/>
 						);
 					})}
 				</nav>
 			</div>
 		),
-		[],
+		[textColorClass, textHoverClass, textFocusClass, titleColorClass],
 	);
 
 	const footerSections = useMemo(
@@ -195,14 +222,14 @@ const Footer = memo(function Footer({
 					<Link
 						key={`${link.href}-${index}`}
 						href={link.href}
-						className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+						className={`text-sm ${textColorClass} ${textHoverClass} transition-colors duration-200 ${textFocusClass} focus:outline-none focus:underline`}
 					>
 						{link.label}
 					</Link>
 				))}
 			</nav>
 		),
-		[],
+		[textColorClass, textHoverClass, textFocusClass],
 	);
 
 	return (
@@ -258,10 +285,14 @@ const Footer = memo(function Footer({
 								)}
 
 								{/* Copyright and policies section */}
-								<div className="border-t border-gray-300 pt-4 sm:pt-6 mt-auto">
+								<div
+									className={`border-t ${borderColorClass} pt-4 sm:pt-6 mt-auto`}
+								>
 									<div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
 										{/* Copyright */}
-										<p className="text-sm text-gray-600 text-center md:text-left">
+										<p
+											className={`text-sm ${textColorClass} text-center md:text-left`}
+										>
 											{copyrightText}
 										</p>
 

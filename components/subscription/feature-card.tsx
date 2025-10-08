@@ -21,7 +21,9 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = memo(
 	({ emoji, title, description, className = "" }) => {
 		return (
-			<div className={`bg-white rounded-lg p-8 shadow-sm border border-gray-100 ${className}`}>
+			<div
+				className={`bg-[#FDFBE2] rounded-3xl p-8 shadow-sm border border-black hover:shadow-md transition-all duration-300 ${className}`}
+			>
 				<div className="flex items-start space-x-4 mb-6">
 					<div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
 						<span className="text-2xl">{emoji}</span>

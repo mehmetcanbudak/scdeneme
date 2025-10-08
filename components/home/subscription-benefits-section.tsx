@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type React from "react";
-import { memo } from "react";
+import { memo, useId } from "react";
 
 /**
  * Props for the SubscriptionBenefitsSection component
@@ -30,6 +30,7 @@ interface BenefitCard {
  */
 const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 	memo(({ className = "" }) => {
+		const sectionId = useId();
 		const benefits: BenefitCard[] = [
 			{
 				icon: "/farmımızda_yetisen_sebzeler/her_hafta_taze_cesitler.svg",
@@ -40,10 +41,10 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 				backgroundColor: "bg-[#fbf9d5]",
 				borderColor: "border-[#fbf9d5]",
 			},
-		{
-			icon: "/abone_olun_bize_bırakin.svg",
-			iconAlt: "Abone Olun",
-			title: "Abone olun, gerisini bize bırakın",
+			{
+				icon: "/abone_olun_bize_bırakin.svg",
+				iconAlt: "Abone Olun",
+				title: "Abone olun, gerisini bize bırakın",
 				description:
 					"Tek yapmanız gereken size en uygun abonelik planını seçmek. İster her hafta, ister iki haftada bir sepetiniz kapınıza gelsin",
 				backgroundColor: "bg-[#e9f2dd]",
@@ -62,6 +63,8 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 
 		return (
 			<section
+				id={sectionId}
+				data-section="subscription-benefits"
 				className={`py-16 md:py-20 bg-[#E7EBDE] relative z-10 ${className}`}
 			>
 				<div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -69,7 +72,7 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 						{benefits.map((benefit, index) => (
 							<div
 								key={`${benefit.title}-${index}`}
-								className={`${benefit.backgroundColor} ${benefit.borderColor} border-2 rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm hover:shadow-md transition-shadow duration-300`}
+								className={`${benefit.backgroundColor} border-2 border-black rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm hover:shadow-md transition-shadow duration-300`}
 							>
 								<div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
 									{/* Icon */}

@@ -196,7 +196,7 @@ ArticleGrid.displayName = "ArticleGrid";
  */
 const FeaturedPost = React.memo<FeaturedPostProps>(({ post }) => {
 	return (
-		<div className="bg-green-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm mb-6 sm:mb-8">
+		<div className="bg-green-50 rounded-3xl shadow-sm border border-black p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow mb-6 sm:mb-8">
 			<p className="text-xs sm:text-sm uppercase tracking-widest text-gray-600 mb-4 sm:mb-6">
 				Son Makale
 			</p>
@@ -548,7 +548,7 @@ export default function Blog() {
 
 					{/* Blog list */}
 					{!loading && blogPosts.length > 0 && (
-						<div className="bg-green-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm mb-6 sm:mb-8">
+						<div className="bg-green-50 rounded-3xl shadow-sm border border-black p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow mb-6 sm:mb-8">
 							<div className="text-center mb-8 sm:mb-12">
 								<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-3 sm:mb-4 text-gray-700">
 									Blog
@@ -602,7 +602,7 @@ export default function Blog() {
 					)}
 
 					{/* Press */}
-					<div className="bg-green-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm">
+					<div className="bg-green-50 rounded-3xl shadow-sm border border-black p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow">
 						<div className="text-center mb-8 sm:mb-12">
 							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-3 sm:mb-4 text-gray-700">
 								Basında Biz

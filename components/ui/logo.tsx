@@ -14,7 +14,7 @@ const Logo = memo(function Logo({
 	const logoSrc = shouldBeTransparent ? "/sclogoblack.svg" : "/sclogo.svg";
 
 	return (
-		<div className="animate-logo-entrance">
+		<div className="animate-logo-entrance mt-7">
 			<Image
 				src={logoSrc}
 				alt="SkyCrops Logo"

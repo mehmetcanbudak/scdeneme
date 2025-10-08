@@ -65,7 +65,7 @@ const MobileSidebar = memo(function MobileSidebar({
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 z-[9999] md:hidden overflow-x-hidden">
+		<div className="fixed inset-0 z-[9999] nav:hidden overflow-x-hidden">
 			{/* Backdrop with smooth fade-in */}
 			<div
 				className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"

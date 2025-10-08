@@ -100,20 +100,22 @@ const Header = memo(function Header({ className = "" }: HeaderProps) {
 			aria-label="Ana navigasyon"
 		>
 			<nav
-				className="flex items-center justify-between px-4 sm:px-6 py-4"
+				className="flex items-center justify-between px-4 sm:px-6 py-4 relative"
 				aria-label="Ana menü"
 			>
 				{/* Mobile hamburger menu */}
-				<HamburgerMenu
-					onClick={toggleMobileMenu}
-					shouldBeTransparent={shouldBeTransparent}
-					aria-expanded={isMobileSidebarOpen}
-					aria-controls="mobile-sidebar"
-					aria-label={isMobileSidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
-				/>
+				<div className="md:hidden">
+					<HamburgerMenu
+						onClick={toggleMobileMenu}
+						shouldBeTransparent={shouldBeTransparent}
+						aria-expanded={isMobileSidebarOpen}
+						aria-controls="mobile-sidebar"
+						aria-label={isMobileSidebarOpen ? "Menüyü kapat" : "Menüyü aç"}
+					/>
+				</div>
 
-				{/* Logo and desktop navigation */}
-				<div className="flex items-center gap-2 sm:gap-4">
+				{/* Desktop Logo (left side) */}
+				<div className="hidden md:flex items-center gap-2 sm:gap-4">
 					<Link
 						href="/"
 						className="transition-opacity hover:opacity-80 focus:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60 rounded"
@@ -121,14 +123,25 @@ const Header = memo(function Header({ className = "" }: HeaderProps) {
 					>
 						<Logo shouldBeTransparent={shouldBeTransparent} />
 					</Link>
+				</div>
 
-					{/* Desktop Navigation Menu */}
-					<div className="hidden md:flex items-center">
-						<NavigationMenu
-							items={NAVIGATION_ITEMS}
-							shouldBeTransparent={shouldBeTransparent}
-						/>
-					</div>
+				{/* Mobile Logo (centered) */}
+				<div className="md:hidden absolute left-1/2 transform -translate-x-1/2">
+					<Link
+						href="/"
+						className="transition-opacity hover:opacity-80 focus:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:ring-white/60 rounded"
+						aria-label="SkyCrops ana sayfasına git"
+					>
+						<Logo shouldBeTransparent={shouldBeTransparent} />
+					</Link>
+				</div>
+
+				{/* Desktop Navigation Menu - Centered */}
+				<div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
+					<NavigationMenu
+						items={NAVIGATION_ITEMS}
+						shouldBeTransparent={shouldBeTransparent}
+					/>
 				</div>
 
 				{/* Action icons - Desktop and Mobile */}

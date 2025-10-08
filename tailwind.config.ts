@@ -8,6 +8,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			screens: {
+				nav: "1350px",
+			},
 			fontFamily: {
 				sans: ["var(--font-roboto)", "system-ui", "sans-serif"],
 				roboto: ["var(--font-roboto)", "system-ui", "sans-serif"],

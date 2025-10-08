@@ -49,7 +49,7 @@ const ContentSection = memo(function ContentSection({
 				</h2>
 				{contentArray.map((paragraph, index) => (
 					<p
-						key={`${title}-${index}`}
+						key={`${title}-${paragraph.slice(0, 20)}-${index}`}
 						className="text-base leading-relaxed mb-6"
 					>
 						{paragraph}
@@ -88,7 +88,7 @@ const FeatureCard = memo(function FeatureCard({
 			</h3>
 			<ul className="text-base leading-relaxed space-y-2 text-left">
 				{items.map((item, index) => (
-					<li key={`${title}-${index}`}>{item}</li>
+					<li key={`${title}-${item.slice(0, 20)}-${index}`}>{item}</li>
 				))}
 			</ul>
 		</div>
@@ -141,7 +141,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 				subtitle: "",
 				buttonText: "",
 				image: "/hakkimizda.png",
-				mobileImage: "/farmımızda_yetisen_sebzeler/hakkimizda_mobile.webp",
+				mobileImage: "/hakkimizda_mobile.webp",
 				mobileAlt: "Skycrops'ın Hakkımızda sayfası mobil görseli",
 			},
 		],
@@ -186,57 +186,6 @@ const Hakkimizda = memo(function Hakkimizda() {
 		[],
 	);
 
-	/**
-	 * Content sections data
-	 */
-	const contentSections = useMemo(
-		() => [
-			{
-				title: "Yaşayan Sebzeler",
-				content: [
-					"Skycrops, sağlıklı yaşamın ve taze lezzetlerin kapılarını aralayan bir dikey tarım tesisi. Doğallıktan uzaklaşmadan, kapalı ortamda, dış dünyanın negatif etkilerinden uzakta üretilen besleyici yeşilliklerimiz, sofralarınıza lezzet ve tazelik getiriyor.",
-					"Geleceğin tarım yöntemlerini bugün uygulayarak, sizleri sağlıklı bir yaşam için doğal ve taze alternatiflerle buluşturmayı hedefliyor. Sağlıklı yaşamın anahtarı, Skycrops'un yeşilliklerinde gizli.",
-				],
-				imageSrc: "/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-				imageAlt: "Modern sera tarımı",
-				imagePosition: "right" as const,
-			},
-			{
-				title: "Taze, Sağlıklı",
-				content:
-					"Şehir içi sağlıklı tarım modeliyle üretimde ürünler uzun nakliye sürecinde kalmak, soğuk hava depolarına girmek yerine hasat edildikten kısa süre sonra sofralara ulaşır. Temiz bir ortamda suda büyüyen ürünler toz, toprak ve zararlılara maruz kalmaz. Temizlenmesi zahmetsizdir.",
-				imageSrc: "/organic-farming-greenhouse-vegetables.png",
-				imageAlt: "Organik tarım",
-				imagePosition: "left" as const,
-			},
-			{
-				title: "Güvenli",
-				content:
-					"Skycrops'ta ürünleri dış dünyanın negatif etkilerine kapalı üretim ortamında, optimum koşullarda gerçekleştirdiğimiz için hiç bir tarımsal ilaç ve hormon kullanmıyoruz. Özenle seçtiğimiz tohumlardan filizlendirdiğimiz bitkiler büyümeleri için gerekli besinler dışında hiçbir yabancı maddeye maruz kalmadan sağlıkla büyüyor. Bu yüzden Skycrops'ta yetişen ürünler tamamıyla güvenli!",
-				imageSrc: "/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-				imageAlt: "Modern sera tarımı",
-				imagePosition: "right" as const,
-			},
-			{
-				title: "Lezzetli",
-				content:
-					'Skycrops\'ta bitkiler biyolojilerine en uygun koşullarda yetişir. İhtiyaçları olan besinleri, doğru ısı, nem ve ışık yoğunluğunda alırlar. Skycrops olarak birinci önceliğimiz "mutlu bitkiler" yetiştirmek. Tohumlarını özenle seçip, özenle yetiştirdiğimiz ürünler; seçkin restoran ve şefler tarafından tercih edilen, dünya genelinde en çok beğenilen ve keyifle tüketilen türlerdir.',
-				imageSrc: "/organic-farming-greenhouse-vegetables.png",
-				imageAlt: "Organik tarım",
-				imagePosition: "left" as const,
-			},
-			{
-				title: "Çevre Dostu",
-				content:
-					"Skycrops'ta en büyük önceliğimiz doğaya saygı ve sürdürülebilirlik. Geleneksel tarım yöntemlerine göre %90'a varan oranlarda daha az su tüketiyoruz. Gelişmiş enerji yönetim teknolojileri sayesinde verimliğimiz dünya standartlarının üzerinde. Gübre ve pestisitlerle toprağı kirletmiyoruz.",
-				imageSrc: "/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-				imageAlt: "Modern sera tarımı",
-				imagePosition: "right" as const,
-			},
-		],
-		[],
-	);
-
 	return (
 		<div className="min-h-screen relative bg-[#DC4F34]">
 			{/* Hero Section */}
@@ -258,10 +207,10 @@ const Hakkimizda = memo(function Hakkimizda() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-8 sm:mb-12">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
 							Hakkımızda
 						</h1>
-						<p className="text-lg leading-relaxed text-gray-600">
+						<p className="text-lg leading-relaxed text-gray-200">
 							Taze sebze deneyiminin hikayesi
 						</p>
 						<div className="mt-6 sm:mt-8 flex justify-center">
@@ -271,9 +220,109 @@ const Hakkimizda = memo(function Hakkimizda() {
 						</div>
 					</div>
 
-					{/* Content */}
-					<div className="bg-white p-6 sm:p-8 rounded-lg shadow-sm mb-8">
-						{/* Misyonumuz Section */}
+					{/* Biz Ne Yapıyoruz Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<div className="mb-12 sm:mb-16">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+								Biz Ne Yapıyoruz
+							</h2>
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
+								<div className="text-center">
+									<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
+										<Image
+											src="/biz_skycrops.svg"
+											alt="Biz Skycrops Icon"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
+										/>
+									</div>
+									<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+										Biz Skycrops
+									</h3>
+									<p className="text-base text-gray-600 leading-relaxed">
+										Modern dikey tarım teknolojisiyle geleceğin tarımını
+										şekillendiriyoruz
+									</p>
+								</div>
+								<div className="text-center">
+									<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
+										<Image
+											src="/kapalı ortam .svg"
+											alt="Kapalı Alan Dikey Tarım Icon"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
+										/>
+									</div>
+									<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+										Kapalı Alanda Dikey Tarım
+									</h3>
+									<p className="text-base text-gray-600 leading-relaxed">
+										Kontrollü ortamda sürdürülebilir ve verimli üretim
+										gerçekleştiriyoruz
+									</p>
+								</div>
+								<div className="text-center">
+									<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
+										<Image
+											src="/pestisitsiz yeni.svg"
+											alt="Pestisitsiz Hormonsuz Icon"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
+										/>
+										{/* X overlay to indicate no pesticides */}
+										<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+											<div className="w-48 h-48 flex items-center justify-center">
+												<svg
+													className="w-48 h-48 text-red-600"
+													fill="currentColor"
+													viewBox="0 0 24 24"
+													aria-hidden="true"
+												>
+													<title>No pesticides icon</title>
+													<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+												</svg>
+											</div>
+										</div>
+									</div>
+									<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+										Pestisitsiz Hormonsuz
+									</h3>
+									<p className="text-base text-gray-600 leading-relaxed">
+										Kimyevi müdahale olmadan doğal yöntemlerle sağlıklı ürünler
+										yetiştiriyoruz
+									</p>
+								</div>
+								<div className="text-center">
+									<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
+										<Image
+											src="/taptaze yeşillikler.svg"
+											alt="Taptaze Icon"
+											width={192}
+											height={192}
+											className="w-full h-full object-contain"
+											quality={85}
+										/>
+									</div>
+									<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+										Taptaze Yeşillikleri Ulaştırıyoruz
+									</h3>
+									<p className="text-base text-gray-600 leading-relaxed">
+										Hasattan dakikalar sonra kapınıza kadar taze ürünlerimizi
+										getiriyoruz
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* Misyonumuz Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
 							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
 								Misyonumuz
@@ -289,8 +338,10 @@ const Hakkimizda = memo(function Hakkimizda() {
 								etmektir.
 							</p>
 						</div>
+					</div>
 
-						{/* Vizyonumuz Section */}
+					{/* Vizyonumuz Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
 							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
 								Vizyonumuz
@@ -305,8 +356,10 @@ const Hakkimizda = memo(function Hakkimizda() {
 								ürünler sunmaktır.
 							</p>
 						</div>
+					</div>
 
-						{/* Neden Dikey Tarım Section */}
+					{/* Neden Dikey Tarım Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
 							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
 								Neden Dikey Tarım
@@ -324,18 +377,64 @@ const Hakkimizda = memo(function Hakkimizda() {
 								))}
 							</div>
 						</div>
+					</div>
 
-						{/* Content Sections */}
-						{contentSections.map((section) => (
-							<ContentSection
-								key={section.title}
-								title={section.title}
-								content={section.content}
-								imageSrc={section.imageSrc}
-								imageAlt={section.imageAlt}
-								imagePosition={section.imagePosition}
-							/>
-						))}
+					{/* Yaşayan Sebzeler Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<ContentSection
+							title="Yaşayan Sebzeler"
+							content={[
+								"Skycrops, sağlıklı yaşamın ve taze lezzetlerin kapılarını aralayan bir dikey tarım tesisi. Doğallıktan uzaklaşmadan, kapalı ortamda, dış dünyanın negatif etkilerinden uzakta üretilen besleyici yeşilliklerimiz, sofralarınıza lezzet ve tazelik getiriyor.",
+								"Geleceğin tarım yöntemlerini bugün uygulayarak, sizleri sağlıklı bir yaşam için doğal ve taze alternatiflerle buluşturmayı hedefliyor. Sağlıklı yaşamın anahtarı, Skycrops'un yeşilliklerinde gizli.",
+							]}
+							imageSrc="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
+							imageAlt="Modern sera tarımı"
+							imagePosition="right"
+						/>
+					</div>
+
+					{/* Taze, Sağlıklı Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<ContentSection
+							title="Taze, Sağlıklı"
+							content="Şehir içi sağlıklı tarım modeliyle üretimde ürünler uzun nakliye sürecinde kalmak, soğuk hava depolarına girmek yerine hasat edildikten kısa süre sonra sofralara ulaşır. Temiz bir ortamda suda büyüyen ürünler toz, toprak ve zararlılara maruz kalmaz. Temizlenmesi zahmetsizdir."
+							imageSrc="/organic-farming-greenhouse-vegetables.png"
+							imageAlt="Organik tarım"
+							imagePosition="left"
+						/>
+					</div>
+
+					{/* Güvenli Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<ContentSection
+							title="Güvenli"
+							content="Skycrops'ta ürünleri dış dünyanın negatif etkilerine kapalı üretim ortamında, optimum koşullarda gerçekleştirdiğimiz için hiç bir tarımsal ilaç ve hormon kullanmıyoruz. Özenle seçtiğimiz tohumlardan filizlendirdiğimiz bitkiler büyümeleri için gerekli besinler dışında hiçbir yabancı maddeye maruz kalmadan sağlıkla büyüyor. Bu yüzden Skycrops'ta yetişen ürünler tamamıyla güvenli!"
+							imageSrc="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
+							imageAlt="Modern sera tarımı"
+							imagePosition="right"
+						/>
+					</div>
+
+					{/* Lezzetli Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<ContentSection
+							title="Lezzetli"
+							content="Skycrops'ta bitkiler biyolojilerine en uygun koşullarda yetişir. İhtiyaçları olan besinleri, doğru ısı, nem ve ışık yoğunluğunda alırlar. Skycrops olarak birinci önceliğimiz mutlu bitkiler yetiştirmek. Tohumlarını özenle seçip, özenle yetiştirdiğimiz ürünler; seçkin restoran ve şefler tarafından tercih edilen, dünya genelinde en çok beğenilen ve keyifle tüketilen türlerdir."
+							imageSrc="/organic-farming-greenhouse-vegetables.png"
+							imageAlt="Organik tarım"
+							imagePosition="left"
+						/>
+					</div>
+
+					{/* Çevre Dostu Section */}
+					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
+						<ContentSection
+							title="Çevre Dostu"
+							content="Skycrops'ta en büyük önceliğimiz doğaya saygı ve sürdürülebilirlik. Geleneksel tarım yöntemlerine göre %90'a varan oranlarda daha az su tüketiyoruz. Gelişmiş enerji yönetim teknolojileri sayesinde verimliğimiz dünya standartlarının üzerinde. Gübre ve pestisitlerle toprağı kirletmiyoruz."
+							imageSrc="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
+							imageAlt="Modern sera tarımı"
+							imagePosition="right"
+						/>
 					</div>
 				</div>
 			</main>

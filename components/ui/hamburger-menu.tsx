@@ -1,5 +1,5 @@
 import { Menu } from "lucide-react";
-import { type ButtonHTMLAttributes, memo } from "react";
+import { memo, type ButtonHTMLAttributes } from "react";
 import { Button } from "./button";
 
 interface HamburgerMenuProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,7 +22,7 @@ const HamburgerMenu = memo(function HamburgerMenu({
 			variant="ghost"
 			size="icon"
 			onClick={onClick}
-			className={`h-8 w-8 md:hidden ${className}`}
+			className={`h-8 w-8 nav:hidden ${className}`}
 			aria-label="Open menu"
 			{...buttonProps}
 		>
