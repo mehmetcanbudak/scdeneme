@@ -40,10 +40,10 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 				backgroundColor: "bg-[#fbf9d5]",
 				borderColor: "border-[#fbf9d5]",
 			},
-			{
-				icon: "/farmımızda_yetisen_sebzeler/abone_olun_bize_bırakin.svg",
-				iconAlt: "Abone Olun",
-				title: "Abone olun, gerisini bize bırakın",
+		{
+			icon: "/abone_olun_bize_bırakin.svg",
+			iconAlt: "Abone Olun",
+			title: "Abone olun, gerisini bize bırakın",
 				description:
 					"Tek yapmanız gereken size en uygun abonelik planını seçmek. İster her hafta, ister iki haftada bir sepetiniz kapınıza gelsin",
 				backgroundColor: "bg-[#e9f2dd]",

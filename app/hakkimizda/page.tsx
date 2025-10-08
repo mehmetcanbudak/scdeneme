@@ -141,7 +141,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 				subtitle: "",
 				buttonText: "",
 				image: "/hakkimizda.png",
-				mobileImage: "/farmımızda_yetisen_sebzeler/hakkimizda_mobile.svg",
+				mobileImage: "/farmımızda_yetisen_sebzeler/hakkimizda_mobile.webp",
 				mobileAlt: "Skycrops'ın Hakkımızda sayfası mobil görseli",
 			},
 		],
