@@ -1,131 +1,78 @@
 "use client";
 
-import MarqueeAlongSvgPath from "@/components/fancy/blocks/marquee-along-svg-path";
+import type React from "react";
+import { memo, useEffect, useState, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import HeroHeader from "@/components/hero-header";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { useCart } from "@/contexts/cart-context";
-import { usePageBackground } from "@/contexts/page-background-context";
+import FeaturesSection from "@/components/home/features-section";
+import PackagesFAQSection from "@/components/home/packages-faq-section";
+import VegetablesSection from "@/components/home/vegetables-section";
+import BlogSection, { type UiPost } from "@/components/home/blog-section";
+import CategoryGridSection from "@/components/home/category-grid-section";
 import { useProducts } from "@/contexts/product-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
-import {
-	ChevronLeft,
-	ChevronRight,
-	Package,
-	RotateCcw,
-	Settings,
-	Snowflake,
-	Truck,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 
-type UiPost = {
+/**
+ * Slide interface for hero header
+ */
+interface Slide {
 	title: string;
-	excerpt?: string;
-	date?: string;
-	image?: string | null;
-	readTime?: string;
-	slug: string;
-};
+	subtitle: string;
+	buttonText: string;
+	buttonAction: () => void;
+	image: string;
+	logo?: string;
+	alt: string;
+}
 
-export default function Home() {
+/**
+ * Home page component
+ * Main landing page of the application
+ *
+ * @returns {React.ReactElement} The home page component
+ */
+const Home: React.FC = memo(() => {
 	const router = useRouter();
-	const {
-		products,
-		featuredProducts,
-		isLoading: productsLoading,
-	} = useProducts();
-	const { addItem } = useCart();
-	const { setBackgroundColor } = usePageBackground();
-	const [showLeftButton, setShowLeftButton] = useState(false);
-	const [showRightButton, setShowRightButton] = useState(true);
-	const [showHerbsLeftButton, setShowHerbsLeftButton] = useState(false);
-	const [showHerbsRightButton, setShowHerbsRightButton] = useState(true);
-	const [isHerbsUserInteracting, setIsHerbsUserInteracting] = useState(false);
-
-	const scrollContainerRef = useRef<HTMLDivElement>(null);
-	const blogScrollRef = useRef<HTMLDivElement>(null);
-	const herbsScrollRef = useRef<HTMLDivElement>(null);
-
-	// Enable transparent navigation for hero section
-	useNavigationTransparency(true);
-
-	// Set the background color for this page
-	useEffect(() => {
-		setBackgroundColor("#E7EBDE");
-	}, [setBackgroundColor]);
-
-	const slides = [
-		{
-			title: "SKYCROPS",
-			subtitle: "YAŞAYAN SEBZELER",
-			buttonText: "ABONE OL",
-			buttonAction: () => router.push("/abonelik/taze-yesillikler-paketi"),
-			image: "/agricultural-figures-with-plants-and-sun.png",
-			logo: "/skycrops-logo.svg",
-			alt: "Skycrops - Yaşayan Sebzeler",
-		},
-	];
-
-	const vegetables = [
-		{ name: "KIVIRCIK", subtitle: "TAZE YAPRAKLAR", image: "/kivircik.png" },
-		{ name: "FESLEĞEN", subtitle: "AROMATIK BİTKİ", image: "/feslegen.png" },
-		{ name: "MAYDANOZ", subtitle: "VİTAMİN DEPOSU", image: "/maydanoz.png" },
-		{
-			name: "LOLLO ROSSO",
-			subtitle: "KIRMIZI YAPRAK",
-			image: "/lollo-rosso.png",
-		},
-		{ name: "REYHAN", subtitle: "AROMATIK NANE", image: "/reyhan.png" },
-		{ name: "ROKA", subtitle: "ACIMSI LEZZET", image: "/roka.png" },
-		{ name: "KEKİK", subtitle: "AROMATIK OT", image: "/kekik.png" },
-		{
-			name: "YAĞLI YAPRAK",
-			subtitle: "TAZE YEŞİLLİK",
-			image: "/yagli-yaprak.png",
-		},
-	];
-
-	// SVG path for marquee animation
-	const vegetablesMarqueePath =
-		"M1 209.434C58.5872 255.935 387.926 325.938 482.583 209.434C600.905 63.8051 525.516 -43.2211 427.332 19.9613C329.149 83.1436 352.902 242.723 515.041 267.302C644.752 286.966 943.56 181.94 995 156.5";
-
-	// Use real products for packages, fallback to static data
-	const packages =
-		featuredProducts.length > 0
-			? featuredProducts.slice(0, 1).map((product, _index) => ({
-					id: product.id,
-					name: product.name,
-					description:
-						product.description ||
-						"Taze ve sağlıklı ürünlerimizden özenle seçilmiş paket",
-					price: product.price.toFixed(2),
-					originalPrice: (product.price * 1.2).toFixed(2), // 20% discount
-					image: product.images?.[0]?.url || "/bundle4.png",
-				}))
-			: [
-					{
-						id: 1,
-						name: "Taze Yeşillikler Paketi",
-						description: "Kıvırcık, roka ve tereotundan taze karışım",
-						price: "24.99",
-						originalPrice: "29.99",
-						image: "/bundle4.png",
-					},
-				];
-
+	const { featuredProducts } = useProducts();
 	const [blogPosts, setBlogPosts] = useState<UiPost[]>([]);
 	const [blogLoading, setBlogLoading] = useState<boolean>(false);
 	const [blogError, setBlogError] = useState<string | null>(null);
 
+	// Enable transparent navigation for hero section
+	useNavigationTransparency(true);
+
+	/**
+	 * Slides data for hero header with memoization
+	 */
+	const slides: Slide[] = useMemo(
+		() => [
+			{
+				title: "SKYCROPS",
+				subtitle: "YAŞAYAN SEBZELER",
+				buttonText: "ABONE OL",
+				buttonAction: () => router.push("/abonelik/taze-yesillikler-paketi"),
+				image: "/anasayfa.png",
+				logo: "/skycrops-logo.svg",
+				alt: "Skycrops - Yaşayan Sebzeler",
+			},
+		],
+		[router],
+	);
+
+	/**
+	 * Get package image from featured products
+	 */
+	const packageImage = useMemo(() => {
+		if (featuredProducts.length > 0) {
+			return featuredProducts[0]?.images?.[0]?.url || "/bundle4.png";
+		}
+		return "/bundle4.png";
+	}, [featuredProducts]);
+
+	/**
+	 * Fetch blog posts from API
+	 */
 	useEffect(() => {
 		let cancelled = false;
 		(async () => {
@@ -163,125 +110,13 @@ export default function Home() {
 		};
 	}, []);
 
-	useEffect(() => {
-		const container = scrollContainerRef.current;
-		if (!container) return;
-
-		const scrollWidth = container.scrollWidth;
-		const clientWidth = container.clientWidth;
-		let scrollPosition = 0;
-
-		const autoScroll = () => {
-			scrollPosition += 1;
-			if (scrollPosition >= scrollWidth - clientWidth) {
-				scrollPosition = 0;
-			}
-			container.scrollLeft = scrollPosition;
-		};
-
-		const interval = setInterval(autoScroll, 50);
-		return () => clearInterval(interval);
-	}, []);
-
-	// Herbs scroll functions
-	const handleHerbsScroll = () => {
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			const { scrollLeft, scrollWidth, clientWidth } = herbsContainer;
-			setShowHerbsLeftButton(scrollLeft > 0);
-			setShowHerbsRightButton(scrollLeft < scrollWidth - clientWidth - 10);
-		}
-	};
-
-	const scrollHerbsLeft = () => {
-		setIsHerbsUserInteracting(true);
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			herbsContainer.scrollBy({
-				left: -200, // Width of one herb card plus gap
-				behavior: "smooth",
-			});
-		}
-		// Reset user interaction after a delay
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000);
-	};
-
-	const scrollHerbsRight = () => {
-		setIsHerbsUserInteracting(true);
-		const herbsContainer = herbsScrollRef.current;
-		if (herbsContainer) {
-			herbsContainer.scrollBy({
-				left: 200, // Width of one herb card plus gap
-				behavior: "smooth",
-			});
-		}
-		// Reset user interaction after a delay
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000);
-	};
-
-	// Initialize herbs scroll state
-	useEffect(() => {
-		handleHerbsScroll();
-	}, [handleHerbsScroll]);
-
-	// Handle screen resize for herbs section
-	useEffect(() => {
-		const handleResize = () => {
-			const herbsContainer = herbsScrollRef.current;
-			if (herbsContainer) {
-				const isMobile = window.innerWidth < 768;
-				if (isMobile) {
-					herbsContainer.style.overflowX = "auto";
-				} else {
-					herbsContainer.style.overflowX = "hidden";
-					herbsContainer.scrollLeft = 0; // Reset scroll position on desktop
-				}
-			}
-		};
-
-		// Initial check
-		handleResize();
-
-		// Add resize listener
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
-
-	// Auto-scroll herbs section when user is not interacting (mobile only)
-	useEffect(() => {
-		const herbsContainer = herbsScrollRef.current;
-		if (!herbsContainer || isHerbsUserInteracting) return;
-
-		// Check if we're on mobile (screen width < 768px)
-		const isMobile = window.innerWidth < 768;
-		if (!isMobile) return;
-
-		const scrollWidth = herbsContainer.scrollWidth;
-		const clientWidth = herbsContainer.clientWidth;
-		let scrollPosition = 0;
-
-		const autoScroll = () => {
-			if (isHerbsUserInteracting) return;
-
-			scrollPosition += 1;
-			if (scrollPosition >= scrollWidth - clientWidth) {
-				scrollPosition = 0;
-			}
-			herbsContainer.scrollLeft = scrollPosition;
-		};
-
-		const interval = setInterval(autoScroll, 50);
-		return () => clearInterval(interval);
-	}, [isHerbsUserInteracting]);
-
-	const scrollToNextSection = () => {
+	/**
+	 * Scroll to next section handler
+	 */
+	const scrollToNextSection = useCallback(() => {
 		const nextSection = document.querySelector("#biz-ne-yapiyoruz-section");
 		if (nextSection) {
-			const headerHeight = 64; // Navigation height after removing banner
+			const headerHeight = 64;
 			const elementPosition =
 				nextSection.getBoundingClientRect().top + window.pageYOffset;
 			const offsetPosition = elementPosition - headerHeight;
@@ -291,58 +126,7 @@ export default function Home() {
 				behavior: "smooth",
 			});
 		}
-	};
-
-	const scrollBlogLeft = () => {
-		const blogContainer = blogScrollRef.current;
-		if (blogContainer) {
-			blogContainer.scrollBy({
-				left: -320, // Width of one blog card plus gap
-				behavior: "smooth",
-			});
-		}
-	};
-
-	const scrollBlogRight = () => {
-		const blogContainer = blogScrollRef.current;
-		if (blogContainer) {
-			blogContainer.scrollBy({
-				left: 320, // Width of one blog card plus gap
-				behavior: "smooth",
-			});
-		}
-	};
-
-	const handleBlogScroll = () => {
-		const blogContainer = blogScrollRef.current;
-		if (blogContainer) {
-			const { scrollLeft, scrollWidth, clientWidth } = blogContainer;
-			setShowLeftButton(scrollLeft > 0);
-			setShowRightButton(scrollLeft < scrollWidth - clientWidth - 10);
-		}
-	};
-
-	const handleHerbsTouchStart = () => {
-		setIsHerbsUserInteracting(true);
-	};
-
-	const handleHerbsTouchEnd = () => {
-		// Reset user interaction after a delay to allow auto-scroll to resume
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000); // 2 second delay before resuming auto-scroll
-	};
-
-	const handleHerbsMouseDown = () => {
-		setIsHerbsUserInteracting(true);
-	};
-
-	const handleHerbsMouseUp = () => {
-		// Reset user interaction after a delay to allow auto-scroll to resume
-		setTimeout(() => {
-			setIsHerbsUserInteracting(false);
-		}, 2000); // 2 second delay before resuming auto-scroll
-	};
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-[#E7EBDE] relative overflow-x-hidden">
@@ -354,502 +138,24 @@ export default function Home() {
 				showDots={false}
 			/>
 
-			{/* Biz Ne Yapıyoruz Section */}
-			<section
-				id="biz-ne-yapiyoruz-section"
-				className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden"
-			>
-				<div className="mx-12">
-					<div className="text-center mb-12">
-						<h2 className="text-4xl md:text-5xl font-light mb-8 tracking-wide text-gray-800">
-							Biz Ne Yapıyoruz
-						</h2>
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-							<div className="text-center">
-								<div className="w-24 h-24 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-									<img
-										src="/Frame 169.svg"
-										alt="Skycrops Icon"
-										className="w-24 h-24 object-contain"
-									/>
-								</div>
-								<h3 className="text-xl font-medium mb-2 text-gray-800">
-									Biz Skycrops
-								</h3>
-								<p className="text-gray-600 text-sm">
-									Modern dikey tarım teknolojisiyle geleceğin tarımını
-									şekillendiriyoruz
-								</p>
-							</div>
-							<div className="text-center">
-								<div className="w-24 h-24 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-									<img
-										src="/Frame 169.svg"
-										alt="Skycrops Icon"
-										className="w-24 h-24 object-contain"
-									/>
-								</div>
-								<h3 className="text-xl font-medium mb-2 text-gray-800">
-									Kapalı Alanda Dikey Tarım
-								</h3>
-								<p className="text-gray-600 text-sm">
-									Kontrollü ortamda sürdürülebilir ve verimli üretim
-									gerçekleştiriyoruz
-								</p>
-							</div>
-							<div className="text-center">
-								<div className="w-24 h-24 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-									<img
-										src="/Frame 169.svg"
-										alt="Skycrops Icon"
-										className="w-24 h-24 object-contain"
-									/>
-								</div>
-								<h3 className="text-xl font-medium mb-2 text-gray-800">
-									Pestisitiz Hormonsuz
-								</h3>
-								<p className="text-gray-600 text-sm">
-									Kimyevi müdahale olmadan doğal yöntemlerle sağlıklı ürünler
-									yetiştiriyoruz
-								</p>
-							</div>
-							<div className="text-center">
-								<div className="w-24 h-24 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-									<img
-										src="/Frame 169.svg"
-										alt="Skycrops Icon"
-										className="w-24 h-24 object-contain"
-									/>
-								</div>
-								<h3 className="text-xl font-medium mb-2 text-gray-800">
-									Taptaze Yeşillikleri Ulaştırıyoruz
-								</h3>
-								<p className="text-gray-600 text-sm">
-									Hasattan dakikalar sonra kapınıza kadar taze ürünlerimizi
-									getiriyoruz
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
+			{/* Features Section */}
+			<FeaturesSection />
 
-			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
-				<div className="mx-6">
-					<div className="text-center mb-12">
-						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
-							Sebze Paketleri
-						</h2>
-						<p className="text-gray-600">
-							En taze sebzellerimizin özenle seçilmiş koleksiyonları, sağlıklı
-							yaşamınız için mükemmel paketler şeklinde
-						</p>
-					</div>
+			{/* Packages FAQ Section */}
+			<PackagesFAQSection packageImage={packageImage} />
 
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-						{/* Package Image - Left Side */}
-						<div className="flex items-center justify-center">
-							<div className="w-full max-w-md">
-								<img
-									src={packages[0]?.image || "/bundle4.png"}
-									alt="Taze Yeşillikler Paketi"
-									className="w-full h-auto object-cover rounded-product shadow-md"
-								/>
-							</div>
-						</div>
+			{/* Vegetables Section */}
+			<VegetablesSection />
 
-						{/* FAQ Accordion - Right Side */}
-						<div className="space-y-4">
-							<h3 className="text-3xl font-medium mb-6 text-gray-700">
-								Paketlerimiz Hakkında
-							</h3>
-							<Accordion type="single" collapsible defaultValue="item-1">
-								{[
-									{
-										id: "item-1",
-										question: "Paketlerimiz nasıl hazırlanır?",
-										answer:
-											"Her paket, taze hasat edilmiş sebzelerimizden özenle seçilerek hazırlanır. Kalite kontrolümüzden geçen ürünler, hijyenik koşullarda paketlenir ve en kısa sürede teslim edilmek üzere hazır hale getirilir.",
-										icon: Package,
-										color: { bg: "bg-green-100", text: "text-green-600" },
-									},
-									{
-										id: "item-2",
-										question: "Teslimat süresi ne kadardır?",
-										answer:
-											"Siparişleriniz genellikle 24 saat içinde hazırlanır ve İstanbul içi teslimat için 2-3 iş günü, diğer bölgeler için 3-5 iş günü sürer. Hafta sonu siparişleri pazartesi günü işleme alınır.",
-										icon: Truck,
-										color: { bg: "bg-blue-100", text: "text-blue-600" },
-									},
-									{
-										id: "item-3",
-										question: "Ürünlerin tazeliği nasıl korunur?",
-										answer:
-											"Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve teslimata kadar bu koşullarda muhafaza edilir. Her paket, teslimattan önce taze kalite kontrolünden geçer.",
-										icon: Snowflake,
-										color: { bg: "bg-yellow-100", text: "text-yellow-600" },
-									},
-									{
-										id: "item-4",
-										question: "Paket içeriği değiştirilebilir mi?",
-										answer:
-											"Evet, özel ihtiyaçlarınıza göre paket içeriğini kişiselleştirebilirsiniz. Alerji durumunuz, tercih ettiğiniz sebzeler veya miktar değişiklikleri için müşteri hizmetlerimizle iletişime geçebilirsiniz.",
-										icon: Settings,
-										color: { bg: "bg-purple-100", text: "text-purple-600" },
-									},
-									{
-										id: "item-5",
-										question: "İptal ve iade koşulları nelerdir?",
-										answer:
-											"Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi ile ilgili sorunlarınızı bildirebilirsiniz. Kalite garantisi kapsamındaki ürünler için tam geri ödeme yapılır.",
-										icon: RotateCcw,
-										color: { bg: "bg-red-100", text: "text-red-600" },
-									},
-								].map((faq) => {
-									const IconComponent = faq.icon;
-									return (
-										<AccordionItem
-											key={faq.id}
-											value={faq.id}
-											className="bg-white rounded-xl shadow-sm border border-gray-100 px-5 mb-3 overflow-hidden"
-										>
-											<AccordionTrigger className="hover:no-underline py-4">
-												<div className="flex items-center space-x-4">
-													<div
-														className={`w-11 h-11 ${faq.color.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
-													>
-														<IconComponent
-															className={`w-5 h-5 ${faq.color.text}`}
-														/>
-													</div>
-													<h4 className="text-lg font-semibold text-left text-gray-800">
-														{faq.question}
-													</h4>
-												</div>
-											</AccordionTrigger>
-											<AccordionContent className="pb-4 pl-[60px] pr-4">
-												<p className="text-gray-600 leading-relaxed text-sm">
-													{faq.answer}
-												</p>
-											</AccordionContent>
-										</AccordionItem>
-									);
-								})}
-							</Accordion>
-						</div>
-					</div>
-				</div>
-			</section>
+			{/* Blog Section */}
+			<BlogSection posts={blogPosts} loading={blogLoading} error={blogError} />
 
-			<section
-				id="vegetables-section"
-				className="py-16 bg-[#E7EBDE] relative z-10"
-				style={{ overflow: "hidden" }}
-			>
-				<div className="mx-12">
-					<div className="text-center mb-12">
-						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
-							Farmımızda Yetişen Sebzeler
-						</h2>
-						<p className="text-gray-600 text-lg mt-4">
-							1 ay içiinde farmımızda yetiştirdiğimiz bütün çesitler evinize
-							ulaşmış olacak.
-						</p>
-					</div>
-				</div>
-
-				{/* Desktop: Marquee Along SVG Path */}
-				<div
-					className="hidden md:block h-[500px] relative"
-					style={{
-						width: "100vw",
-						marginLeft: "calc(-50vw + 50%)",
-						marginRight: "calc(-50vw + 50%)",
-					}}
-				>
-					<MarqueeAlongSvgPath
-						path={vegetablesMarqueePath}
-						baseVelocity={8}
-						slowdownOnHover={true}
-						draggable={true}
-						repeat={3}
-						dragSensitivity={0.1}
-						className="w-full h-full"
-						grabCursor
-						viewBox="0 0 1000 300"
-						preserveAspectRatio="xMidYMid slice"
-					>
-						{vegetables.map((vegetable) => (
-							<div
-								key={vegetable.name}
-								className="w-24 h-24 hover:scale-150 duration-300 ease-in-out group"
-							>
-								<div className="relative w-full h-full">
-									<img
-										src={vegetable.image || "/placeholder.svg"}
-										alt={vegetable.name}
-										className="w-full h-full object-cover rounded-full shadow-md"
-										draggable={false}
-									/>
-									<div className="absolute bottom-[-40px] left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-										<p className="text-xs font-medium text-gray-800 bg-white/90 px-2 py-1 rounded shadow-sm">
-											{vegetable.name}
-										</p>
-									</div>
-								</div>
-							</div>
-						))}
-					</MarqueeAlongSvgPath>
-				</div>
-
-				{/* Mobile: Horizontal scrollable herbs */}
-				<div className="md:hidden relative w-full pl-16 pr-16">
-					<div
-						ref={herbsScrollRef}
-						className="flex space-x-8 overflow-x-auto pb-4 px-6 herbs-scroll"
-						onScroll={handleHerbsScroll}
-						onTouchStart={handleHerbsTouchStart}
-						onTouchEnd={handleHerbsTouchEnd}
-						onMouseDown={handleHerbsMouseDown}
-						onMouseUp={handleHerbsMouseUp}
-					>
-						{vegetables.concat(vegetables).map((vegetable, index) => (
-							<div
-								key={index}
-								className="flex-shrink-0 text-center group cursor-pointer w-32"
-							>
-								<div className="relative mb-4 overflow-hidden rounded-full w-32 h-32 mx-auto">
-									<img
-										src={vegetable.image || "/placeholder.svg"}
-										alt={vegetable.name}
-										className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-									/>
-								</div>
-								<h3 className="font-medium text-sm mb-1 tracking-wide">
-									{vegetable.name}
-								</h3>
-								<p className="text-xs text-gray-600 uppercase tracking-widest">
-									{vegetable.subtitle}
-								</p>
-							</div>
-						))}
-					</div>
-
-					{/* Herbs Navigation Buttons - Mobile Only */}
-					{showHerbsLeftButton && (
-						<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
-							<button
-								onClick={scrollHerbsLeft}
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-							>
-								<ChevronLeft className="w-5 h-5 text-gray-600" />
-							</button>
-						</div>
-					)}
-
-					{showHerbsRightButton && (
-						<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
-							<button
-								onClick={scrollHerbsRight}
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-							>
-								<ChevronRight className="w-5 h-5 text-gray-600" />
-							</button>
-						</div>
-					)}
-				</div>
-			</section>
-
-			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
-				<div className="mx-12">
-					<div className="text-center mb-12">
-						<h2 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
-							Blog - Basında Biz
-						</h2>
-					</div>
-
-					<div className="relative pl-16 pr-16">
-						<div
-							ref={blogScrollRef}
-							className="flex space-x-6 overflow-x-auto pb-4"
-							onScroll={handleBlogScroll}
-							style={{
-								scrollBehavior: "smooth",
-								scrollbarWidth: "none",
-								msOverflowStyle: "none",
-								maxWidth: "100vw",
-								width: "100%",
-							}}
-						>
-							{blogPosts.map((post, index) => (
-								<Link
-									key={index}
-									href={`/blog/${post.slug}`}
-									className="flex-shrink-0 w-80"
-								>
-									<div className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-										<div className="aspect-video">
-											<img
-												src={post.image || "/placeholder.svg"}
-												alt={post.title}
-												className="w-full h-full object-cover"
-											/>
-										</div>
-										<div className="p-6">
-											<div className="text-sm text-gray-500 mb-2">
-												{post.date}
-											</div>
-											<h3 className="font-medium text-lg mb-3 line-clamp-2">
-												{post.title}
-											</h3>
-											<p className="text-sm text-gray-600 line-clamp-3">
-												{post.excerpt}
-											</p>
-										</div>
-									</div>
-								</Link>
-							))}
-						</div>
-
-						{showLeftButton && (
-							<div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-30">
-								<button
-									onClick={scrollBlogLeft}
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronLeft className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
-
-						{showRightButton && (
-							<div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-30">
-								<button
-									onClick={scrollBlogRight}
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronRight className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
-					</div>
-
-					<div className="text-center mt-8">
-						<Link href="/blog">
-							<Button className="px-8 py-3 uppercase tracking-widest">
-								Tümünü Gör
-							</Button>
-						</Link>
-					</div>
-				</div>
-			</section>
-
-			{/* Category Grid */}
-			<section className="py-16 bg-[#E7EBDE] relative z-10 overflow-x-hidden">
-				<div className="mx-12 relative z-10">
-					{/* Desktop Grid View */}
-					<div className="hidden md:grid md:grid-cols-3 gap-6">
-						{[
-							{
-								title: "SAĞLIK",
-								image: "/fresh-mixed-vegetables-display.png",
-								buttonText: "KEŞFET",
-								href: "/saglik",
-							},
-							{
-								title: "SERTİFİKALAR VE ANALİZLER",
-								image: "/iso.png",
-								buttonText: "KEŞFET",
-								href: "/sertifikalar",
-							},
-							{
-								title: "SIKÇA SORULAN SORULAR",
-								image: "/organic-farming-greenhouse-vegetables.png",
-								buttonText: "KEŞFET",
-								href: "/sorular",
-							},
-						].map((category, index) => (
-							<Link
-								key={index}
-								href={category.href}
-								className="relative group cursor-pointer overflow-hidden rounded-lg"
-							>
-								<div className="aspect-square">
-									<img
-										src={category.image || "/placeholder.svg"}
-										alt={category.title}
-										className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-									/>
-								</div>
-								<div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-								<div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-									<h3 className="text-xl font-light mb-4 tracking-wide">
-										{category.title}
-									</h3>
-									<Button
-										variant="outline"
-										size="sm"
-										className="bg-transparent border-white text-white hover:bg-white hover:text-black w-fit uppercase tracking-widest text-xs"
-									>
-										{category.buttonText}
-									</Button>
-								</div>
-							</Link>
-						))}
-					</div>
-
-					{/* Mobile List View */}
-					<div className="md:hidden space-y-4">
-						{[
-							{
-								title: "SAĞLIK",
-								image: "/fresh-mixed-vegetables-display.png",
-								buttonText: "KEŞFET",
-								href: "/saglik",
-							},
-							{
-								title: "SERTİFİKALAR VE ANALİZLER",
-								image: "/iso.png",
-								buttonText: "KEŞFET",
-								href: "/sertifikalar",
-							},
-							{
-								title: "SIKÇA SORULAN SORULAR",
-								image: "/organic-farming-greenhouse-vegetables.png",
-								buttonText: "KEŞFET",
-								href: "/sorular",
-							},
-						].map((category, index) => (
-							<Link
-								key={index}
-								href={category.href}
-								className="relative group cursor-pointer overflow-hidden rounded-lg block"
-							>
-								<div className="aspect-[16/9]">
-									<img
-										src={category.image || "/placeholder.svg"}
-										alt={category.title}
-										className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-									/>
-								</div>
-								<div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300"></div>
-								<div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
-									<h3 className="text-xl font-light mb-4 tracking-wide">
-										{category.title}
-									</h3>
-									<Button
-										variant="outline"
-										size="sm"
-										className="bg-transparent border-white text-white hover:bg-white hover:text-black w-fit uppercase tracking-widest text-sm"
-									>
-										{category.buttonText}
-									</Button>
-								</div>
-							</Link>
-						))}
-					</div>
-				</div>
-			</section>
+			{/* Category Grid Section */}
+			<CategoryGridSection />
 		</div>
 	);
-}
+});
+
+Home.displayName = "Home";
+
+export default Home;

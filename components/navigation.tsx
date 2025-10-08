@@ -1,7 +1,6 @@
 "use client";
 
 import { NAVIGATION_ITEMS } from "@/lib/navigation-config";
-import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigation } from "./navigation-context";
@@ -77,7 +76,9 @@ const Navigation = memo(function Navigation({
 	return (
 		<header
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
-				shouldBeTransparent ? "bg-transparent" : "bg-[#E7EBDE] shadow-sm"
+				shouldBeTransparent
+					? "bg-transparent"
+					: "bg-white/70 backdrop-blur-lg shadow-lg border-b border-white/30"
 			} ${className}`}
 			aria-label="Ana navigasyon"
 		>
@@ -127,7 +128,7 @@ const Navigation = memo(function Navigation({
 				</div>
 			</nav>
 
-			{!shouldBeTransparent && (
+			{/* {!shouldBeTransparent && (
 				<div className="w-full">
 					<Image
 						src="/celenk.svg"
@@ -139,7 +140,7 @@ const Navigation = memo(function Navigation({
 						priority
 					/>
 				</div>
-			)}
+			)} */}
 
 			{/* Mobile sidebar */}
 			<MobileSidebar

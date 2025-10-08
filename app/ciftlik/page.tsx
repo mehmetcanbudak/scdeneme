@@ -1,14 +1,20 @@
 "use client";
 
+import React, { useCallback, useMemo } from "react";
 import Image from "next/image";
-import { useCallback } from "react";
 import HeroHeader from "@/components/hero-header";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
-export default function Ciftlik() {
+/**
+ * Ciftlik page component - Farm information page
+ */
+const Ciftlik = React.memo(() => {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
+	/**
+	 * Scrolls smoothly to the main content section
+	 */
 	const scrollToContent = useCallback(() => {
 		const contentSection = document.querySelector("#main-content");
 		if (contentSection) {
@@ -24,19 +30,39 @@ export default function Ciftlik() {
 		}
 	}, []);
 
+	/**
+	 * Hero slides configuration
+	 */
+	const heroSlides = useMemo(
+		() => [
+			{
+				title: "ÇİFTLİK",
+				subtitle: "",
+				buttonText: "",
+				image: "/agricultural-figures-with-plants-and-sun.png",
+			},
+		],
+		[]
+	);
+
+	/**
+	 * Feature list for sustainable farming
+	 */
+	const features = useMemo(
+		() => [
+			"Organik gübre kullanımı",
+			"Su tasarrufu teknolojileri",
+			"Doğal haşere kontrolü",
+		],
+		[]
+	);
+
 	return (
 		<div className="min-h-screen bg-white relative">
 			{/* Navigation is now handled by the shared Navigation component */}
 
 			<HeroHeader
-				slides={[
-					{
-						title: "ÇİFTLİK",
-						subtitle: "",
-						buttonText: "",
-						image: "/agricultural-figures-with-plants-and-sun.png",
-					},
-				]}
+				slides={heroSlides}
 				onScrollToNext={scrollToContent}
 				showDots={false}
 				showButton={false}
@@ -45,8 +71,8 @@ export default function Ciftlik() {
 			/>
 
 			{/* Main content with id and bg-white */}
-			<main id="main-content" className="py-12 px-6 relative z-10 bg-white">
-				<div className="mx-12">
+			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
 						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
@@ -71,18 +97,12 @@ export default function Ciftlik() {
 									ürünleri sunuyoruz.
 								</p>
 								<ul className="space-y-3 text-gray-600">
-									<li className="flex items-center">
-										<span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-										Organik gübre kullanımı
-									</li>
-									<li className="flex items-center">
-										<span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-										Su tasarrufu teknolojileri
-									</li>
-									<li className="flex items-center">
-										<span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-										Doğal haşere kontrolü
-									</li>
+									{features.map((feature, index) => (
+										<li key={index} className="flex items-center">
+											<span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+											{feature}
+										</li>
+									))}
 								</ul>
 							</div>
 							<div>
@@ -101,4 +121,7 @@ export default function Ciftlik() {
 			</main>
 		</div>
 	);
-}
+});
+Ciftlik.displayName = "Ciftlik";
+
+export default Ciftlik;

@@ -1,6 +1,20 @@
 "use client";
 
+import type React from "react";
+import { memo, useCallback, useEffect, useId, useState, useMemo } from "react";
+import Image from "next/image";
+import { notFound, useRouter } from "next/navigation";
+import { Award, Leaf, Minus, Plus, Shield, Truck, X } from "lucide-react";
 import HeroHeader from "@/components/hero-header";
+import HeroContent from "@/components/subscription/hero-content";
+import FeatureCard from "@/components/subscription/feature-card";
+import WeeklyProgram from "@/components/subscription/weekly-program";
+import ProductSelector, {
+	type Product,
+	type SubscriptionInterval,
+	type DeliveryDay,
+} from "@/components/subscription/product-selector";
+import SubscriptionProductPreview from "@/components/subscription/subscription-product-preview";
 import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
 import { Button } from "@/components/ui/button";
 import { Grid, Section, SectionHeader } from "@/components/ui/page-layout";
@@ -9,66 +23,261 @@ import {
 	CTASection,
 	TestimonialCard,
 } from "@/components/ui/subscription-components";
-import { useSubscriptions } from "@/contexts/subscription-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import { useFooterColorSetter } from "@/hooks/use-footer-color";
 import { apiClient } from "@/lib/api-client";
-import { Award, Leaf, Minus, Plus, Shield, Truck } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useId, useState } from "react";
 
-const API_BASE_URL =
-	process.env.NEXT_PUBLIC_API_URL ||
-	"https://dynamic-spirit-b1c4404b11.strapiapp.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-export default function Abonelik() {
+/**
+ * Benefit interface
+ */
+interface Benefit {
+	icon: React.ReactNode;
+	title: string;
+	description: string;
+}
+
+/**
+ * Testimonial interface
+ */
+interface Testimonial {
+	name: string;
+	comment: string;
+	rating: number;
+	image: string;
+}
+
+/**
+ * FAQ item interface
+ */
+interface FAQItem {
+	id: string;
+	question: string;
+	answer: string;
+}
+
+/**
+ * Feature interface
+ */
+interface Feature {
+	emoji: string;
+	title: string;
+	description: string;
+}
+
+/**
+ * Subscription landing page component
+ * Main page for subscription offerings and product display
+ *
+ * @returns {React.ReactElement} The subscription landing page component
+ */
+const Abonelik: React.FC = memo(() => {
 	const router = useRouter();
 	const mainContentId = useId();
 
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
-	// Get subscription plans from backend
-	const { plans, isLoading: plansLoading } = useSubscriptions();
-
-	// State for images
-	const [sebzePaketiImage, setSebzePaketiImage] = useState<string>(
-		"/skycrops-package-product.png",
-	);
-	const [_tazeYesilliklerImage, setTazeYesilliklerImage] = useState<string>(
-		"/skycrops-package-product.png",
-	);
-	const [_isImageLoading, setIsImageLoading] = useState(false);
+	// Set footer color to match page background
+	useFooterColorSetter("#DF626B");
 
 	// State for product data from API
-	const [bundleProduct, setBundleProduct] = useState<any | null>(null);
-	const [bundleLoading, setBundleLoading] = useState(true);
+	const [product, setProduct] = useState<Product | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	// State for interactive elements
 	const [selectedImage, setSelectedImage] = useState(0);
-	const [selectedPurchaseOption, setSelectedPurchaseOption] = useState<
-		"subscription" | "oneTime"
-	>("subscription");
 	const [quantity, setQuantity] = useState(1);
-	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2); // Default to Salı (Tuesday)
-	const [deliveryFrequency, setDeliveryFrequency] = useState<
-		"oneTime" | "weekly" | "biweekly"
-	>("weekly");
+	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2);
+	const [selectedInterval, setSelectedInterval] =
+		useState<SubscriptionInterval | null>(null);
+	const [purchaseType, setPurchaseType] = useState<"subscription" | "one_time">(
+		"subscription",
+	);
 	const [deliveryDayStock, setDeliveryDayStock] = useState<
 		Record<number, number>
 	>({});
 
-	// Delivery days configuration
-	const deliveryDays = [
-		{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
-		{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
-		{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
-		{ id: 4, name: "Perşembe", shortName: "Per", alwaysInactive: false },
-		{ id: 5, name: "Cuma", shortName: "Cum", alwaysInactive: false },
-		{ id: 6, name: "Cumartesi", shortName: "Cmt", alwaysInactive: false },
-		{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
-	];
+	/**
+	 * Delivery days configuration with memoization
+	 */
+	const deliveryDays: DeliveryDay[] = useMemo(
+		() => [
+			{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
+			{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
+			{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
+			{ id: 4, name: "Perşembe", shortName: "Per", alwaysInactive: false },
+			{ id: 5, name: "Cuma", shortName: "Cum", alwaysInactive: false },
+			{ id: 6, name: "Cumartesi", shortName: "Cmt", alwaysInactive: false },
+			{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
+		],
+		[],
+	);
 
+	/**
+	 * Features data with memoization
+	 */
+	const features: Feature[] = useMemo(
+		() => [
+			{
+				emoji: "🌿",
+				title: "Her hafta farklı çeşitler",
+				description:
+					"Skycrops abonelik programıyla sofranıza her hafta farklı tatlar geliyor. Programımızda yalnızca 2 marul çeşidi sabit kalıyor; diğer tüm ürünler haftadan haftaya değişiyor. Böylece her kutuda 8 adet yeşillik ile hem tanıdık lezzetleri koruyor hem de yeni tatlarla mutfağınıza sürprizler ekliyoruz. Roka, fesleğen, maydanoz, semizotu ve daha niceleri…",
+			},
+			{
+				emoji: "📦",
+				title: "Abone olun, gerisini bize bırakın",
+				description:
+					"Tek yapmanız gereken size en uygun abonelik planını seçmek. İster her hafta, ister iki haftada bir sepetiniz kapınıza gelsin.",
+			},
+			{
+				emoji: "🛡️",
+				title: "Doğal ve güvenilir üretim",
+				description:
+					"Pestisitsiz, %90 daha az suyla yetiştirilen yeşilliklerimiz kontrollü koşullarda üretilir ve sofranıza en yüksek tazelikle ulaşır.",
+			},
+			{
+				emoji: "⚡",
+				title: "Daha taze, daha pratik",
+				description:
+					"Hasat edildiği gün paketlenen yeşillikler, alışveriş zahmetini ortadan kaldırır ve sofranıza maksimum lezzetle gelir.",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Benefits data with memoization
+	 */
+	const benefits: Benefit[] = useMemo(
+		() => [
+			{
+				icon: <Leaf className="w-8 h-8 text-green-600" />,
+				title: "Doğal ve Organik",
+				description:
+					"Kapalı ortamda, hiçbir kimyasal ve pestisit kullanmadan yetiştirilen taze ürünler",
+			},
+			{
+				icon: <Shield className="w-8 h-8 text-green-600" />,
+				title: "Çevre Dostu",
+				description: "Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
+			},
+			{
+				icon: <Truck className="w-8 h-8 text-yellow-600" />,
+				title: "Hızlı Teslimat",
+				description:
+					"Şehir içi üretim sayesinde hasattan kısa sürede sofraya ulaşım",
+			},
+			{
+				icon: <Award className="w-8 h-8 text-purple-600" />,
+				title: "Teknoloji Odaklı",
+				description:
+					"Gelişmiş dikey tarım teknolojisi ile optimum koşullarda üretim",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Testimonials data with memoization
+	 */
+	const testimonials: Testimonial[] = useMemo(
+		() => [
+			{
+				name: "Merve K.",
+				comment:
+					"Skycrops aboneliği ile evimize gelen taze kıvırcık ve roka harika! Çocuklarım dikey tarım ürünlerini çok seviyor.",
+				rating: 5,
+				image: "/testimonial-1.jpg",
+			},
+			{
+				name: "Ahmet B.",
+				comment:
+					"Dikey tarım teknolojisine destek olmak ve aynı zamanda taze yeşillikler almak mükemmel. Hizmet kalitesi çok iyi!",
+				rating: 5,
+				image: "/testimonial-2.jpg",
+			},
+			{
+				name: "Selin Y.",
+				comment:
+					"Kapalı ortam üretim sistemi ve çevre dostu yaklaşımı için tercih ettim. Ürünler gerçekten taze ve pestisit içermiyor.",
+				rating: 5,
+				image: "/testimonial-3.jpg",
+			},
+			{
+				name: "Kemal D.",
+				comment:
+					"Geleceğin tarım teknolojisini desteklemek ve doğal ürünler tüketmek için harika bir fırsat. Kesinlikle tavsiye ederim.",
+				rating: 5,
+				image: "/testimonial-4.jpg",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * FAQ items data with memoization
+	 */
+	const faqItems: FAQItem[] = useMemo(
+		() => [
+			{
+				id: "faq-1",
+				question: "Paket içeriğini neden ben seçemiyorum?",
+				answer:
+					"Her ürünün büyüme süresi ve verimlilik miktarı farklılık göstermektedir. Örneğin, bazı yeşillikler daha kısa sürede hasada gelirken, bazı çeşitlerin olgunlaşması daha uzun zaman almaktadır. Ayrıca aynı üretim alanından elde edilen demet sayısı da her tür için değişmektedir.\n\nBu sebeplerle paket içeriğini bireysel tercihlere göre belirlemek, üretim planlamasında ciddi operasyonel zorluklar yaratır ve ürünlerin düzenli ve sürdürülebilir şekilde ulaştırılmasını engelleyebilir.\n\nSkycrops olarak biz, bu süreci titizlikle yönetiyor ve paketlerinizi her hafta dengeli, çeşitli ve taptaze ürünlerle hazırlıyoruz. Böylece abonelerimiz hiçbir planlama yapmadan, güvenle sofralarında farklı lezzetleri deneyimleyebiliyor.",
+			},
+			{
+				id: "faq-2",
+				question: "Ürünler nasıl paketleniyor?",
+				answer:
+					"Yeşilliklerimiz kontrollü ve hijyenik koşullarda yetiştirildiği için yıkanmasına gerek kalmaz. Hasat edildiği gün tazeliğini kaybetmeden ayıklanır, özenle paketlenir ve özel ambalajlarla sofranıza ulaşır.",
+			},
+			{
+				id: "faq-3",
+				question: "Teslimat günümü değiştirebilir miyim?",
+				answer:
+					"Teslimatlar belirli günlerde planlanmaktadır. Abonelik başlangıcında size en uygun günü seçebilirsiniz. Sonrasında gün değişikliği ihtiyacınız olursa hesabınızdan değişiklik yapabilirsiniz.",
+			},
+			{
+				id: "faq-4",
+				question: "Aboneliğimi dondurabilir miyim?",
+				answer:
+					"Evet. İstediğinizde ara verebilir, dilediğiniz zaman kaldığınız yerden devam edebilirsiniz.",
+			},
+			{
+				id: "faq-5",
+				question: "Abonelik planımı değiştirebilir miyim?",
+				answer:
+					"Evet. Aboneliğinizi haftalık ya da iki haftada bir olacak şekilde değiştirebilirsiniz. Değişiklik sonrasında planınız hızlıca güncellenir ve teslimatlar yeni planınıza göre devam eder.",
+			},
+			{
+				id: "faq-6",
+				question: "Tek seferlik satın alma yapabiliyor muyum?",
+				answer:
+					"Evet. Abonelik dışında tek seferlik satın alma da yapabilirsiniz. Böylece ürünlerimizi denemek isterseniz önce tek kutu sipariş verebilir, sonrasında dilerseniz aboneliğe geçebilirsiniz. Düzenli tazelik isteyenler için abonelik öneriyoruz; ancak tek seferlik siparişlerle de Skycrops lezzetini deneyimlemeniz mümkün.",
+			},
+			{
+				id: "faq-7",
+				question: "Ürünler kargoda zarar görürse ne yapılır?",
+				answer:
+					"Nadiren de olsa taşıma sırasında ürünlerde zarar oluşabilir. Böyle bir durumda hemen bizimle iletişime geçmenizi rica ederiz. Fotoğraf paylaşmanızın ardından size en kısa sürede yeni ürün gönderimi yapılır.",
+			},
+			{
+				id: "faq-8",
+				question: "Neden Skycrops ürünlerine güvenmeliyim?",
+				answer:
+					"Skycrops olarak tüm ürünlerimizi kontrollü, kapalı ve hijyenik koşullarda, pestisit kullanılmadan üretiyoruz. Üretimimiz, resmi olarak aldığımız İyi Tarım Uygulamaları Belgesi ile de tescillenmiş durumda.\n\nBu belge, gıda güvenliği, çevreye duyarlılık ve sürdürülebilirlik kriterlerine uygun üretim yaptığımızı kanıtlar. Yani sofranıza gelen her yeşillik, hem sağlıklı hem de güvenilir bir şekilde yetiştirilmiştir.",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Scroll to content handler
+	 */
 	const scrollToContent = useCallback(() => {
 		const contentSection = document.getElementById(mainContentId);
 		if (contentSection) {
@@ -84,63 +293,68 @@ export default function Abonelik() {
 		}
 	}, [mainContentId]);
 
+	/**
+	 * Navigate to product detail page
+	 */
+	const handleSubscribeClick = useCallback(() => {
+		router.push("/abonelik/taze-yesillikler-paketi");
+	}, [router]);
+
 	// Fetch product data from API
-	useEffect(() => {
-		const fetchBundleProduct = async () => {
-			try {
-				setBundleLoading(true);
-				const response = await apiClient.getProductBySlug(
-					"taze-yesillikler-paketi",
-					{
-						populate: "*",
-					},
-				);
+	const fetchProduct = useCallback(async () => {
+		try {
+			setLoading(true);
+			setError(null);
 
-				if (response.data) {
-					setBundleProduct(response.data);
+			const response = await apiClient.getProductBySlug(
+				"taze-yesillikler-paketi",
+				{
+					populate: "*",
+				},
+			);
 
-					// Set product image
-					const productData = response.data as any;
-					let imageUrl = null;
-
-					if (
-						productData.images &&
-						Array.isArray(productData.images) &&
-						productData.images.length > 0
-					) {
-						imageUrl = productData.images[0].url;
-					} else if (productData.image?.url) {
-						imageUrl = productData.image.url;
-					}
-
-					if (imageUrl) {
-						const fullImageUrl = imageUrl.startsWith("http")
-							? imageUrl
-							: `${API_BASE_URL}${imageUrl}`;
-						setSebzePaketiImage(fullImageUrl);
-					}
-				}
-			} catch (error) {
-				console.error("Error fetching bundle product:", error);
-			} finally {
-				setBundleLoading(false);
+			if (response.error) {
+				setError(response.error.message);
+				return;
 			}
-		};
 
-		const fetchDeliveryDayStock = async () => {
-			try {
-				const response = await apiClient.getDeliveryDayStock();
-				if (response.data) {
-					setDeliveryDayStock(response.data);
+			if (response.data) {
+				const productData = response.data as Product;
+				setProduct(productData);
+
+				// Set default subscription interval if subscription is enabled
+				if (
+					productData.subscription_intervals &&
+					productData.subscription_intervals.length > 0
+				) {
+					setSelectedInterval(productData.subscription_intervals[0]);
+					setPurchaseType("subscription");
 				}
-			} catch (err) {
-				console.error("Error fetching delivery day stock:", err);
 			}
-		};
-
-		fetchBundleProduct();
-		fetchDeliveryDayStock();
+		} catch (err) {
+			setError("Ürün bilgileri yüklenirken bir hata oluştu");
+			console.error("Error fetching product:", err);
+		} finally {
+			setLoading(false);
+		}
 	}, []);
+
+	// Fetch delivery day stock
+	const fetchDeliveryDayStock = useCallback(async () => {
+		try {
+			const response = await apiClient.getDeliveryDayStock();
+			if (response.data) {
+				setDeliveryDayStock(response.data);
+			}
+		} catch (err) {
+			console.error("Error fetching delivery day stock:", err);
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchProduct();
+		fetchDeliveryDayStock();
+	}, [fetchProduct, fetchDeliveryDayStock]);
 
 	// Reset quantity when delivery day changes to prevent stock issues
 	useEffect(() => {
@@ -150,145 +364,160 @@ export default function Abonelik() {
 		}
 	}, [selectedDeliveryDay, deliveryDayStock, quantity]);
 
-	// Subscription packages from Skycrops content
-	const _subscriptionPackages = [
-		{
-			id: 1,
-			name: "Çok küçük bir paket için büyük bir adım!",
-			description: "Skycrops'tan taze, dikey tarım ürünleri ile sağlıklı yaşam",
-			image: "/bundle4.png", // Use custom bundle image for this section
-			originalPrice: "450.00",
-			discountedPrice: "299.00",
-			badge: "MİKRO PAKET",
-			features: [
-				"Haftada bir teslim",
-				"Taze, doğal ve organik ürünler",
-				"Plastik ambalaj kullanmıyoruz",
-				"Dikey tarım teknolojisi",
-				"Şehir içi üretim tesisi",
-				"Yıl boyu taze ürün çeşitliliği",
-			],
-			weeklyItems: [
-				"500 gr Kıvırcık (dikey tarım)",
-				"300 gr Fesleğen",
-				"300 gr Maydanoz",
-				"500 gr Lollo Rosso",
-				"300 gr Reyhan",
-				"400 gr Roka",
-			],
-		},
-	];
+	// Get product images
+	const getProductImages = () => {
+		if (!product) return [];
 
-	const benefits = [
-		{
-			icon: <Leaf className="w-8 h-8 text-green-600" />,
-			title: "Doğal ve Organik",
-			description:
-				"Kapalı ortamda, hiçbir kimyasal ve pestisit kullanmadan yetiştirilen taze ürünler",
-		},
-		{
-			icon: <Shield className="w-8 h-8 text-green-600" />,
-			title: "Çevre Dostu",
-			description: "Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
-		},
-		{
-			icon: <Truck className="w-8 h-8 text-yellow-600" />,
-			title: "Hızlı Teslimat",
-			description:
-				"Şehir içi üretim sayesinde hasattan kısa sürede sofraya ulaşım",
-		},
-		{
-			icon: <Award className="w-8 h-8 text-purple-600" />,
-			title: "Teknoloji Odaklı",
-			description:
-				"Gelişmiş dikey tarım teknolojisi ile optimum koşullarda üretim",
-		},
-	];
+		const images: string[] = [];
 
-	const testimonials = [
-		{
-			name: "Merve K.",
-			comment:
-				"Skycrops aboneliği ile evimize gelen taze kıvırcık ve roka harika! Çocuklarım dikey tarım ürünlerini çok seviyor.",
-			rating: 5,
-			image: "/testimonial-1.jpg",
-		},
-		{
-			name: "Ahmet B.",
-			comment:
-				"Dikey tarım teknolojisine destek olmak ve aynı zamanda taze yeşillikler almak mükemmel. Hizmet kalitesi çok iyi!",
-			rating: 5,
-			image: "/testimonial-2.jpg",
-		},
-		{
-			name: "Selin Y.",
-			comment:
-				"Kapalı ortam üretim sistemi ve çevre dostu yaklaşımı için tercih ettim. Ürünler gerçekten taze ve pestisit içermiyor.",
-			rating: 5,
-			image: "/testimonial-3.jpg",
-		},
-		{
-			name: "Kemal D.",
-			comment:
-				"Geleceğin tarım teknolojisini desteklemek ve doğal ürünler tüketmek için harika bir fırsat. Kesinlikle tavsiye ederim.",
-			rating: 5,
-			image: "/testimonial-4.jpg",
-		},
-	];
+		// Add single image if exists
+		if (product.image) {
+			const imageUrl =
+				typeof product.image === "string"
+					? product.image
+					: product.image.url ||
+						product.image.formats?.large?.url ||
+						product.image.formats?.medium?.url ||
+						product.image.formats?.small?.url;
 
-	const faqItems = [
-		{
-			id: "faq-1",
-			question: "Paket içeriğini neden ben seçemiyorum?",
-			answer:
-				"Her ürünün büyüme süresi ve verimlilik miktarı farklılık göstermektedir. Örneğin, bazı yeşillikler daha kısa sürede hasada gelirken, bazı çeşitlerin olgunlaşması daha uzun zaman almaktadır. Ayrıca aynı üretim alanından elde edilen demet sayısı da her tür için değişmektedir.\n\nBu sebeplerle paket içeriğini bireysel tercihlere göre belirlemek, üretim planlamasında ciddi operasyonel zorluklar yaratır ve ürünlerin düzenli ve sürdürülebilir şekilde ulaştırılmasını engelleyebilir.\n\nSkycrops olarak biz, bu süreci titizlikle yönetiyor ve paketlerinizi her hafta dengeli, çeşitli ve taptaze ürünlerle hazırlıyoruz. Böylece abonelerimiz hiçbir planlama yapmadan, güvenle sofralarında farklı lezzetleri deneyimleyebiliyor.",
-		},
-		{
-			id: "faq-2",
-			question: "Ürünler nasıl paketleniyor?",
-			answer:
-				"Yeşilliklerimiz kontrollü ve hijyenik koşullarda yetiştirildiği için yıkanmasına gerek kalmaz. Hasat edildiği gün tazeliğini kaybetmeden ayıklanır, özenle paketlenir ve özel ambalajlarla sofranıza ulaşır.",
-		},
-		{
-			id: "faq-3",
-			question: "Teslimat günümü değiştirebilir miyim?",
-			answer:
-				"Teslimatlar belirli günlerde planlanmaktadır. Abonelik başlangıcında size en uygun günü seçebilirsiniz. Sonrasında gün değişikliği ihtiyacınız olursa hesabınızdan değişiklik yapabilirsiniz.",
-		},
-		{
-			id: "faq-4",
-			question: "Aboneliğimi dondurabilir miyim?",
-			answer:
-				"Evet. İstediğinizde ara verebilir, dilediğiniz zaman kaldığınız yerden devam edebilirsiniz.",
-		},
-		{
-			id: "faq-5",
-			question: "Abonelik planımı değiştirebilir miyim?",
-			answer:
-				"Evet. Aboneliğinizi haftalık ya da iki haftada bir olacak şekilde değiştirebilirsiniz. Değişiklik sonrasında planınız hızlıca güncellenir ve teslimatlar yeni planınıza göre devam eder.",
-		},
-		{
-			id: "faq-6",
-			question: "Tek seferlik satın alma yapabiliyor muyum?",
-			answer:
-				"Evet. Abonelik dışında tek seferlik satın alma da yapabilirsiniz. Böylece ürünlerimizi denemek isterseniz önce tek kutu sipariş verebilir, sonrasında dilerseniz aboneliğe geçebilirsiniz. Düzenli tazelik isteyenler için abonelik öneriyoruz; ancak tek seferlik siparişlerle de Skycrops lezzetini deneyimlemeniz mümkün.",
-		},
-		{
-			id: "faq-7",
-			question: "Ürünler kargoda zarar görürse ne yapılır?",
-			answer:
-				"Nadiren de olsa taşıma sırasında ürünlerde zarar oluşabilir. Böyle bir durumda hemen bizimle iletişime geçmenizi rica ederiz. Fotoğraf paylaşmanızın ardından size en kısa sürede yeni ürün gönderimi yapılır.",
-		},
-		{
-			id: "faq-8",
-			question: "Neden Skycrops ürünlerine güvenmeliyim?",
-			answer:
-				"Skycrops olarak tüm ürünlerimizi kontrollü, kapalı ve hijyenik koşullarda, pestisit kullanılmadan üretiyoruz. Üretimimiz, resmi olarak aldığımız İyi Tarım Uygulamaları Belgesi ile de tescillenmiş durumda.\n\nBu belge, gıda güvenliği, çevreye duyarlılık ve sürdürülebilirlik kriterlerine uygun üretim yaptığımızı kanıtlar. Yani sofranıza gelen her yeşillik, hem sağlıklı hem de güvenilir bir şekilde yetiştirilmiştir.",
-		},
-	];
+			if (imageUrl) {
+				images.push(
+					imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`,
+				);
+			}
+		}
+
+		// Add multiple images if exists
+		if (product.images && Array.isArray(product.images)) {
+			product.images.forEach((img) => {
+				const imageUrl =
+					typeof img === "string"
+						? img
+						: img.url ||
+							img.formats?.large?.url ||
+							img.formats?.medium?.url ||
+							img.formats?.small?.url;
+
+				if (imageUrl) {
+					images.push(
+						imageUrl.startsWith("http")
+							? imageUrl
+							: `${API_BASE_URL}${imageUrl}`,
+					);
+				}
+			});
+		}
+
+		return images.length > 0 ? images : ["/placeholder.svg"];
+	};
+
+	// Format price
+	const formatPrice = (price: number, currency: string = "TRY") => {
+		return new Intl.NumberFormat("tr-TR", {
+			style: "currency",
+			currency: currency,
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 2,
+		}).format(price);
+	};
+
+	// Get current price based on selection
+	const getCurrentPrice = () => {
+		if (!product) return 0;
+
+		if (purchaseType === "subscription" && selectedInterval) {
+			return selectedInterval.price;
+		}
+
+		return product.sale_price || product.price;
+	};
+
+	// Get discount information
+	const getDiscountInfo = () => {
+		if (!product) return null;
+
+		if (purchaseType === "subscription" && selectedInterval) {
+			const originalPrice = product.price;
+			const discountedPrice = selectedInterval.price;
+			const discountAmount = originalPrice - discountedPrice;
+			const discountPercentage = (discountAmount / originalPrice) * 100;
+
+			return {
+				hasDiscount: discountAmount > 0,
+				originalPrice,
+				discountedPrice,
+				discountAmount,
+				discountPercentage: Math.round(discountPercentage),
+			};
+		}
+
+		if (product.sale_price && product.sale_price < product.price) {
+			const discountAmount = product.price - product.sale_price;
+			const discountPercentage = (discountAmount / product.price) * 100;
+
+			return {
+				hasDiscount: true,
+				originalPrice: product.price,
+				discountedPrice: product.sale_price,
+				discountAmount,
+				discountPercentage: Math.round(discountPercentage),
+			};
+		}
+
+		return {
+			hasDiscount: false,
+			originalPrice: product.price,
+			discountedPrice: product.price,
+			discountAmount: 0,
+			discountPercentage: 0,
+		};
+	};
+
+	// Error state
+	if (error) {
+		return (
+			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
+				<div className="text-center">
+					<div className="text-red-600 mb-4">
+						<X className="w-12 h-12 mx-auto" />
+					</div>
+					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+						Bir Hata Oluştu
+					</h2>
+					<p className="text-base leading-relaxed mb-6">{error}</p>
+					<Button
+						onClick={() => window.location.reload()}
+						className="bg-gray-600 hover:bg-gray-700"
+					>
+						Tekrar Dene
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
+	// Loading state for main content
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
+					<p className="text-gray-600">Ürün yükleniyor...</p>
+				</div>
+			</div>
+		);
+	}
+
+	// Error state if no product
+	if (!product) {
+		notFound();
+	}
+
+	const images = getProductImages();
+	const discountInfo = getDiscountInfo();
 
 	return (
-		<div className="min-h-screen bg-white relative">
+		<div className="min-h-screen bg-[#DF626B] relative">
 			<HeroHeader
 				slides={[
 					{
@@ -297,7 +526,7 @@ export default function Abonelik() {
 						buttonText: "",
 						buttonAction: () =>
 							router.push("/abonelik/taze-yesillikler-paketi"),
-						image: "/derleme.png",
+						image: "/abonelik.png",
 					},
 				]}
 				onScrollToNext={scrollToContent}
@@ -307,19 +536,19 @@ export default function Abonelik() {
 			/>
 
 			{/* Main content */}
-			<main id={mainContentId} className="relative z-10 bg-white">
+			<main id={mainContentId} className="relative z-10 bg-[#DF626B]">
 				{/* Hero Content Section */}
-				<Section className="py-20 bg-gray-50">
-					<div className="mx-12">
+				<Section className="py-20 bg-[#DF626B]">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						{/* Main Hero Title */}
 						<div className="text-center mb-16">
-							<h1 className="text-5xl md:text-6xl font-light mb-6 tracking-wide text-gray-800 leading-tight">
+							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
 								Her Hafta Taptaze Yeşillikler
-								<span className="block text-gray-600 font-medium">
+								<span className="block text-gray-600 font-semibold">
 									Kapınızda!
 								</span>
 							</h1>
-							<p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+							<p className="text-lg leading-relaxed max-w-4xl mx-auto">
 								Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze,
 								en lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
 								kolay yolu.
@@ -340,553 +569,46 @@ export default function Abonelik() {
 						<div className="grid lg:grid-cols-2 gap-16 items-start">
 							{/* Left Column - Key Features */}
 							<div className="space-y-12">
-								{/* Her Hafta Farklı Çeşitler */}
-								<div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-									<div className="flex items-start space-x-4 mb-6">
-										<div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-											<span className="text-2xl">🌿</span>
-										</div>
-										<div>
-											<h3 className="text-2xl font-medium text-gray-800 mb-3">
-												Her hafta farklı çeşitler
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												Skycrops abonelik programıyla sofranıza her hafta farklı
-												tatlar geliyor. Programımızda yalnızca 2 marul çeşidi
-												sabit kalıyor; diğer tüm ürünler haftadan haftaya
-												değişiyor. Böylece her kutuda 8 adet yeşillik ile hem
-												tanıdık lezzetleri koruyor hem de yeni tatlarla
-												mutfağınıza sürprizler ekliyoruz. Roka, fesleğen,
-												maydanoz, semizotu ve daha niceleri…
-											</p>
-										</div>
-									</div>
-								</div>
-
-								{/* Abone Olun */}
-								<div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-									<div className="flex items-start space-x-4 mb-6">
-										<div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-											<span className="text-2xl">📦</span>
-										</div>
-										<div>
-											<h3 className="text-2xl font-medium text-gray-800 mb-3">
-												Abone olun, gerisini bize bırakın
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												Tek yapmanız gereken size en uygun abonelik planını
-												seçmek. İster her hafta, ister iki haftada bir sepetiniz
-												kapınıza gelsin.
-											</p>
-										</div>
-									</div>
-								</div>
-
-								{/* Doğal ve Güvenilir */}
-								<div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-									<div className="flex items-start space-x-4 mb-6">
-										<div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-											<span className="text-2xl">🛡️</span>
-										</div>
-										<div>
-											<h3 className="text-2xl font-medium text-gray-800 mb-3">
-												Doğal ve güvenilir üretim
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												Pestisitsiz, %90 daha az suyla yetiştirilen
-												yeşilliklerimiz kontrollü koşullarda üretilir ve
-												sofranıza en yüksek tazelikle ulaşır.
-											</p>
-										</div>
-									</div>
-								</div>
-
-								{/* Daha Taze, Daha Pratik */}
-								<div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-									<div className="flex items-start space-x-4 mb-6">
-										<div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-											<span className="text-2xl">⚡</span>
-										</div>
-										<div>
-											<h3 className="text-2xl font-medium text-gray-800 mb-3">
-												Daha taze, daha pratik
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												Hasat edildiği gün paketlenen yeşillikler, alışveriş
-												zahmetini ortadan kaldırır ve sofranıza maksimum
-												lezzetle gelir.
-											</p>
-										</div>
-									</div>
-								</div>
+								{features.map((feature) => (
+									<FeatureCard
+										key={feature.title}
+										emoji={feature.emoji}
+										title={feature.title}
+										description={feature.description}
+									/>
+								))}
 							</div>
 
 							{/* Right Column - Weekly Programs */}
 							<div className="lg:sticky lg:top-8">
-								<div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-									<div className="text-center mb-8">
-										<div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-											<span className="text-3xl">📅</span>
-										</div>
-										<h3 className="text-3xl font-medium text-gray-800 mb-4">
-											Örnek Haftalık Programlar
-										</h3>
-										<p className="text-gray-600 leading-relaxed">
-											Aboneliğinizle birlikte her hafta sofranıza farklı
-											kombinasyonlarda 8 adet taptaze yeşillik gelir.
-										</p>
-									</div>
-
-									{/* Example Weeks */}
-									<div className="space-y-6">
-										{/* Week 1 */}
-										<div className="bg-gray-50 rounded-lg p-6">
-											<h4 className="font-medium text-gray-800 mb-3 flex items-center">
-												<span className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
-													1
-												</span>
-												Örnek Hafta
-											</h4>
-											<p className="text-sm text-gray-600 leading-relaxed">
-												2 adet kıvırcık ile birlikte endivyen, arugula,
-												maydanoz, frenk soğanı, tere ve kekik
-											</p>
-										</div>
-
-										{/* Week 2 */}
-										<div className="bg-gray-50 rounded-lg p-6">
-											<h4 className="font-medium text-gray-800 mb-3 flex items-center">
-												<span className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
-													2
-												</span>
-												Örnek Hafta
-											</h4>
-											<p className="text-sm text-gray-600 leading-relaxed">
-												2 adet kıvırcık, kale, roka, maydanoz, frenk soğanı,
-												mizuna ve fesleğen
-											</p>
-										</div>
-
-										{/* Week 3 */}
-										<div className="bg-gray-50 rounded-lg p-6">
-											<h4 className="font-medium text-gray-800 mb-3 flex items-center">
-												<span className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
-													3
-												</span>
-												Örnek Hafta
-											</h4>
-											<p className="text-sm text-gray-600 leading-relaxed">
-												Kıvırcık, endivyen veya yağlı yaprak, semizotu, dereotu,
-												maydanoz, kuzu kulağı, amarant ve kale
-											</p>
-										</div>
-
-										{/* Week 4 */}
-										<div className="bg-gray-50 rounded-lg p-6">
-											<h4 className="font-medium text-gray-800 mb-3 flex items-center">
-												<span className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
-													4
-												</span>
-												Örnek Hafta
-											</h4>
-											<p className="text-sm text-gray-600 leading-relaxed">
-												Kıvırcık, kale veya lolorosso, roka, maydanoz, frenk
-												soğanı, kırmızı damarlı kuzu kulağı, mor fesleğen ve
-												tere
-											</p>
-										</div>
-									</div>
-
-									<div className="mt-8 text-center">
-										<Button
-											onClick={() =>
-												router.push("/abonelik/taze-yesillikler-paketi")
-											}
-											className="w-full px-8 py-3"
-										>
-											Abonelik Planlarını İncele
-										</Button>
-									</div>
-								</div>
+								<WeeklyProgram
+									onViewPlans={() =>
+										router.push("/abonelik/taze-yesillikler-paketi")
+									}
+								/>
 							</div>
 						</div>
 					</div>
 				</Section>
 
 				{/* Subscription Package */}
-				<Section className="py-20">
-					<div className="mx-12">
-						{/* Main Product Layout */}
-						<div className="grid lg:grid-cols-2 gap-16 items-start">
-							{/* Left Column - Product Image */}
-							<div className="relative">
-								<div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden">
-									<Image
-										src={
-											[
-												"/bundle4.png",
-												sebzePaketiImage,
-												"/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-												"/organic-farming-greenhouse-vegetables.png",
-											][selectedImage]
-										}
-										alt="Taze Yeşillikler Paketi"
-										fill
-										className="object-cover"
-										onError={(e) => {
-											const target = e.target as HTMLImageElement;
-											target.src = "/bundle4.png";
-										}}
-									/>
-								</div>
-
-								{/* Thumbnail Images */}
-								<div className="flex space-x-3 mt-4 overflow-x-auto">
-									{[
-										"/bundle4.png",
-										sebzePaketiImage,
-										"/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-										"/organic-farming-greenhouse-vegetables.png",
-									].map((img, index) => (
-										<button
-											key={img}
-											type="button"
-											onClick={() => setSelectedImage(index)}
-											className={`flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer ${
-												selectedImage === index
-													? "border-gray-600"
-													: "border-gray-200 hover:border-yellow-400"
-											}`}
-										>
-											<div className="relative w-full h-full">
-												<Image
-													src={img}
-													alt={`Product view ${index + 1}`}
-													fill
-													className="object-cover"
-													onError={(e) => {
-														const target = e.target as HTMLImageElement;
-														target.src = "/bundle4.png";
-													}}
-												/>
-											</div>
-										</button>
-									))}
-								</div>
-							</div>
-
-							{/* Right Column - Product Info */}
-							<div className="space-y-6">
-								{bundleLoading ? (
-									<div className="animate-pulse space-y-4">
-										<div className="h-8 bg-gray-200 rounded w-3/4"></div>
-										<div className="h-4 bg-gray-200 rounded w-full"></div>
-										<div className="h-4 bg-gray-200 rounded w-5/6"></div>
-									</div>
-								) : (
-									<div>
-										<h1 className="text-3xl md:text-4xl font-light mb-2 text-gray-800">
-											{bundleProduct?.name || "Taze Yeşillikler Paketi"}
-										</h1>
-										<p className="text-gray-600 text-lg italic leading-relaxed">
-											{bundleProduct?.description ||
-												bundleProduct?.short_description ||
-												"Dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın. Her hafta 8 adet özenle seçilmiş taptaze yeşillik kapınıza gelir."}
-										</p>
-									</div>
-								)}
-
-								{/* Purchase Options */}
-								<div className="space-y-3">
-									{/* Subscription Option */}
-									<div
-										className={`p-4 rounded-lg border-2 transition-colors ${
-											selectedPurchaseOption === "subscription"
-												? "border-gray-600 bg-gray-50"
-												: "border-gray-200"
-										}`}
-									>
-										<button
-											onClick={() => setSelectedPurchaseOption("subscription")}
-											className="w-full text-left"
-											type="button"
-										>
-											<div className="flex items-center justify-between mb-3">
-												<div>
-													<div className="font-medium text-gray-800">
-														Abonelik
-													</div>
-													<div className="text-sm text-gray-600">
-														{bundleProduct &&
-														bundleProduct.subscription_intervals?.length > 0
-															? `Düzenli teslimat ile %${Math.round(bundleProduct.subscription_intervals[0].discount)} tasarruf et`
-															: "Düzenli teslimat ile %35 tasarruf et"}
-													</div>
-												</div>
-												<div className="text-right">
-													<div className="text-lg font-medium text-red-600">
-														{bundleProduct &&
-														bundleProduct.subscription_intervals?.length > 0
-															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.subscription_intervals[0].price.toFixed(2)}`
-															: "₺299.00"}
-													</div>
-													<div className="text-sm text-gray-500 line-through">
-														{bundleProduct?.price
-															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.price.toFixed(2)}`
-															: "₺450.00"}
-													</div>
-												</div>
-											</div>
-										</button>
-
-										{/* Subscription Details - Only show when selected */}
-										{selectedPurchaseOption === "subscription" && (
-											<div className="space-y-3 mt-3 pt-3 border-t border-gray-200">
-												{/* Subscription Benefits */}
-												<div className="space-y-2 text-sm text-gray-700">
-													<div>
-														+ %35 indirim ilk üç siparişte, sonrasında %20
-														indirim
-													</div>
-													<div>+ Ücretsiz teslimat</div>
-													<div>
-														+ İstediğiniz zaman duraklatın veya iptal edin
-													</div>
-													<div>+ Abonelik yaptığınızda özel hediyeler</div>
-												</div>
-
-												{/* Delivery Frequency Selector */}
-												<div>
-													<select
-														value={deliveryFrequency}
-														onChange={(e) =>
-															setDeliveryFrequency(
-																e.target.value as
-																	| "oneTime"
-																	| "weekly"
-																	| "biweekly",
-															)
-														}
-														className="w-full p-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-gray-200 focus:border-gray-400"
-													>
-														{bundleProduct?.subscription_intervals?.map(
-															(interval: any) => (
-																<option key={interval.key} value={interval.key}>
-																	{interval.name} -{" "}
-																	{bundleProduct.currency === "TRY" ? "₺" : ""}
-																	{interval.price.toFixed(2)}
-																</option>
-															),
-														) || (
-															<>
-																<option value="weekly">Haftada bir</option>
-																<option value="biweekly">2 haftada bir</option>
-															</>
-														)}
-													</select>
-												</div>
-
-												{/* Quantity Selector */}
-												<div className="flex items-center justify-between">
-													<span className="text-sm font-medium text-gray-700">
-														Adet:
-													</span>
-													<div className="flex items-center space-x-3">
-														<button
-															type="button"
-															onClick={() =>
-																setQuantity(Math.max(1, quantity - 1))
-															}
-															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-															disabled={quantity <= 1}
-														>
-															<Minus className="w-3 h-3" />
-														</button>
-														<span className="w-12 text-center font-medium">
-															{quantity}
-														</span>
-														<button
-															type="button"
-															onClick={() => {
-																const dayStock =
-																	deliveryDayStock[selectedDeliveryDay] ?? 0;
-																setQuantity(Math.min(dayStock, quantity + 1));
-															}}
-															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
-															disabled={
-																quantity >=
-																(deliveryDayStock[selectedDeliveryDay] ?? 0)
-															}
-														>
-															<Plus className="w-3 h-3" />
-														</button>
-													</div>
-												</div>
-
-												{/* Delivery Day Selector */}
-												<div>
-													<div className="flex items-center justify-between mb-2">
-														<span className="text-sm font-medium text-gray-700">
-															Teslimat Günü:
-														</span>
-														<span className="text-xs text-gray-500">
-															{
-																deliveryDays.find(
-																	(d) => d.id === selectedDeliveryDay,
-																)?.name
-															}
-														</span>
-													</div>
-													<p className="text-xs text-gray-500 mb-2">
-														Tercih ettiğiniz günleri seçebilirsiniz, üretim
-														planına göre gönderimler yapılacaktır.
-													</p>
-													<div className="grid grid-cols-7 gap-1">
-														{deliveryDays.map((day) => {
-															const stock = deliveryDayStock[day.id] ?? 0;
-															const remainingStock =
-																day.id === selectedDeliveryDay
-																	? Math.max(0, stock - quantity)
-																	: stock;
-															const isInactive =
-																day.alwaysInactive || stock === 0;
-															const isSelected = selectedDeliveryDay === day.id;
-
-															return (
-																<div key={day.id} className="flex flex-col">
-																	<button
-																		type="button"
-																		onClick={() =>
-																			!isInactive &&
-																			setSelectedDeliveryDay(day.id)
-																		}
-																		disabled={isInactive}
-																		className={`p-2 text-xs rounded border transition-colors ${
-																			isInactive
-																				? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
-																				: isSelected
-																					? "border-gray-600 bg-gray-600 text-white"
-																					: "border-gray-200 hover:border-gray-300 text-gray-700"
-																		}`}
-																	>
-																		<span
-																			className={
-																				isInactive ? "line-through" : ""
-																			}
-																		>
-																			{day.shortName}
-																		</span>
-																	</button>
-																	{day.alwaysInactive && day.id === 1 ? (
-																		<span className="text-[10px] text-center mt-0.5 text-gray-600 font-medium">
-																			Kalan Stok:
-																		</span>
-																	) : !day.alwaysInactive ? (
-																		<span
-																			className={`text-[10px] text-center mt-0.5 ${
-																				remainingStock === 0
-																					? "text-red-500 font-medium"
-																					: "text-gray-500"
-																			}`}
-																		>
-																			{remainingStock > 0
-																				? `${remainingStock}`
-																				: "Yok"}
-																		</span>
-																	) : null}
-																</div>
-															);
-														})}
-													</div>
-												</div>
-
-												{/* Summary */}
-												<div className="bg-gray-50 p-3 rounded text-sm">
-													<p className="text-gray-700">
-														<strong>{quantity} adet</strong> ürün,{" "}
-														<strong>
-															{deliveryFrequency === "weekly"
-																? "her hafta"
-																: deliveryFrequency === "biweekly"
-																	? "2 haftada bir"
-																	: "tek seferlik"}
-														</strong>{" "}
-														<strong>
-															{
-																deliveryDays.find(
-																	(d) => d.id === selectedDeliveryDay,
-																)?.name
-															}
-														</strong>{" "}
-														günleri teslimat edilecek.
-													</p>
-												</div>
-											</div>
-										)}
-									</div>
-
-									{/* Buy Once Option - Never expands */}
-									<div
-										className={`p-4 rounded-lg border-2 transition-colors ${
-											selectedPurchaseOption === "oneTime"
-												? "border-gray-600 bg-gray-50"
-												: "border-gray-200 hover:border-gray-300"
-										}`}
-									>
-										<button
-											onClick={() => setSelectedPurchaseOption("oneTime")}
-											className="w-full text-left"
-											type="button"
-										>
-											<div className="flex items-center justify-between">
-												<div>
-													<div className="font-medium text-gray-800">
-														Tek Seferlik Satın Al
-													</div>
-													<div className="text-sm text-gray-600">
-														Şimdi satın al, istediğin zaman tekrar sipariş ver
-													</div>
-												</div>
-												<div className="text-right">
-													<div className="text-lg font-medium text-gray-800">
-														{bundleProduct?.sale_price
-															? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.sale_price.toFixed(2)}`
-															: bundleProduct?.price
-																? `${bundleProduct.currency === "TRY" ? "₺" : ""}${bundleProduct.price.toFixed(2)}`
-																: "₺450.00"}
-													</div>
-												</div>
-											</div>
-										</button>
-									</div>
-								</div>
-
-								{/* Add to Cart Button */}
-								<Button
-									onClick={() =>
-										router.push("/abonelik/taze-yesillikler-paketi")
-									}
-									className="w-full py-4 text-lg"
-								>
-									Sepete Ekle
-								</Button>
-
-								{/* Product Details Link */}
-								<div className="text-center">
-									<button
-										type="button"
-										className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors"
-									>
-										Ürün detaylarını gör
-									</button>
-								</div>
-							</div>
-						</div>
+				<Section className="py-20 bg-[#DF626B]">
+					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+						<SubscriptionProductPreview
+							product={product}
+							loading={loading}
+							selectedImage={selectedImage}
+							onImageSelect={setSelectedImage}
+							images={images}
+							deliveryDays={deliveryDays}
+							deliveryDayStock={deliveryDayStock}
+							onAddToCart={() => router.push("/abonelik/taze-yesillikler-paketi")}
+						/>
 					</div>
 				</Section>
 
 				{/* Benefits Section */}
-				<Section className="bg-gray-50">
+				<Section className="bg-[#DF626B]">
 					<SectionHeader
 						title="Neden Skycrops?"
 						subtitle="Dikey tarımın avantajlarını yaşayın"
@@ -904,13 +626,13 @@ export default function Abonelik() {
 				</Section>
 
 				{/* FAQ Section */}
-				<Section>
+				<Section className="bg-[#DF626B]">
 					<div className="max-w-4xl mx-auto">
 						<div className="text-center mb-12">
-							<h2 className="text-2xl font-medium mb-4 text-gray-700">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700">
 								Sıkça Sorulan Sorular
 							</h2>
-							<p className="text-gray-600">Merak ettiklerinizin cevapları</p>
+							<p className="text-base leading-relaxed">Merak ettiklerinizin cevapları</p>
 						</div>
 
 						<BasicAccordion
@@ -931,7 +653,7 @@ export default function Abonelik() {
 				</Section>
 
 				{/* Testimonials Section */}
-				<Section className="bg-gray-50">
+				<Section className="bg-[#DF626B]">
 					<SectionHeader
 						title="Müşteri Yorumları"
 						subtitle="Mutlu müşterilerimizin deneyimleri"
@@ -958,4 +680,8 @@ export default function Abonelik() {
 			</main>
 		</div>
 	);
-}
+});
+
+Abonelik.displayName = "Abonelik";
+
+export default Abonelik;

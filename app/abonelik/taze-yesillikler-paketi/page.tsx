@@ -1,35 +1,23 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+import { CheckCircle, ShoppingCart, X, Heart, Share2, Award, Clock, Leaf, Shield, Truck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
-import {
-	ArrowLeft,
-	Award,
-	CheckCircle,
-	ChevronLeft,
-	ChevronRight,
-	Clock,
-	Heart,
-	HelpCircle,
-	Leaf,
-	Minus,
-	Package,
-	Play,
-	Plus,
-	Share2,
-	Shield,
-	ShoppingCart,
-	Truck,
-	Users,
-	X,
-} from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import StickyImageGallery from "@/components/product/sticky-image-gallery";
+import ProductInfoSection from "@/components/product/product-info-section";
+import PurchaseOptionsPanel from "@/components/product/purchase-options-panel";
+import ProductionVideoSection from "@/components/product/production-video-section";
+import GallerySlider from "@/components/product/gallery-slider";
+import FAQSection from "@/components/product/faq-section";
 
+/**
+ * Subscription interval interface
+ */
 interface SubscriptionInterval {
 	key: string;
 	days: number;
@@ -42,6 +30,9 @@ interface SubscriptionInterval {
 	description_en: string;
 }
 
+/**
+ * Product interface
+ */
 interface Product {
 	id: number;
 	documentId: string;
@@ -72,27 +63,8 @@ interface Product {
 	image?: any;
 	images?: any[];
 	gallery?: any[];
-	price_breakdown: {
-		base_price: number;
-		sale_price: number;
-		discount_applied: number;
-		discount_active: boolean;
-		price_without_vat: number;
-		vat_amount: number;
-		vat_rate: number;
-		price_with_vat: number;
-		final_price: number;
-		currency: string;
-		original_currency: string;
-		formatted_price: string;
-		formatted_price_with_vat: string;
-		formatted_price_without_vat: string;
-	};
-	purchase_options: {
-		one_time_available: boolean;
-		subscription_available: boolean;
-		intervals: any[];
-	};
+	price_breakdown: any;
+	purchase_options: any;
 	categories?: Array<{
 		id: number;
 		name: string;
@@ -105,14 +77,32 @@ interface Product {
 	}>;
 }
 
+/**
+ * Purchase type
+ */
 type PurchaseType = "one_time" | "subscription";
 
+/**
+ * Delivery day interface
+ */
+interface DeliveryDay {
+	id: number;
+	name: string;
+	shortName: string;
+	alwaysInactive: boolean;
+}
+
+/**
+ * Taze Yeşillikler Paketi Product Detail Page
+ *
+ * @returns {React.ReactElement} Product detail page component
+ */
 export default function TazeYesilliklerPaketi() {
 	const { addItem } = useCart();
-	useAuth(); // Auth context is available if needed
+	useAuth();
 
 	// Delivery days configuration
-	const deliveryDays = [
+	const deliveryDays: DeliveryDay[] = [
 		{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
 		{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
 		{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
@@ -122,26 +112,18 @@ export default function TazeYesilliklerPaketi() {
 		{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
 	];
 
+	// State
 	const [product, setProduct] = useState<Product | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [selectedImage, setSelectedImage] = useState(0);
 	const [quantity, setQuantity] = useState(1);
-	const [purchaseType, setPurchaseType] =
-		useState<PurchaseType>("subscription");
-	const [selectedInterval, setSelectedInterval] =
-		useState<SubscriptionInterval | null>(null);
-	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2); // Default to Salı (Tuesday) since Pzt is inactive
+	const [purchaseType, setPurchaseType] = useState<PurchaseType>("subscription");
+	const [selectedInterval, setSelectedInterval] = useState<SubscriptionInterval | null>(null);
+	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2);
 	const [addingToCart, setAddingToCart] = useState(false);
 	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-	const [deliveryDayStock, setDeliveryDayStock] = useState<
-		Record<number, number>
-	>({});
-
-	// Refs for scrolling functionality
-	const galleryScrollRef = useRef<HTMLDivElement>(null);
-	const [showGalleryLeftButton, setShowGalleryLeftButton] = useState(false);
-	const [showGalleryRightButton, setShowGalleryRightButton] = useState(true);
+	const [deliveryDayStock, setDeliveryDayStock] = useState<Record<number, number>>({});
 
 	// Enable navigation transparency
 	useNavigationTransparency(false);
@@ -158,7 +140,7 @@ export default function TazeYesilliklerPaketi() {
 		}
 	}, []);
 
-	// Fetch Taze Yeşillikler Paketi product by slug
+	// Fetch product
 	const fetchProduct = useCallback(async () => {
 		try {
 			setLoading(true);
@@ -166,9 +148,7 @@ export default function TazeYesilliklerPaketi() {
 
 			const response = await apiClient.getProductBySlug(
 				"taze-yesillikler-paketi",
-				{
-					populate: "*",
-				},
+				{ populate: "*" },
 			);
 
 			if (response.error) {
@@ -180,7 +160,6 @@ export default function TazeYesilliklerPaketi() {
 				const productData = response.data as Product;
 				setProduct(productData);
 
-				// Set default subscription interval if subscription is enabled
 				if (
 					productData.subscription_enabled &&
 					productData.subscription_intervals.length > 0
@@ -188,7 +167,6 @@ export default function TazeYesilliklerPaketi() {
 					setSelectedInterval(productData.subscription_intervals[0]);
 				}
 
-				// Default to subscription for this product since it's moved to abonelik
 				if (productData.is_active) {
 					if (
 						productData.subscription_enabled &&
@@ -213,7 +191,7 @@ export default function TazeYesilliklerPaketi() {
 		fetchDeliveryDayStock();
 	}, [fetchProduct, fetchDeliveryDayStock]);
 
-	// Reset quantity when delivery day changes to prevent stock issues
+	// Reset quantity when delivery day changes
 	useEffect(() => {
 		const dayStock = deliveryDayStock[selectedDeliveryDay] ?? 0;
 		if (quantity > dayStock) {
@@ -227,7 +205,6 @@ export default function TazeYesilliklerPaketi() {
 
 		const images: string[] = [];
 
-		// Add single image if exists
 		if (product.image) {
 			const imageUrl =
 				typeof product.image === "string"
@@ -246,7 +223,6 @@ export default function TazeYesilliklerPaketi() {
 			}
 		}
 
-		// Add multiple images if exists
 		if (product.images && Array.isArray(product.images)) {
 			product.images.forEach((img) => {
 				const imageUrl =
@@ -267,7 +243,6 @@ export default function TazeYesilliklerPaketi() {
 			});
 		}
 
-		// Add gallery images if exists
 		if (product.gallery && Array.isArray(product.gallery)) {
 			product.gallery.forEach((img) => {
 				const imageUrl =
@@ -291,17 +266,7 @@ export default function TazeYesilliklerPaketi() {
 		return images.length > 0 ? images : ["/placeholder.svg"];
 	};
 
-	// Format price
-	const formatPrice = (price: number, currency: string = "TRY") => {
-		return new Intl.NumberFormat("tr-TR", {
-			style: "currency",
-			currency: currency,
-			minimumFractionDigits: 0,
-			maximumFractionDigits: 2,
-		}).format(price);
-	};
-
-	// Get current price based on selection
+	// Get current price
 	const getCurrentPrice = () => {
 		if (!product) return 0;
 
@@ -312,7 +277,7 @@ export default function TazeYesilliklerPaketi() {
 		return product.sale_price || product.price;
 	};
 
-	// Get discount information
+	// Get discount info
 	const getDiscountInfo = () => {
 		if (!product) return null;
 
@@ -353,35 +318,10 @@ export default function TazeYesilliklerPaketi() {
 		};
 	};
 
-	// Gallery scroll functions
-	const scrollGalleryLeft = () => {
-		const galleryContainer = galleryScrollRef.current;
-		if (galleryContainer) {
-			galleryContainer.scrollBy({
-				left: -320,
-				behavior: "smooth",
-			});
-		}
-	};
-
-	const scrollGalleryRight = () => {
-		const galleryContainer = galleryScrollRef.current;
-		if (galleryContainer) {
-			galleryContainer.scrollBy({
-				left: 320,
-				behavior: "smooth",
-			});
-		}
-	};
-
-	const handleGalleryScroll = () => {
-		const galleryContainer = galleryScrollRef.current;
-		if (galleryContainer) {
-			const { scrollLeft, scrollWidth, clientWidth } = galleryContainer;
-			setShowGalleryLeftButton(scrollLeft > 0);
-			setShowGalleryRightButton(scrollLeft < scrollWidth - clientWidth - 10);
-		}
-	};
+	// Handle interval change
+	const handleIntervalChange = useCallback((interval: SubscriptionInterval | null) => {
+		setSelectedInterval(interval);
+	}, []);
 
 	// Handle add to cart
 	const handleAddToCart = async () => {
@@ -409,10 +349,8 @@ export default function TazeYesilliklerPaketi() {
 				cartItem.deliveryDay,
 			);
 
-			// Show success message
 			setShowSuccessMessage(true);
 
-			// Hide success message after 3 seconds
 			setTimeout(() => {
 				setShowSuccessMessage(false);
 			}, 3000);
@@ -423,7 +361,7 @@ export default function TazeYesilliklerPaketi() {
 		}
 	};
 
-	// Static data for gallery section
+	// Gallery items data
 	const galleryItems = [
 		{
 			image: "/feslegen.png",
@@ -568,834 +506,105 @@ export default function TazeYesilliklerPaketi() {
 				</div>
 			)}
 
-			{/* Section 1: Product Info with Sticky Image and Scrolling Content */}
+			{/* Section 1: Product Info with Sticky Image */}
 			<div className="flex">
 				{/* Left Side - Sticky Image */}
-				<div className="w-1/2 h-screen sticky top-0 bg-gray-50">
-					<div className="h-full flex items-center justify-center p-8">
-						<div className="max-w-md w-full">
-							<img
-								src={images[selectedImage]}
-								alt={product?.name || "Taze Yeşillikler Paketi"}
-								className="w-full h-auto max-h-[500px] object-contain rounded-lg shadow-lg"
-								onError={(e) => {
-									const target = e.target as HTMLImageElement;
-									target.src = "/skycrops-package-product.png";
-								}}
-							/>
-							{/* Thumbnail Images */}
-							{images.length > 1 && (
-								<div className="flex space-x-2 mt-4 justify-center">
-									{images.map((image, index) => (
-										<button
-											key={`thumbnail-${image.slice(-20)}-${index}`}
-											type="button"
-											onClick={() => setSelectedImage(index)}
-											className={`w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
-												selectedImage === index
-													? "border-gray-600"
-													: "border-gray-200"
-											}`}
-										>
-											<img
-												src={image}
-												alt={`Thumbnail ${index + 1}`}
-												className="w-full h-full object-cover"
-												onError={(e) => {
-													const target = e.target as HTMLImageElement;
-													target.src = "/placeholder.svg";
-												}}
-											/>
-										</button>
-									))}
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
+				<StickyImageGallery
+					images={images}
+					selectedImage={selectedImage}
+					onImageSelect={setSelectedImage}
+					productName={product?.name || "Taze Yeşillikler Paketi"}
+				/>
 
 				{/* Right Side - Scrolling Content */}
 				<div className="w-1/2 min-h-screen">
-					<div className="p-8 pt-32 pb-16">
-						{/* Breadcrumb */}
-						<div className="mb-8">
-							<Link
-								href="/abonelik"
-								className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+					<ProductInfoSection
+						product={product}
+						currentPrice={getCurrentPrice()}
+						discountInfo={discountInfo}
+						purchaseType={purchaseType}
+						addingToCart={addingToCart}
+						onAddToCart={handleAddToCart}
+					/>
+
+					{/* Purchase Options */}
+					<div className="px-8 pb-8 space-y-8">
+						{product && (
+							<PurchaseOptionsPanel
+								product={product}
+								deliveryDays={deliveryDays}
+								deliveryDayStock={deliveryDayStock}
+								purchaseType={purchaseType}
+								onPurchaseTypeChange={setPurchaseType}
+								selectedInterval={selectedInterval}
+								onIntervalChange={handleIntervalChange as any}
+								quantity={quantity}
+								onQuantityChange={setQuantity}
+								selectedDeliveryDay={selectedDeliveryDay}
+								onDeliveryDayChange={setSelectedDeliveryDay}
+							/>
+						)}
+
+						{/* Add to Cart Button */}
+						<div className="space-y-4">
+							<Button
+								onClick={handleAddToCart}
+								disabled={
+									!product?.in_stock ||
+									!product?.is_active ||
+									addingToCart ||
+									quantity <= 0
+								}
+								className={`w-full py-6 text-lg font-medium ${
+									!product?.is_active
+										? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
+										: "bg-gray-600 hover:bg-gray-700 text-white"
+								}`}
 							>
-								<ArrowLeft className="w-4 h-4 mr-2" />
-								Abonelik Sayfasına Dön
-							</Link>
-						</div>
-
-						<div className="space-y-8">
-							{/* Product Title and Price */}
-							<div>
-								<h1 className="text-4xl font-light mb-4 text-gray-800">
-									{product?.name || "Taze Yeşillikler Paketi"}
-								</h1>
-
-								{/* Stock Status */}
-								<div className="mb-6 space-y-2">
-									{product && !product.is_active ? (
-										<span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-red-100 text-red-800">
-											<div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-											Pasif Ürün
-										</span>
-									) : product?.in_stock ? (
-										<span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-											<div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-											Stokta var ({product.stock_quantity} adet)
-										</span>
-									) : (
-										<span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-											<div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-											Stokta var
-										</span>
-									)}
-								</div>
-
-								{/* Price */}
-								<div className="text-4xl font-light text-gray-800 mb-2">
-									{product && discountInfo?.hasDiscount ? (
-										<div className="space-y-2">
-											<div className="flex items-center space-x-3">
-												<span className="text-red-600">
-													{formatPrice(getCurrentPrice(), product.currency)}
-												</span>
-												<span className="text-xl text-gray-500 line-through">
-													{formatPrice(
-														discountInfo.originalPrice,
-														product.currency,
-													)}
-												</span>
-												<span className="bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full">
-													%{discountInfo.discountPercentage} indirim
-												</span>
-											</div>
-										</div>
-									) : (
-										<span>
-											{product
-												? formatPrice(getCurrentPrice(), product.currency)
-												: "₺45.90"}
-										</span>
-									)}
-								</div>
-
-								{/* VAT Info */}
-								<p className="text-sm text-gray-600 mb-6">KDV dahil</p>
-							</div>
-
-							{/* Description */}
-							<div>
-								<h3 className="font-medium mb-3 text-gray-800 text-lg">
-									Ürün Açıklaması
-								</h3>
-								<p className="text-gray-600 leading-relaxed">
-									{product?.description ||
-										"Organik ve taze yeşilliklerden oluşan özel paketimiz. Fesleğen, roka, maydanoz, marul ve daha birçok vitamin deposu yeşillik bir arada. Dalından taze toplanır, soğuk zincirle size ulaştırılır."}
-								</p>
-							</div>
-
-							{/* Purchase Options */}
-							{product && (
-								<div>
-									<h3 className="font-medium mb-4 text-gray-800 text-lg">
-										Abonelik Seçenekleri
-									</h3>
-									{!product.is_active && (
-										<div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-											<p className="text-red-700 text-sm">
-												Bu ürün şu anda pasif durumda ve satın alınamaz.
-											</p>
-										</div>
-									)}
-									<div className="grid grid-cols-1 gap-3">
-										{/* Subscription Option */}
-										{product.subscription_enabled &&
-											product.subscription_intervals.length > 0 && (
-												<div
-													className={`p-6 rounded-lg border-2 transition-colors ${
-														!product.is_active
-															? "border-gray-200 bg-gray-50 opacity-60"
-															: purchaseType === "subscription"
-																? "border-gray-600 bg-gray-50"
-																: "border-gray-200"
-													}`}
-												>
-													<button
-														onClick={() =>
-															product.is_active &&
-															setPurchaseType("subscription")
-														}
-														className={`w-full text-left ${!product.is_active ? "cursor-not-allowed" : ""}`}
-														disabled={!product.is_active}
-														type="button"
-													>
-														<div className="flex items-center justify-between mb-4">
-															<div>
-																<div className="font-medium text-gray-800 text-lg">
-																	Abonelik
-																</div>
-																<div className="text-sm text-gray-600">
-																	Düzenli teslimat ile %
-																	{Math.round(
-																		((product.price -
-																			product.subscription_intervals[0].price) /
-																			product.price) *
-																			100,
-																	)}{" "}
-																	tasarruf et
-																</div>
-															</div>
-															<div className="text-right">
-																<div className="text-xl font-medium text-red-600">
-																	{selectedInterval &&
-																		formatPrice(
-																			selectedInterval.price,
-																			selectedInterval.currency,
-																		)}
-																</div>
-																<div className="text-sm text-gray-500 line-through">
-																	{formatPrice(product.price, product.currency)}
-																</div>
-															</div>
-														</div>
-													</button>
-
-													{/* Subscription Intervals */}
-													{purchaseType === "subscription" &&
-														product.is_active && (
-															<div className="space-y-3 mt-4 pt-4 border-t border-gray-200">
-																{product.subscription_intervals.map(
-																	(interval) => (
-																		<div
-																			key={interval.key}
-																			className={`p-4 rounded-lg border transition-colors ${
-																				selectedInterval?.key === interval.key
-																					? "border-gray-600 bg-white"
-																					: "border-gray-200 hover:border-gray-300"
-																			}`}
-																		>
-																			<button
-																				type="button"
-																				onClick={() =>
-																					setSelectedInterval(interval)
-																				}
-																				className="w-full text-left"
-																			>
-																				<div className="flex items-center justify-between mb-3">
-																					<div>
-																						<div className="font-medium text-gray-800">
-																							{interval.name}
-																						</div>
-																						<div className="text-sm text-gray-600">
-																							{interval.description}
-																						</div>
-																					</div>
-																					<div className="text-right">
-																						<div className="font-medium text-gray-800">
-																							{formatPrice(
-																								interval.price,
-																								interval.currency,
-																							)}
-																						</div>
-																						<div className="text-sm text-green-600">
-																							%{Math.round(interval.discount)}{" "}
-																							indirim
-																						</div>
-																					</div>
-																				</div>
-																			</button>
-
-																			{/* Subscription Controls */}
-																			{selectedInterval?.key === interval.key &&
-																				product.is_active && (
-																					<div className="space-y-4 pt-4 border-t border-gray-200">
-																						{/* Quantity */}
-																						<div className="flex items-center justify-between">
-																							<span className="font-medium text-gray-700">
-																								Adet:
-																							</span>
-																							<div className="flex items-center space-x-3">
-																								<button
-																									type="button"
-																									onClick={() =>
-																										setQuantity(
-																											Math.max(1, quantity - 1),
-																										)
-																									}
-																									className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-																									disabled={quantity <= 1}
-																								>
-																									<Minus className="w-4 h-4" />
-																								</button>
-																								<span className="w-16 text-center font-medium text-lg">
-																									{quantity}
-																								</span>
-																								<button
-																									type="button"
-																									onClick={() => {
-																										const dayStock =
-																											deliveryDayStock[
-																												selectedDeliveryDay
-																											] ?? 0;
-																										setQuantity(
-																											Math.min(
-																												dayStock,
-																												quantity + 1,
-																											),
-																										);
-																									}}
-																									className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-																									disabled={
-																										quantity >=
-																										(deliveryDayStock[
-																											selectedDeliveryDay
-																										] ?? 0)
-																									}
-																								>
-																									<Plus className="w-4 h-4" />
-																								</button>
-																							</div>
-																						</div>
-
-																						{/* Delivery Day */}
-																						<div>
-																							<div className="flex items-center justify-between mb-2">
-																								<span className="font-medium text-gray-700">
-																									Teslimat Günü:
-																								</span>
-																								<span className="text-sm text-gray-500">
-																									{
-																										deliveryDays.find(
-																											(d) =>
-																												d.id ===
-																												selectedDeliveryDay,
-																										)?.name
-																									}
-																								</span>
-																							</div>
-																							<p className="text-xs text-gray-500 mb-3">
-																								Tercih ettiğiniz günleri
-																								seçebilirsiniz, üretim planına
-																								göre gönderimler yapılacaktır.
-																							</p>
-																							<div className="grid grid-cols-7 gap-2">
-																								{deliveryDays.map((day) => {
-																									const stock =
-																										deliveryDayStock[day.id] ??
-																										0;
-																									const remainingStock =
-																										day.id ===
-																										selectedDeliveryDay
-																											? Math.max(
-																													0,
-																													stock - quantity,
-																												)
-																											: stock;
-																									const isInactive =
-																										day.alwaysInactive ||
-																										stock === 0;
-																									const isSelected =
-																										selectedDeliveryDay ===
-																										day.id;
-
-																									return (
-																										<div
-																											key={day.id}
-																											className="flex flex-col"
-																										>
-																											<button
-																												type="button"
-																												onClick={() =>
-																													!isInactive &&
-																													setSelectedDeliveryDay(
-																														day.id,
-																													)
-																												}
-																												disabled={isInactive}
-																												className={`p-3 text-sm rounded border transition-colors relative ${
-																													isInactive
-																														? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
-																														: isSelected
-																															? "border-gray-600 bg-gray-600 text-white"
-																															: "border-gray-200 hover:border-gray-300 text-gray-700"
-																												}`}
-																											>
-																												<span
-																													className={
-																														isInactive
-																															? "line-through"
-																															: ""
-																													}
-																												>
-																													{day.shortName}
-																												</span>
-																											</button>
-																											{day.alwaysInactive &&
-																											day.id === 1 ? (
-																												<span className="text-xs text-center mt-1 text-gray-600 font-medium">
-																													Kalan Stok:
-																												</span>
-																											) : !day.alwaysInactive ? (
-																												<span
-																													className={`text-xs text-center mt-1 ${
-																														remainingStock === 0
-																															? "text-red-500 font-medium"
-																															: "text-gray-500"
-																													}`}
-																												>
-																													{remainingStock > 0
-																														? `${remainingStock} kota`
-																														: "Stok yok"}
-																												</span>
-																											) : null}
-																										</div>
-																									);
-																								})}
-																							</div>
-																						</div>
-																					</div>
-																				)}
-																		</div>
-																	),
-																)}
-															</div>
-														)}
-												</div>
-											)}
-
-										{/* One-time Purchase */}
-										{product.is_active && product.one_time_purchase_enabled && (
-											<div
-												className={`p-6 rounded-lg border-2 transition-colors ${
-													purchaseType === "one_time"
-														? "border-gray-600 bg-gray-50"
-														: "border-gray-200 hover:border-gray-300"
-												}`}
-											>
-												<button
-													onClick={() => setPurchaseType("one_time")}
-													className="w-full text-left"
-													type="button"
-												>
-													<div className="flex items-center justify-between mb-4">
-														<div>
-															<div className="font-medium text-gray-800 text-lg">
-																Tek Seferlik Satın Al
-															</div>
-															<div className="text-sm text-gray-600">
-																Şimdi satın al, istediğin zaman tekrar sipariş
-																ver
-															</div>
-														</div>
-														<div className="text-right">
-															<div className="text-xl font-medium text-gray-800">
-																{formatPrice(
-																	product.sale_price || product.price,
-																	product.currency,
-																)}
-															</div>
-														</div>
-													</div>
-												</button>
-
-												{/* One-time Quantity */}
-												{purchaseType === "one_time" && (
-													<div className="pt-4 border-t border-gray-200">
-														<div className="flex items-center justify-between">
-															<span className="font-medium text-gray-700">
-																Adet:
-															</span>
-															<div className="flex items-center space-x-3">
-																<button
-																	type="button"
-																	onClick={() =>
-																		setQuantity(Math.max(1, quantity - 1))
-																	}
-																	className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-																	disabled={quantity <= 1}
-																>
-																	<Minus className="w-4 h-4" />
-																</button>
-																<span className="w-16 text-center font-medium text-lg">
-																	{quantity}
-																</span>
-																<button
-																	type="button"
-																	onClick={() =>
-																		setQuantity(
-																			Math.min(
-																				product.stock_quantity,
-																				quantity + 1,
-																			),
-																		)
-																	}
-																	className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-																	disabled={quantity >= product.stock_quantity}
-																>
-																	<Plus className="w-4 h-4" />
-																</button>
-															</div>
-														</div>
-													</div>
-												)}
-											</div>
-										)}
+								{addingToCart ? (
+									<div className="flex items-center">
+										<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current mr-2"></div>
+										Sepete Ekleniyor...
 									</div>
-								</div>
-							)}
-
-							{/* Add to Cart Button */}
-							<div className="space-y-4">
-								<Button
-									onClick={handleAddToCart}
-									disabled={
-										!product?.in_stock ||
-										!product?.is_active ||
-										addingToCart ||
-										quantity <= 0
-									}
-									className={`w-full py-6 text-lg font-medium ${
-										!product?.is_active
-											? "bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300"
-											: "bg-gray-600 hover:bg-gray-700 text-white"
-									}`}
-								>
-									{addingToCart ? (
-										<div className="flex items-center">
-											<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current mr-2"></div>
-											Sepete Ekleniyor...
-										</div>
-									) : !product?.is_active ? (
-										<div className="flex items-center justify-center">
-											<X className="w-5 h-5 mr-2" />
-											Pasif Ürün - Satın Alınamaz
-										</div>
-									) : (
-										<div className="flex items-center justify-center">
-											<ShoppingCart className="w-5 h-5 mr-2" />
-											{purchaseType === "subscription"
-												? "Aboneliğe Başla"
-												: "Sepete Ekle"}
-										</div>
-									)}
-								</Button>
-
-								{/* Action Buttons */}
-								<div className="flex space-x-3">
-									<Button variant="outline" className="flex-1 py-3">
-										<Heart className="w-4 h-4 mr-2" />
-										Favorilere Ekle
-									</Button>
-									<Button variant="outline" className="flex-1 py-3">
-										<Share2 className="w-4 h-4 mr-2" />
-										Paylaş
-									</Button>
-								</div>
-							</div>
-
-							{/* Product Features */}
-							<div className="grid grid-cols-1 gap-6 pt-8 border-t border-gray-200">
-								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-										<Package className="w-6 h-6 text-green-600" />
+								) : !product?.is_active ? (
+									<div className="flex items-center justify-center">
+										<X className="w-5 h-5 mr-2" />
+										Pasif Ürün - Satın Alınamaz
 									</div>
-									<div>
-										<div className="font-medium text-gray-800">Taze Ürün</div>
-										<div className="text-sm text-gray-600">
-											Dalından taze toplanır
-										</div>
+								) : (
+									<div className="flex items-center justify-center">
+										<ShoppingCart className="w-5 h-5 mr-2" />
+										{purchaseType === "subscription"
+											? "Aboneliğe Başla"
+											: "Sepete Ekle"}
 									</div>
-								</div>
-
-								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-										<Shield className="w-6 h-6 text-green-600" />
-									</div>
-									<div>
-										<div className="font-medium text-gray-800">
-											100% Organik
-										</div>
-										<div className="text-sm text-gray-600">
-											Pestisitsiz, doğal
-										</div>
-									</div>
-								</div>
-
-								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-										<Truck className="w-6 h-6 text-yellow-600" />
-									</div>
-									<div>
-										<div className="font-medium text-gray-800">
-											Hızlı Teslimat
-										</div>
-										<div className="text-sm text-gray-600">
-											24-48 saat içinde
-										</div>
-									</div>
-								</div>
-
-								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-										<Clock className="w-6 h-6 text-purple-600" />
-									</div>
-									<div>
-										<div className="font-medium text-gray-800">
-											Güvenli Ödeme
-										</div>
-										<div className="text-sm text-gray-600">SSL korumalı</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{/* Section 2: Info Left, Video/Picture Right */}
-			<div className="py-16 bg-gray-50">
-				<div className="mx-12">
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-						{/* Left - Info */}
-						<div className="space-y-6">
-							<h2 className="text-3xl font-light text-gray-800">
-								Sera Teknolojisi ile Üretim
-							</h2>
-							<p className="text-lg text-gray-600 leading-relaxed">
-								En modern sera teknolojileri kullanarak, controlled environment
-								agriculture (CEA) sistemleriyle ürünlerimizi yetiştiriyoruz. Bu
-								sayede yıl boyunca aynı kalitede, taze ve besleyici ürünler
-								sunabiliyoruz.
-							</p>
-							<div className="space-y-4">
-								<div className="flex items-start space-x-3">
-									<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
-									<div>
-										<h4 className="font-medium text-gray-800">Su Tasarrufu</h4>
-										<p className="text-gray-600">
-											Geleneksel tarıma göre %95 daha az su kullanımı
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start space-x-3">
-									<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
-									<div>
-										<h4 className="font-medium text-gray-800">
-											Pestisit Kullanmıyoruz
-										</h4>
-										<p className="text-gray-600">
-											Kapalı sistem sayesinde zararlılardan doğal koruma
-										</p>
-									</div>
-								</div>
-								<div className="flex items-start space-x-3">
-									<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
-									<div>
-										<h4 className="font-medium text-gray-800">
-											Yıl Boyu Üretim
-										</h4>
-										<p className="text-gray-600">
-											Mevsim şartlarından bağımsız sürekli hasat
-										</p>
-									</div>
-								</div>
-							</div>
-							<Button className="bg-gray-600 hover:bg-gray-700 text-white">
-								<Play className="w-4 h-4 mr-2" />
-								Üretim Sürecini İzle
+								)}
 							</Button>
-						</div>
 
-						{/* Right - Video/Picture */}
-						<div className="relative">
-							<div className="aspect-video rounded-lg overflow-hidden bg-gray-200">
-								<img
-									src="/fresh-vegetables-and-greens-in-modern-greenhouse.png"
-									alt="Modern sera üretimi"
-									className="w-full h-full object-cover"
-								/>
-								<div className="absolute inset-0 flex items-center justify-center">
-									<button
-										type="button"
-										className="w-20 h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
-									>
-										<Play className="w-8 h-8 text-gray-600 ml-1" />
-									</button>
-								</div>
+							{/* Action Buttons */}
+							<div className="flex space-x-3">
+								<Button variant="outline" className="flex-1 py-3">
+									<Heart className="w-4 h-4 mr-2" />
+									Favorilere Ekle
+								</Button>
+								<Button variant="outline" className="flex-1 py-3">
+									<Share2 className="w-4 h-4 mr-2" />
+									Paylaş
+								</Button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			{/* Section 2: Production Video */}
+			<ProductionVideoSection />
 
 			{/* Section 3: Gallery Slider */}
-			<div className="py-16">
-				<div className="max-w-7xl mx-auto">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl font-light text-gray-800 mb-4">
-							Paket İçeriği
-						</h2>
-						<p className="text-lg text-gray-600">
-							Taze yeşillikler paketimizde bulunan organik ürünler
-						</p>
-					</div>
-
-					<div className="relative">
-						<div
-							ref={galleryScrollRef}
-							className="flex space-x-6 overflow-x-auto pb-4 horizontal-scroll"
-							onScroll={handleGalleryScroll}
-							style={{ scrollBehavior: "smooth" }}
-						>
-							{galleryItems.map((item, index) => (
-								<div
-									key={`gallery-${item.title}-${index}`}
-									className="flex-shrink-0 w-80"
-								>
-									<div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 h-full">
-										<div className="relative overflow-hidden">
-											<img
-												src={item.image}
-												alt={item.title}
-												className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-												onError={(e) => {
-													const target = e.target as HTMLImageElement;
-													target.src = "/placeholder.svg";
-												}}
-											/>
-										</div>
-										<div className="p-6">
-											<h3 className="font-medium mb-2 text-gray-800 text-lg">
-												{item.title}
-											</h3>
-											<p className="text-gray-600 text-sm mb-4">
-												{item.description}
-											</p>
-											<div className="space-y-2">
-												<h4 className="font-medium text-gray-800 text-sm">
-													Besin Değerleri:
-												</h4>
-												<div className="flex flex-wrap gap-2">
-													{item.benefits.map((benefit, benefitIndex) => (
-														<span
-															key={`benefit-${item.title}-${benefit}-${benefitIndex}`}
-															className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
-														>
-															{benefit}
-														</span>
-													))}
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							))}
-						</div>
-
-						{/* Scroll Buttons */}
-						{showGalleryLeftButton && (
-							<div className="absolute top-1/2 -left-6 transform -translate-y-1/2 z-30">
-								<button
-									type="button"
-									onClick={scrollGalleryLeft}
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronLeft className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
-
-						{showGalleryRightButton && (
-							<div className="absolute top-1/2 -right-6 transform -translate-y-1/2 z-30">
-								<button
-									type="button"
-									onClick={scrollGalleryRight}
-									className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300"
-								>
-									<ChevronRight className="w-5 h-5 text-gray-600" />
-								</button>
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
+			<GallerySlider items={galleryItems} />
 
 			{/* Section 4: FAQ */}
-			<div className="py-16 px-6 bg-gray-50">
-				<div className="max-w-4xl mx-auto">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl font-light text-gray-800 mb-4">
-							Sıkça Sorulan Sorular
-						</h2>
-						<p className="text-lg text-gray-600">
-							Taze yeşillikler paketi hakkında merak edilenler
-						</p>
-					</div>
-
-					<div className="grid md:grid-cols-2 gap-8">
-						{faqData.map((faq, index) => {
-							const IconComponent = faq.icon;
-							const colorClasses = [
-								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-yellow-100", text: "text-yellow-600" },
-								{ bg: "bg-purple-100", text: "text-purple-600" },
-								{ bg: "bg-red-100", text: "text-red-600" },
-								{ bg: "bg-indigo-100", text: "text-indigo-600" },
-							];
-							const colorClass = colorClasses[index % colorClasses.length];
-							return (
-								<div
-									key={`faq-${faq.question.slice(0, 20)}-${index}`}
-									className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-								>
-									<div className="flex items-start space-x-4">
-										<div
-											className={`w-12 h-12 ${colorClass.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
-										>
-											<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
-										</div>
-										<div>
-											<h3 className="text-lg font-semibold mb-3 text-gray-800">
-												{faq.question}
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												{faq.answer}
-											</p>
-										</div>
-									</div>
-								</div>
-							);
-						})}
-					</div>
-
-					{/* Contact Section */}
-					<div className="bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl p-8 text-white text-center mt-12">
-						<h3 className="text-2xl font-light mb-4">
-							Başka Sorularınız mı Var?
-						</h3>
-						<p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
-							Burada bulamadığınız bilgiler için bizimle iletişime geçebilir,
-							uzman ekibimizden detaylı bilgi alabilirsiniz.
-						</p>
-						<div className="flex flex-wrap justify-center gap-4">
-							<Link href="/iletisim">
-								<Button
-									variant="outline"
-									className="bg-transparent border-white text-white hover:bg-white hover:text-gray-600"
-								>
-									<HelpCircle className="w-4 h-4 mr-2" />
-									İletişime Geç
-								</Button>
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
+			<FAQSection items={faqData} />
 		</div>
 	);
 }

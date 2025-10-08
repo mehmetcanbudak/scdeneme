@@ -2,8 +2,10 @@
 
 import type { FooterSection } from "@/lib/navigation-config";
 import { FOOTER_POLICY_LINKS, FOOTER_SECTIONS } from "@/lib/navigation-config";
+import { useFooterColor } from "@/contexts/footer-color-context";
+import Image from "next/image";
 import Link from "next/link";
-import { memo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 interface FooterProps {
 	className?: string;
@@ -11,121 +13,204 @@ interface FooterProps {
 	copyrightText?: string;
 }
 
+interface FooterLinkProps {
+	href: string;
+	label: string;
+	external?: boolean;
+	ariaLabel?: string;
+	type?: "link" | "email" | "tel";
+	className?: string;
+}
+
+/**
+ * Footer link component with proper external link handling
+ */
+const FooterLink = memo(function FooterLink({
+	href,
+	label,
+	external = false,
+	ariaLabel,
+	type = "link",
+	className,
+}: FooterLinkProps) {
+	const isExternal = external || href.startsWith("http");
+	const isSpecialType = type === "email" || type === "tel";
+
+	const linkClassName = useMemo(
+		() =>
+			className ||
+			"block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline",
+		[className],
+	);
+
+	const linkProps = useMemo(
+		() => ({
+			href,
+			className: linkClassName,
+			"aria-label": ariaLabel,
+			...(isExternal &&
+				!isSpecialType && {
+					target: "_blank",
+					rel: "noopener noreferrer",
+				}),
+		}),
+		[href, linkClassName, ariaLabel, isExternal, isSpecialType],
+	);
+
+	if (isExternal && !isSpecialType) {
+		return <a {...linkProps}>{label}</a>;
+	}
+
+	return <Link {...linkProps}>{label}</Link>;
+});
+
+/**
+ * Footer component with sticky reveal animation
+ * Features:
+ * - Responsive grid layout for navigation sections
+ * - Large logo display at bottom
+ * - Sticky reveal animation effect
+ * - Accessible navigation with ARIA labels
+ * - Support for external links, email, and phone links
+ */
 const Footer = memo(function Footer({
 	className = "",
 	showLogo = true,
 	copyrightText = "© 2025 Skycrops. Tüm hakları saklıdır.",
 }: FooterProps) {
-	const renderFooterSection = (section: FooterSection, _index: number) => (
-		<div key={section.title} className="space-y-4">
-			<h3 className="font-medium text-gray-800 text-base uppercase tracking-wide">
-				{section.title}
-			</h3>
-			<nav className="space-y-2" aria-label={`${section.title} menüsü`}>
-				{section.links.map((link, linkIndex) => {
-					const isExternal = link.external || link.href.startsWith("http");
-					const isSpecialType = link.type === "email" || link.type === "tel";
+	const { footerColor } = useFooterColor();
+	/**
+	 * Renders a footer section with links
+	 */
+	const renderFooterSection = useCallback(
+		(section: FooterSection, index: number) => (
+			<div key={`${section.title}-${index}`} className="space-y-4">
+				<h3 className="text-xl md:text-2xl font-medium leading-snug text-gray-800 uppercase tracking-wide">
+					{section.title}
+				</h3>
+				<nav className="space-y-2" aria-label={`${section.title} menüsü`}>
+					{section.links.map((link, linkIndex) => {
+						const uniqueKey = `${section.title}-${link.href}-${linkIndex}`;
 
-					const linkProps = {
-						href: link.href,
-						className:
-							"block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline",
-						"aria-label": link.ariaLabel,
-						...(isExternal &&
-							!isSpecialType && {
-								target: "_blank",
-								rel: "noopener noreferrer",
-							}),
-					};
+						// Special rendering for address section
+						if (section.title === "Adres") {
+							return (
+								<a
+									key={uniqueKey}
+									href={link.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="block text-base text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+									aria-label={link.ariaLabel}
+								>
+									<div className="space-y-1">
+										<div>Çorlu 1 OSB</div>
+										<div>Bülent Ecevit Caddesi No:13/1</div>
+										<div>PK: 59860 – Tekirdağ, Türkiye</div>
+									</div>
+								</a>
+							);
+						}
 
-					const uniqueKey = `${section.title}-${link.href}-${linkIndex}`;
-
-					if (section.title === "Adres") {
 						return (
-							<a key={uniqueKey} {...linkProps}>
-								<div className="space-y-1">
-									<div>Çorlu 1 OSB</div>
-									<div>Bülent Ecevit Caddesi No:13/1</div>
-									<div>PK: 59860 – Tekirdağ, Türkiye</div>
-								</div>
-							</a>
+							<FooterLink
+								key={uniqueKey}
+								href={link.href}
+								label={link.label}
+								external={link.external}
+								ariaLabel={link.ariaLabel}
+								type={link.type}
+							/>
 						);
-					}
+					})}
+				</nav>
+			</div>
+		),
+		[],
+	);
 
-					return isExternal && !isSpecialType ? (
-						<a key={uniqueKey} {...linkProps}>
-							{link.label}
-						</a>
-					) : (
-						<Link key={uniqueKey} {...linkProps}>
-							{link.label}
-						</Link>
-					);
-				})}
+	const footerSections = useMemo(
+		() =>
+			FOOTER_SECTIONS.map((section, index) =>
+				renderFooterSection(section, index),
+			),
+		[renderFooterSection],
+	);
+
+	const policyLinks = useMemo(
+		() => (
+			<nav
+				className="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6"
+				aria-label="Politika menüsü"
+			>
+				{FOOTER_POLICY_LINKS.map((link, index) => (
+					<Link
+						key={`${link.href}-${index}`}
+						href={link.href}
+						className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
+					>
+						{link.label}
+					</Link>
+				))}
 			</nav>
-		</div>
+		),
+		[],
 	);
 
 	return (
 		<div
-			className="relative h-[800px]"
+			className="relative h-[500px]"
 			style={{
 				clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
 			}}
 		>
-			<div className="relative h-[calc(100vh+800px)] -top-[100vh]">
-				<div className="h-[800px] sticky top-[calc(100vh-800px)]">
+			<div className="relative h-[calc(100vh+500px)] -top-[100vh]">
+				<div className="h-[500px] sticky top-[calc(100vh-500px)]">
 					<footer
-						className={`h-full bg-[#E7EBDE] py-8 px-6 border-t overflow-x-hidden ${className}`}
+						className={`h-full py-6 sm:py-8 px-4 sm:px-6 border-t overflow-x-hidden transition-colors duration-300 ${className}`}
+						style={{ backgroundColor: footerColor }}
+						role="contentinfo"
+						aria-label="Site footer"
 					>
-						<div className="mx-12 h-full">
+						<div className="mx-4 sm:mx-8 md:mx-12 h-full">
 							{/* Footer Content Wrapper */}
-							<div className="flex flex-col h-full space-y-8">
+							<div className="flex flex-col h-full space-y-6 sm:space-y-8">
 								{/* Navigation Sections */}
-								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-									{FOOTER_SECTIONS.map((section, index) =>
-										renderFooterSection(section, index),
-									)}
+								<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+									{footerSections}
 								</div>
 
 								{/* Logo Section */}
 								{showLogo && (
-									<div className="flex items-center justify-center py-8 flex-grow">
+									<div className="flex items-center justify-center py-2">
 										<Link
 											href="/"
 											aria-label="SkyCrops ana sayfasına git"
-											className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#E7EBDE] focus-visible:ring-gray-500/40"
+											className="block rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#E7EBDE] focus-visible:ring-gray-500/40 transition-opacity hover:opacity-80"
 										>
-											<img
+											<Image
 												src="/skycrops-logo.svg"
 												alt="SkyCrops Logo"
+												width={300}
+												height={100}
 												className="w-full max-w-md md:max-w-2xl h-auto"
+												unoptimized
+												priority={false}
 											/>
 										</Link>
 									</div>
 								)}
 
 								{/* Copyright and policies section */}
-								<div className="border-t pt-6 mt-auto">
-									<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+								<div className="border-t border-gray-300 pt-4 sm:pt-6 mt-auto">
+									<div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
 										{/* Copyright */}
-										<p className="text-sm text-gray-600">{copyrightText}</p>
+										<p className="text-sm text-gray-600 text-center md:text-left">
+											{copyrightText}
+										</p>
 
 										{/* Policy links */}
-										<nav
-											className="flex flex-wrap justify-center md:justify-end space-x-6"
-											aria-label="Politika menüsü"
-										>
-											{FOOTER_POLICY_LINKS.map((link, index) => (
-												<Link
-													key={`${link.href}-${index}`}
-													href={link.href}
-													className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 focus:text-gray-800 focus:outline-none focus:underline"
-												>
-													{link.label}
-												</Link>
-											))}
-										</nav>
+										{policyLinks}
 									</div>
 								</div>
 							</div>

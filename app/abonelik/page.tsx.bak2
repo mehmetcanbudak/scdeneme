@@ -1,0 +1,1192 @@
+"use client";
+
+import type React from "react";
+import { memo, useCallback, useEffect, useId, useState, useMemo } from "react";
+import Image from "next/image";
+import { notFound, useRouter } from "next/navigation";
+import { Award, Leaf, Minus, Plus, Shield, Truck, X } from "lucide-react";
+import HeroHeader from "@/components/hero-header";
+import HeroContent from "@/components/subscription/hero-content";
+import FeatureCard from "@/components/subscription/feature-card";
+import WeeklyProgram from "@/components/subscription/weekly-program";
+import ProductSelector, {
+	type Product,
+	type SubscriptionInterval,
+	type DeliveryDay,
+} from "@/components/subscription/product-selector";
+import SubscriptionProductPreview from "@/components/subscription/subscription-product-preview";
+import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
+import { Button } from "@/components/ui/button";
+import { Grid, Section, SectionHeader } from "@/components/ui/page-layout";
+import {
+	BenefitCard,
+	CTASection,
+	TestimonialCard,
+} from "@/components/ui/subscription-components";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
+import { apiClient } from "@/lib/api-client";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+
+/**
+ * Benefit interface
+ */
+interface Benefit {
+	icon: React.ReactNode;
+	title: string;
+	description: string;
+}
+
+/**
+ * Testimonial interface
+ */
+interface Testimonial {
+	name: string;
+	comment: string;
+	rating: number;
+	image: string;
+}
+
+/**
+ * FAQ item interface
+ */
+interface FAQItem {
+	id: string;
+	question: string;
+	answer: string;
+}
+
+/**
+ * Feature interface
+ */
+interface Feature {
+	emoji: string;
+	title: string;
+	description: string;
+}
+
+/**
+ * Subscription landing page component
+ * Main page for subscription offerings and product display
+ *
+ * @returns {React.ReactElement} The subscription landing page component
+ */
+const Abonelik: React.FC = memo(() => {
+	const router = useRouter();
+	const mainContentId = useId();
+
+	// Enable transparent navigation for hero section
+	useNavigationTransparency(true);
+
+	// State for product data from API
+	const [product, setProduct] = useState<Product | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	// State for interactive elements
+	const [selectedImage, setSelectedImage] = useState(0);
+	const [quantity, setQuantity] = useState(1);
+	const [selectedDeliveryDay, setSelectedDeliveryDay] = useState<number>(2);
+	const [selectedInterval, setSelectedInterval] =
+		useState<SubscriptionInterval | null>(null);
+	const [purchaseType, setPurchaseType] = useState<"subscription" | "one_time">(
+		"subscription",
+	);
+	const [deliveryDayStock, setDeliveryDayStock] = useState<
+		Record<number, number>
+	>({});
+
+	/**
+	 * Delivery days configuration with memoization
+	 */
+	const deliveryDays: DeliveryDay[] = useMemo(
+		() => [
+			{ id: 1, name: "Pazartesi", shortName: "Pzt", alwaysInactive: true },
+			{ id: 2, name: "Salı", shortName: "Sal", alwaysInactive: false },
+			{ id: 3, name: "Çarşamba", shortName: "Çar", alwaysInactive: false },
+			{ id: 4, name: "Perşembe", shortName: "Per", alwaysInactive: false },
+			{ id: 5, name: "Cuma", shortName: "Cum", alwaysInactive: false },
+			{ id: 6, name: "Cumartesi", shortName: "Cmt", alwaysInactive: false },
+			{ id: 7, name: "Pazar", shortName: "Paz", alwaysInactive: true },
+		],
+		[],
+	);
+
+	/**
+	 * Features data with memoization
+	 */
+	const features: Feature[] = useMemo(
+		() => [
+			{
+				emoji: "🌿",
+				title: "Her hafta farklı çeşitler",
+				description:
+					"Skycrops abonelik programıyla sofranıza her hafta farklı tatlar geliyor. Programımızda yalnızca 2 marul çeşidi sabit kalıyor; diğer tüm ürünler haftadan haftaya değişiyor. Böylece her kutuda 8 adet yeşillik ile hem tanıdık lezzetleri koruyor hem de yeni tatlarla mutfağınıza sürprizler ekliyoruz. Roka, fesleğen, maydanoz, semizotu ve daha niceleri…",
+			},
+			{
+				emoji: "📦",
+				title: "Abone olun, gerisini bize bırakın",
+				description:
+					"Tek yapmanız gereken size en uygun abonelik planını seçmek. İster her hafta, ister iki haftada bir sepetiniz kapınıza gelsin.",
+			},
+			{
+				emoji: "🛡️",
+				title: "Doğal ve güvenilir üretim",
+				description:
+					"Pestisitsiz, %90 daha az suyla yetiştirilen yeşilliklerimiz kontrollü koşullarda üretilir ve sofranıza en yüksek tazelikle ulaşır.",
+			},
+			{
+				emoji: "⚡",
+				title: "Daha taze, daha pratik",
+				description:
+					"Hasat edildiği gün paketlenen yeşillikler, alışveriş zahmetini ortadan kaldırır ve sofranıza maksimum lezzetle gelir.",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Benefits data with memoization
+	 */
+	const benefits: Benefit[] = useMemo(
+		() => [
+			{
+				icon: <Leaf className="w-8 h-8 text-green-600" />,
+				title: "Doğal ve Organik",
+				description:
+					"Kapalı ortamda, hiçbir kimyasal ve pestisit kullanmadan yetiştirilen taze ürünler",
+			},
+			{
+				icon: <Shield className="w-8 h-8 text-green-600" />,
+				title: "Çevre Dostu",
+				description: "Dikey tarım ile %97 daha az su kullanımı ve güneş enerjisi",
+			},
+			{
+				icon: <Truck className="w-8 h-8 text-yellow-600" />,
+				title: "Hızlı Teslimat",
+				description:
+					"Şehir içi üretim sayesinde hasattan kısa sürede sofraya ulaşım",
+			},
+			{
+				icon: <Award className="w-8 h-8 text-purple-600" />,
+				title: "Teknoloji Odaklı",
+				description:
+					"Gelişmiş dikey tarım teknolojisi ile optimum koşullarda üretim",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Testimonials data with memoization
+	 */
+	const testimonials: Testimonial[] = useMemo(
+		() => [
+			{
+				name: "Merve K.",
+				comment:
+					"Skycrops aboneliği ile evimize gelen taze kıvırcık ve roka harika! Çocuklarım dikey tarım ürünlerini çok seviyor.",
+				rating: 5,
+				image: "/testimonial-1.jpg",
+			},
+			{
+				name: "Ahmet B.",
+				comment:
+					"Dikey tarım teknolojisine destek olmak ve aynı zamanda taze yeşillikler almak mükemmel. Hizmet kalitesi çok iyi!",
+				rating: 5,
+				image: "/testimonial-2.jpg",
+			},
+			{
+				name: "Selin Y.",
+				comment:
+					"Kapalı ortam üretim sistemi ve çevre dostu yaklaşımı için tercih ettim. Ürünler gerçekten taze ve pestisit içermiyor.",
+				rating: 5,
+				image: "/testimonial-3.jpg",
+			},
+			{
+				name: "Kemal D.",
+				comment:
+					"Geleceğin tarım teknolojisini desteklemek ve doğal ürünler tüketmek için harika bir fırsat. Kesinlikle tavsiye ederim.",
+				rating: 5,
+				image: "/testimonial-4.jpg",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * FAQ items data with memoization
+	 */
+	const faqItems: FAQItem[] = useMemo(
+		() => [
+			{
+				id: "faq-1",
+				question: "Paket içeriğini neden ben seçemiyorum?",
+				answer:
+					"Her ürünün büyüme süresi ve verimlilik miktarı farklılık göstermektedir. Örneğin, bazı yeşillikler daha kısa sürede hasada gelirken, bazı çeşitlerin olgunlaşması daha uzun zaman almaktadır. Ayrıca aynı üretim alanından elde edilen demet sayısı da her tür için değişmektedir.\n\nBu sebeplerle paket içeriğini bireysel tercihlere göre belirlemek, üretim planlamasında ciddi operasyonel zorluklar yaratır ve ürünlerin düzenli ve sürdürülebilir şekilde ulaştırılmasını engelleyebilir.\n\nSkycrops olarak biz, bu süreci titizlikle yönetiyor ve paketlerinizi her hafta dengeli, çeşitli ve taptaze ürünlerle hazırlıyoruz. Böylece abonelerimiz hiçbir planlama yapmadan, güvenle sofralarında farklı lezzetleri deneyimleyebiliyor.",
+			},
+			{
+				id: "faq-2",
+				question: "Ürünler nasıl paketleniyor?",
+				answer:
+					"Yeşilliklerimiz kontrollü ve hijyenik koşullarda yetiştirildiği için yıkanmasına gerek kalmaz. Hasat edildiği gün tazeliğini kaybetmeden ayıklanır, özenle paketlenir ve özel ambalajlarla sofranıza ulaşır.",
+			},
+			{
+				id: "faq-3",
+				question: "Teslimat günümü değiştirebilir miyim?",
+				answer:
+					"Teslimatlar belirli günlerde planlanmaktadır. Abonelik başlangıcında size en uygun günü seçebilirsiniz. Sonrasında gün değişikliği ihtiyacınız olursa hesabınızdan değişiklik yapabilirsiniz.",
+			},
+			{
+				id: "faq-4",
+				question: "Aboneliğimi dondurabilir miyim?",
+				answer:
+					"Evet. İstediğinizde ara verebilir, dilediğiniz zaman kaldığınız yerden devam edebilirsiniz.",
+			},
+			{
+				id: "faq-5",
+				question: "Abonelik planımı değiştirebilir miyim?",
+				answer:
+					"Evet. Aboneliğinizi haftalık ya da iki haftada bir olacak şekilde değiştirebilirsiniz. Değişiklik sonrasında planınız hızlıca güncellenir ve teslimatlar yeni planınıza göre devam eder.",
+			},
+			{
+				id: "faq-6",
+				question: "Tek seferlik satın alma yapabiliyor muyum?",
+				answer:
+					"Evet. Abonelik dışında tek seferlik satın alma da yapabilirsiniz. Böylece ürünlerimizi denemek isterseniz önce tek kutu sipariş verebilir, sonrasında dilerseniz aboneliğe geçebilirsiniz. Düzenli tazelik isteyenler için abonelik öneriyoruz; ancak tek seferlik siparişlerle de Skycrops lezzetini deneyimlemeniz mümkün.",
+			},
+			{
+				id: "faq-7",
+				question: "Ürünler kargoda zarar görürse ne yapılır?",
+				answer:
+					"Nadiren de olsa taşıma sırasında ürünlerde zarar oluşabilir. Böyle bir durumda hemen bizimle iletişime geçmenizi rica ederiz. Fotoğraf paylaşmanızın ardından size en kısa sürede yeni ürün gönderimi yapılır.",
+			},
+			{
+				id: "faq-8",
+				question: "Neden Skycrops ürünlerine güvenmeliyim?",
+				answer:
+					"Skycrops olarak tüm ürünlerimizi kontrollü, kapalı ve hijyenik koşullarda, pestisit kullanılmadan üretiyoruz. Üretimimiz, resmi olarak aldığımız İyi Tarım Uygulamaları Belgesi ile de tescillenmiş durumda.\n\nBu belge, gıda güvenliği, çevreye duyarlılık ve sürdürülebilirlik kriterlerine uygun üretim yaptığımızı kanıtlar. Yani sofranıza gelen her yeşillik, hem sağlıklı hem de güvenilir bir şekilde yetiştirilmiştir.",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Scroll to content handler
+	 */
+	const scrollToContent = useCallback(() => {
+		const contentSection = document.getElementById(mainContentId);
+		if (contentSection) {
+			const headerHeight = 64;
+			const elementPosition =
+				contentSection.getBoundingClientRect().top + window.pageYOffset;
+			const offsetPosition = elementPosition - headerHeight;
+
+			window.scrollTo({
+				top: offsetPosition,
+				behavior: "smooth",
+			});
+		}
+	}, [mainContentId]);
+
+	/**
+	 * Navigate to product detail page
+	 */
+	const handleSubscribeClick = useCallback(() => {
+		router.push("/abonelik/taze-yesillikler-paketi");
+	}, [router]);
+
+	// Fetch product data from API
+	const fetchProduct = useCallback(async () => {
+		try {
+			setLoading(true);
+			setError(null);
+
+			const response = await apiClient.getProductBySlug(
+				"taze-yesillikler-paketi",
+				{
+					populate: "*",
+				},
+			);
+
+			if (response.error) {
+				setError(response.error.message);
+				return;
+			}
+
+			if (response.data) {
+				const productData = response.data as Product;
+				setProduct(productData);
+
+				// Set product image
+				const prodData = response.data as any;
+				let imageUrl = null;
+
+				if (
+					prodData.images &&
+					Array.isArray(prodData.images) &&
+					prodData.images.length > 0
+				) {
+					imageUrl = prodData.images[0].url;
+				} else if (prodData.image?.url) {
+					imageUrl = prodData.image.url;
+				}
+
+				if (imageUrl) {
+					const fullImageUrl = imageUrl.startsWith("http")
+						? imageUrl
+						: `${API_BASE_URL}${imageUrl}`;
+					setSebzePaketiImage(fullImageUrl);
+				}
+
+				// Set default subscription interval if subscription is enabled
+				if (
+					productData.subscription_enabled &&
+					productData.subscription_intervals.length > 0
+				) {
+					setSelectedInterval(productData.subscription_intervals[0]);
+				}
+
+				// Default to subscription for this product
+				if (productData.is_active) {
+					if (
+						productData.subscription_enabled &&
+						productData.subscription_intervals.length > 0
+					) {
+						setPurchaseType("subscription");
+					} else {
+						setPurchaseType("one_time");
+					}
+				}
+			}
+		} catch (err) {
+			setError("Ürün bilgileri yüklenirken bir hata oluştu");
+			console.error("Error fetching product:", err);
+		} finally {
+			setLoading(false);
+		}
+	}, []);
+
+	// Fetch delivery day stock
+	const fetchDeliveryDayStock = useCallback(async () => {
+		try {
+			const response = await apiClient.getDeliveryDayStock();
+			if (response.data) {
+				setDeliveryDayStock(response.data);
+			}
+		} catch (err) {
+			console.error("Error fetching delivery day stock:", err);
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchProduct();
+		fetchDeliveryDayStock();
+	}, [fetchProduct, fetchDeliveryDayStock]);
+
+	// Reset quantity when delivery day changes to prevent stock issues
+	useEffect(() => {
+		const dayStock = deliveryDayStock[selectedDeliveryDay] ?? 0;
+		if (quantity > dayStock) {
+			setQuantity(Math.min(1, dayStock));
+		}
+	}, [selectedDeliveryDay, deliveryDayStock, quantity]);
+
+	// Get product images
+	const getProductImages = () => {
+		if (!product) return [];
+
+		const images: string[] = [];
+
+		// Add single image if exists
+		if (product.image) {
+			const imageUrl =
+				typeof product.image === "string"
+					? product.image
+					: product.image.url ||
+						product.image.formats?.large?.url ||
+						product.image.formats?.medium?.url ||
+						product.image.formats?.small?.url;
+
+			if (imageUrl) {
+				images.push(
+					imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`,
+				);
+			}
+		}
+
+		// Add multiple images if exists
+		if (product.images && Array.isArray(product.images)) {
+			product.images.forEach((img) => {
+				const imageUrl =
+					typeof img === "string"
+						? img
+						: img.url ||
+							img.formats?.large?.url ||
+							img.formats?.medium?.url ||
+							img.formats?.small?.url;
+
+				if (imageUrl) {
+					images.push(
+						imageUrl.startsWith("http")
+							? imageUrl
+							: `${API_BASE_URL}${imageUrl}`,
+					);
+				}
+			});
+		}
+
+		return images.length > 0 ? images : ["/placeholder.svg"];
+	};
+
+	// Format price
+	const formatPrice = (price: number, currency: string = "TRY") => {
+		return new Intl.NumberFormat("tr-TR", {
+			style: "currency",
+			currency: currency,
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 2,
+		}).format(price);
+	};
+
+	// Get current price based on selection
+	const getCurrentPrice = () => {
+		if (!product) return 0;
+
+		if (purchaseType === "subscription" && selectedInterval) {
+			return selectedInterval.price;
+		}
+
+		return product.sale_price || product.price;
+	};
+
+	// Get discount information
+	const getDiscountInfo = () => {
+		if (!product) return null;
+
+		if (purchaseType === "subscription" && selectedInterval) {
+			const originalPrice = product.price;
+			const discountedPrice = selectedInterval.price;
+			const discountAmount = originalPrice - discountedPrice;
+			const discountPercentage = (discountAmount / originalPrice) * 100;
+
+			return {
+				hasDiscount: discountAmount > 0,
+				originalPrice,
+				discountedPrice,
+				discountAmount,
+				discountPercentage: Math.round(discountPercentage),
+			};
+		}
+
+		if (product.sale_price && product.sale_price < product.price) {
+			const discountAmount = product.price - product.sale_price;
+			const discountPercentage = (discountAmount / product.price) * 100;
+
+			return {
+				hasDiscount: true,
+				originalPrice: product.price,
+				discountedPrice: product.sale_price,
+				discountAmount,
+				discountPercentage: Math.round(discountPercentage),
+			};
+		}
+
+		return {
+			hasDiscount: false,
+			originalPrice: product.price,
+			discountedPrice: product.price,
+			discountAmount: 0,
+			discountPercentage: 0,
+		};
+	};
+
+	// Error state
+	if (error) {
+		return (
+			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
+				<div className="text-center">
+					<div className="text-red-600 mb-4">
+						<X className="w-12 h-12 mx-auto" />
+					</div>
+					<h2 className="text-2xl font-medium text-gray-800 mb-2">
+						Bir Hata Oluştu
+					</h2>
+					<p className="text-gray-600 mb-6">{error}</p>
+					<Button
+						onClick={() => window.location.reload()}
+						className="bg-gray-600 hover:bg-gray-700"
+					>
+						Tekrar Dene
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
+	// Loading state for main content
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
+					<p className="text-gray-600">Ürün yükleniyor...</p>
+				</div>
+			</div>
+		);
+	}
+
+	// Error state if no product
+	if (!product) {
+		notFound();
+	}
+
+	const images = getProductImages();
+	const discountInfo = getDiscountInfo();
+
+	return (
+		<div className="min-h-screen bg-[#DF626B] relative">
+			<HeroHeader
+				slides={[
+					{
+						title: "",
+						subtitle: "",
+						buttonText: "",
+						buttonAction: () =>
+							router.push("/abonelik/taze-yesillikler-paketi"),
+						image: "/abonelik.png",
+					},
+				]}
+				onScrollToNext={scrollToContent}
+				singleImage={true}
+				showDots={false}
+				customHeight="65vh"
+			/>
+
+			{/* Main content */}
+			<main id={mainContentId} className="relative z-10 bg-blue-50">
+				{/* Hero Content Section */}
+				<Section className="py-20 bg-[#DF626B]">
+					<div className="mx-12">
+						{/* Main Hero Title */}
+						<div className="text-center mb-16">
+							<h1 className="text-5xl md:text-6xl font-light mb-6 tracking-wide text-gray-800 leading-tight">
+								Her Hafta Taptaze Yeşillikler
+								<span className="block text-gray-600 font-medium">
+									Kapınızda!
+								</span>
+							</h1>
+							<p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+								Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze,
+								en lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
+								kolay yolu.
+							</p>
+							<div className="mt-8">
+								<Button
+									onClick={() =>
+										router.push("/abonelik/taze-yesillikler-paketi")
+									}
+									className="px-10 py-4 text-lg"
+								>
+									Hemen Abone Ol
+								</Button>
+							</div>
+						</div>
+
+						{/* Content Grid */}
+						<div className="grid lg:grid-cols-2 gap-16 items-start">
+							{/* Left Column - Key Features */}
+							<div className="space-y-12">
+								{features.map((feature) => (
+									<FeatureCard
+										key={feature.title}
+										emoji={feature.emoji}
+										title={feature.title}
+										description={feature.description}
+									/>
+								))}
+							</div>
+
+							{/* Right Column - Weekly Programs */}
+							<div className="lg:sticky lg:top-8">
+								<WeeklyProgram
+									onButtonClick={() =>
+										router.push("/abonelik/taze-yesillikler-paketi")
+									}
+								/>
+							</div>
+						</div>
+					</div>
+				</Section>
+
+				{/* Subscription Package */}
+				<Section className="py-20 bg-[#DF626B]">
+					<div className="mx-12">
+						{/* Main Product Layout */}
+						<div className="grid lg:grid-cols-2 gap-16 items-start">
+							{/* Left Column - Product Image */}
+							<div className="relative">
+								<div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden">
+									<Image
+										src={images[selectedImage] || "/bundle4.png"}
+										alt="Taze Yeşillikler Paketi"
+										fill
+										className="object-cover"
+										onError={(e) => {
+											const target = e.target as HTMLImageElement;
+											target.src = "/bundle4.png";
+										}}
+									/>
+								</div>
+
+								{/* Thumbnail Images */}
+								<div className="flex space-x-3 mt-4 overflow-x-auto">
+									{images.map((img, index) => (
+										<button
+											key={img}
+											type="button"
+											onClick={() => setSelectedImage(index)}
+											className={`flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer ${
+												selectedImage === index
+													? "border-gray-600"
+													: "border-gray-200 hover:border-yellow-400"
+											}`}
+										>
+											<div className="relative w-full h-full">
+												<Image
+													src={img}
+													alt={`Product view ${index + 1}`}
+													fill
+													className="object-cover"
+													onError={(e) => {
+														const target = e.target as HTMLImageElement;
+														target.src = "/bundle4.png";
+													}}
+												/>
+											</div>
+										</button>
+									))}
+								</div>
+							</div>
+
+							{/* Right Column - Product Info */}
+							<div className="space-y-6">
+								{loading ? (
+									<div className="animate-pulse space-y-4">
+										<div className="h-8 bg-gray-200 rounded w-3/4"></div>
+										<div className="h-4 bg-gray-200 rounded w-full"></div>
+										<div className="h-4 bg-gray-200 rounded w-5/6"></div>
+									</div>
+								) : (
+									<div>
+										<h1 className="text-3xl md:text-4xl font-light mb-2 text-gray-800">
+											{product?.name || "Taze Yeşillikler Paketi"}
+										</h1>
+										<p className="text-gray-600 text-lg italic leading-relaxed">
+											{product?.description ||
+												product?.short_description ||
+												"Dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın. Her hafta 8 adet özenle seçilmiş taptaze yeşillik kapınıza gelir."}
+										</p>
+									</div>
+								)}
+
+								{/* Purchase Options */}
+								<div className="space-y-3">
+									{/* Subscription Option */}
+									<div
+										className={`p-4 rounded-lg border-2 transition-colors ${
+											purchaseType === "subscription"
+												? "border-gray-600 bg-gray-50"
+												: "border-gray-200"
+										}`}
+									>
+										<button
+											onClick={() => setPurchaseType("subscription")}
+											className="w-full text-left"
+											type="button"
+										>
+											<div className="flex items-center justify-between mb-3">
+												<div>
+													<div className="font-medium text-gray-800">
+														Abonelik
+													</div>
+													<div className="text-sm text-gray-600">
+														{selectedInterval
+															? `Düzenli teslimat ile %${Math.round(selectedInterval.discount)} tasarruf et`
+															: "Düzenli teslimat ile %35 tasarruf et"}
+													</div>
+												</div>
+												<div className="text-right">
+													<div className="text-lg font-medium text-red-600">
+														{selectedInterval
+															? `${product?.currency === "TRY" ? "₺" : ""}${selectedInterval.price.toFixed(2)}`
+															: `${product?.currency === "TRY" ? "₺" : ""}${product?.sale_price || product?.price || 350}`}
+													</div>
+													<div className="text-sm text-gray-500 line-through">
+														{product?.price
+															? `${product.currency === "TRY" ? "₺" : ""}${product.price.toFixed(2)}`
+															: "₺400.00"}
+													</div>
+												</div>
+											</div>
+										</button>
+
+										{/* Subscription Details - Only show when selected */}
+										{purchaseType === "subscription" && (
+											<div className="space-y-3 mt-3 pt-3 border-t border-gray-200">
+												{/* Subscription Benefits */}
+												<div className="space-y-2 text-sm text-gray-700">
+													<div>
+														+ %35 indirim ilk üç siparişte, sonrasında %20
+														indirim
+													</div>
+													<div>+ Ücretsiz teslimat</div>
+													<div>
+														+ İstediğiniz zaman duraklatın veya iptal edin
+													</div>
+													<div>+ Abonelik yaptığınızda özel hediyeler</div>
+												</div>
+
+												{/* Delivery Frequency Selector */}
+												<div>
+													<select
+														value={
+															selectedInterval?.key ||
+															product?.subscription_intervals?.[0]?.key ||
+															"weekly"
+														}
+														onChange={(e) => {
+															const interval =
+																product?.subscription_intervals?.find(
+																	(i) => i.key === e.target.value,
+																);
+															if (interval) {
+																setSelectedInterval(interval);
+															}
+														}}
+														className="w-full p-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-gray-200 focus:border-gray-400"
+													>
+														{product?.subscription_intervals?.map(
+															(interval) => (
+																<option key={interval.key} value={interval.key}>
+																	{interval.name} -{" "}
+																	{product.currency === "TRY" ? "₺" : ""}
+																	{interval.price.toFixed(2)}
+																</option>
+															),
+														) || (
+															<>
+																<option value="weekly">
+																	Haftada bir - ₺100.10
+																</option>
+																<option value="bi_weekly">
+																	2 haftada bir - ₺90.10
+																</option>
+																<option value="monthly">Aylık - ₺80.10</option>
+																<option value="quarterly">
+																	3 ayda bir - ₺70.10
+																</option>
+															</>
+														)}
+													</select>
+												</div>
+
+												{/* Quantity Selector */}
+												<div className="flex items-center justify-between">
+													<span className="text-sm font-medium text-gray-700">
+														Adet:
+													</span>
+													<div className="flex items-center space-x-3">
+														<button
+															type="button"
+															onClick={() =>
+																setQuantity(Math.max(1, quantity - 1))
+															}
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
+															disabled={quantity <= 1}
+														>
+															<Minus className="w-3 h-3" />
+														</button>
+														<span className="w-12 text-center font-medium">
+															{quantity}
+														</span>
+														<button
+															type="button"
+															onClick={() => {
+																const dayStock =
+																	deliveryDayStock[selectedDeliveryDay] ?? 0;
+																setQuantity(Math.min(dayStock, quantity + 1));
+															}}
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
+															disabled={
+																quantity >=
+																(deliveryDayStock[selectedDeliveryDay] ?? 0)
+															}
+														>
+															<Plus className="w-3 h-3" />
+														</button>
+													</div>
+												</div>
+
+												{/* Delivery Day Selector */}
+												<div>
+													<div className="flex items-center justify-between mb-2">
+														<span className="text-sm font-medium text-gray-700">
+															Teslimat Günü:
+														</span>
+														<span className="text-xs text-gray-500">
+															{
+																deliveryDays.find(
+																	(d) => d.id === selectedDeliveryDay,
+																)?.name
+															}
+														</span>
+													</div>
+													<div className="grid grid-cols-7 gap-1">
+														{deliveryDays.map((day) => {
+															const stock = deliveryDayStock[day.id] ?? 0;
+															const remainingStock =
+																day.id === selectedDeliveryDay
+																	? Math.max(0, stock - quantity)
+																	: stock;
+															const isInactive =
+																day.alwaysInactive || stock === 0;
+															const isSelected = selectedDeliveryDay === day.id;
+
+															return (
+																<div key={day.id} className="flex flex-col">
+																	<button
+																		type="button"
+																		onClick={() =>
+																			!isInactive &&
+																			setSelectedDeliveryDay(day.id)
+																		}
+																		disabled={isInactive}
+																		className={`p-2 text-xs rounded border transition-colors ${
+																			isInactive
+																				? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
+																				: isSelected
+																					? "border-gray-600 bg-gray-600 text-white"
+																					: "border-gray-200 hover:border-gray-300 text-gray-700"
+																		}`}
+																	>
+																		<span
+																			className={
+																				isInactive ? "line-through" : ""
+																			}
+																		>
+																			{day.shortName}
+																		</span>
+																	</button>
+																	{day.alwaysInactive && day.id === 1 ? (
+																		<span className="text-[10px] text-center mt-0.5 text-gray-600 font-medium">
+																			Kalan Stok:
+																		</span>
+																	) : !day.alwaysInactive ? (
+																		<span
+																			className={`text-[10px] text-center mt-0.5 ${
+																				remainingStock === 0
+																					? "text-red-500 font-medium"
+																					: "text-gray-500"
+																			}`}
+																		>
+																			{remainingStock > 0
+																				? `${remainingStock}`
+																				: "Yok"}
+																		</span>
+																	) : null}
+																</div>
+															);
+														})}
+													</div>
+												</div>
+
+												{/* Summary */}
+												<div className="bg-gray-50 p-3 rounded text-sm">
+													<p className="text-gray-700">
+														<strong>{quantity} adet</strong> ürün,{" "}
+														<strong>
+															{selectedInterval?.name?.toLowerCase() ||
+																"haftalık"}
+														</strong>{" "}
+														<strong>
+															{
+																deliveryDays.find(
+																	(d) => d.id === selectedDeliveryDay,
+																)?.name
+															}
+														</strong>{" "}
+														günleri teslimat edilecek.
+													</p>
+												</div>
+											</div>
+										)}
+									</div>
+
+									{/* Buy Once Option */}
+									<div
+										className={`p-4 rounded-lg border-2 transition-colors ${
+											purchaseType === "one_time"
+												? "border-gray-600 bg-gray-50"
+												: "border-gray-200"
+										}`}
+									>
+										<button
+											onClick={() => setPurchaseType("one_time")}
+											className="w-full text-left"
+											type="button"
+										>
+											<div className="flex items-center justify-between mb-3">
+												<div>
+													<div className="font-medium text-gray-800">
+														Tek Seferlik Satın Al
+													</div>
+													<div className="text-sm text-gray-600">
+														Şimdi satın al, istediğin zaman tekrar sipariş ver
+													</div>
+												</div>
+												<div className="text-right">
+													<div className="text-lg font-medium text-red-600">
+														{product?.sale_price
+															? `${product.currency === "TRY" ? "₺" : ""}${product.sale_price.toFixed(2)}`
+															: product?.price
+																? `${product.currency === "TRY" ? "₺" : ""}${product.price.toFixed(2)}`
+																: "₺350.00"}
+													</div>
+													<div className="text-sm text-gray-500 line-through">
+														{product?.sale_price &&
+														product?.price &&
+														product.sale_price < product.price
+															? `${product.currency === "TRY" ? "₺" : ""}${product.price.toFixed(2)}`
+															: ""}
+													</div>
+												</div>
+											</div>
+										</button>
+
+										{/* One-time Purchase Details - Only show when selected */}
+										{purchaseType === "one_time" && (
+											<div className="space-y-3 mt-3 pt-3 border-t border-gray-200">
+												{/* Quantity Selector */}
+												<div className="flex items-center justify-between">
+													<span className="text-sm font-medium text-gray-700">
+														Adet:
+													</span>
+													<div className="flex items-center space-x-3">
+														<button
+															type="button"
+															onClick={() =>
+																setQuantity(Math.max(1, quantity - 1))
+															}
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
+															disabled={quantity <= 1}
+														>
+															<Minus className="w-3 h-3" />
+														</button>
+														<span className="w-12 text-center font-medium">
+															{quantity}
+														</span>
+														<button
+															type="button"
+															onClick={() => {
+																const dayStock =
+																	deliveryDayStock[selectedDeliveryDay] ?? 0;
+																setQuantity(Math.min(dayStock, quantity + 1));
+															}}
+															className="w-8 h-8 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-yellow-50 transition-colors"
+															disabled={
+																quantity >=
+																(deliveryDayStock[selectedDeliveryDay] ?? 0)
+															}
+														>
+															<Plus className="w-3 h-3" />
+														</button>
+													</div>
+												</div>
+
+												{/* Delivery Day Selector */}
+												<div>
+													<div className="flex items-center justify-between mb-2">
+														<span className="text-sm font-medium text-gray-700">
+															Teslimat Günü:
+														</span>
+														<span className="text-xs text-gray-500">
+															{
+																deliveryDays.find(
+																	(d) => d.id === selectedDeliveryDay,
+																)?.name
+															}
+														</span>
+													</div>
+													<div className="grid grid-cols-7 gap-1">
+														{deliveryDays.map((day) => {
+															const stock = deliveryDayStock[day.id] ?? 0;
+															const remainingStock =
+																day.id === selectedDeliveryDay
+																	? Math.max(0, stock - quantity)
+																	: stock;
+															const isInactive =
+																day.alwaysInactive || stock === 0;
+															const isSelected = selectedDeliveryDay === day.id;
+
+															return (
+																<div key={day.id} className="flex flex-col">
+																	<button
+																		type="button"
+																		onClick={() =>
+																			!isInactive &&
+																			setSelectedDeliveryDay(day.id)
+																		}
+																		disabled={isInactive}
+																		className={`p-2 text-xs rounded border transition-colors ${
+																			isInactive
+																				? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
+																				: isSelected
+																					? "border-gray-600 bg-gray-600 text-white"
+																					: "border-gray-200 hover:border-gray-300 text-gray-700"
+																		}`}
+																	>
+																		<span
+																			className={
+																				isInactive ? "line-through" : ""
+																			}
+																		>
+																			{day.shortName}
+																		</span>
+																	</button>
+																	{!day.alwaysInactive && (
+																		<span
+																			className={`text-[10px] text-center mt-0.5 ${
+																				remainingStock === 0
+																					? "text-red-500 font-medium"
+																					: "text-gray-500"
+																			}`}
+																		>
+																			{remainingStock > 0
+																				? `${remainingStock}`
+																				: "Yok"}
+																		</span>
+																	)}
+																</div>
+															);
+														})}
+													</div>
+												</div>
+
+												{/* Summary */}
+												<div className="bg-gray-50 p-3 rounded text-sm">
+													<p className="text-gray-700">
+														<strong>{quantity} adet</strong> ürün,{" "}
+														<strong>
+															{
+																deliveryDays.find(
+																	(d) => d.id === selectedDeliveryDay,
+																)?.name
+															}
+														</strong>{" "}
+														günü teslimat edilecek.
+													</p>
+												</div>
+											</div>
+										)}
+									</div>
+								</div>
+
+								{/* Add to Cart Button */}
+								<Button
+									onClick={() =>
+										router.push("/abonelik/taze-yesillikler-paketi")
+									}
+									className="w-full py-4 text-lg"
+								>
+									Sepete Ekle
+								</Button>
+
+								{/* Product Details Link */}
+								<div className="text-center">
+									<button
+										type="button"
+										className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors"
+									>
+										Ürün detaylarını gör
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Section>
+
+				{/* Benefits Section */}
+				<Section className="bg-[#DF626B]">
+					<SectionHeader
+						title="Neden Skycrops?"
+						subtitle="Dikey tarımın avantajlarını yaşayın"
+					/>
+					<Grid cols={4}>
+						{benefits.map((benefit, index) => (
+							<BenefitCard
+								key={benefit.title}
+								icon={benefit.icon}
+								title={benefit.title}
+								description={benefit.description}
+							/>
+						))}
+					</Grid>
+				</Section>
+
+				{/* FAQ Section */}
+				<Section className="bg-[#DF626B]">
+					<div className="max-w-4xl mx-auto">
+						<div className="text-center mb-12">
+							<h2 className="text-2xl font-medium mb-4 text-gray-700">
+								Sıkça Sorulan Sorular
+							</h2>
+							<p className="text-gray-600">Merak ettiklerinizin cevapları</p>
+						</div>
+
+						<BasicAccordion
+							items={faqItems.map((item) => ({
+								id: item.id,
+								title: item.question,
+								content: (
+									<div className="text-gray-600 leading-relaxed text-base whitespace-pre-line">
+										{item.answer}
+									</div>
+								),
+							}))}
+							allowMultiple={true}
+							defaultExpandedIds={[]}
+							className="bg-white shadow-sm border border-gray-100"
+						/>
+					</div>
+				</Section>
+
+				{/* Testimonials Section */}
+				<Section className="bg-[#DF626B]">
+					<SectionHeader
+						title="Müşteri Yorumları"
+						subtitle="Mutlu müşterilerimizin deneyimleri"
+					/>
+					<Grid cols={4}>
+						{testimonials.map((testimonial, index) => (
+							<TestimonialCard
+								key={testimonial.name}
+								name={testimonial.name}
+								comment={testimonial.comment}
+								rating={testimonial.rating}
+							/>
+						))}
+					</Grid>
+				</Section>
+
+				{/* CTA Section */}
+				<CTASection
+					title="Sürdürülebilir Tarıma Hemen Katılın!"
+					subtitle="Skycrops abonelik sistemiyle dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın. Çevre dostu üretim ile taze ürünler her hafta kapınızda!"
+					buttonText="Şimdi Abone Ol"
+					onButtonClick={() => router.push("/abonelik/taze-yesillikler-paketi")}
+				/>
+			</main>
+		</div>
+	);
+}

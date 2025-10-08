@@ -3,7 +3,38 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-async function fetchArticle(slug: string) {
+
+// ========================================
+// Types
+// ========================================
+
+/** Article data structure from Strapi */
+interface ArticleData {
+	title: string;
+	excerpt?: string;
+	content?: string;
+	publishedAt?: string;
+	readTime?: number;
+	cover?: {
+		url: string;
+	};
+}
+
+/** Page params structure */
+interface PageParams {
+	params: Promise<{ slug: string }>;
+}
+
+// ========================================
+// Server Functions
+// ========================================
+
+/**
+ * Fetches a single article by slug from Strapi
+ * @param slug - The article slug identifier
+ * @returns The article data or null if not found
+ */
+async function fetchArticle(slug: string): Promise<ArticleData | null> {
 	try {
 		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
 		const TOKEN = process.env.STRAPI_API_TOKEN;
@@ -36,11 +67,12 @@ async function fetchArticle(slug: string) {
 	}
 }
 
-export async function generateMetadata({
-	params: paramsPromise,
-}: {
-	params: Promise<{ slug: string }>;
-}) {
+/**
+ * Generates metadata for SEO and social sharing
+ * @param params - Page params containing the article slug
+ * @returns Metadata object for Next.js
+ */
+export async function generateMetadata({ params: paramsPromise }: PageParams) {
 	const { slug } = await paramsPromise;
 	try {
 		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -82,31 +114,67 @@ export async function generateMetadata({
 
 export const dynamic = "force-dynamic";
 
-export default async function BlogArticle({
-	params: paramsPromise,
-}: {
-	params: Promise<{ slug: string }>;
-}) {
+// ========================================
+// Helper Functions
+// ========================================
+
+/**
+ * Constructs the full cover image URL
+ * @param cover - Cover object from Strapi
+ * @param apiUrl - Base API URL
+ * @returns Full image URL or null
+ */
+function getCoverUrl(
+	cover: { url: string } | undefined,
+	apiUrl: string,
+): string | null {
+	if (!cover?.url) return null;
+	return cover.url.startsWith("http") ? cover.url : `${apiUrl}${cover.url}`;
+}
+
+/**
+ * Formats a date string to Turkish locale
+ * @param dateString - ISO date string
+ * @returns Formatted date string or undefined
+ */
+function formatDate(dateString: string | undefined): string | undefined {
+	if (!dateString) return undefined;
+	return new Date(dateString).toLocaleDateString("tr-TR");
+}
+
+/**
+ * Formats read time in minutes
+ * @param readTime - Read time in minutes
+ * @returns Formatted read time string or undefined
+ */
+function formatReadTime(readTime: number | undefined): string | undefined {
+	if (!readTime) return undefined;
+	return `${readTime} dk okuma`;
+}
+
+// ========================================
+// Main Component
+// ========================================
+
+/**
+ * Blog article detail page component
+ * Server-rendered page that displays a single blog article with metadata
+ * @param params - Page params containing the article slug
+ */
+export default async function BlogArticle({ params: paramsPromise }: PageParams) {
 	const params = await paramsPromise;
 	const data = await fetchArticle(params.slug);
 	if (!data) return notFound();
 
 	// Handle Strapi v5 data structure (fields are directly on data object)
-	const a = data || {};
 	const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-	const coverUrl = a?.cover?.url
-		? a.cover.url.startsWith("http")
-			? a.cover.url
-			: `${API_URL}${a.cover.url}`
-		: null;
-	const date = a.publishedAt
-		? new Date(a.publishedAt).toLocaleDateString("tr-TR")
-		: undefined;
-	const readTime = a.readTime ? `${a.readTime} dk okuma` : undefined;
+	const coverUrl = getCoverUrl(data.cover, API_URL);
+	const date = formatDate(data.publishedAt);
+	const readTime = formatReadTime(data.readTime);
 
 	return (
 		<div className="min-h-screen bg-white relative">
-			<main className="py-6 px-4 sm:py-8 sm:px-6 lg:py-12 lg:px-8 relative z-10">
+			<main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
 				<div className="max-w-4xl mx-auto">
 					{/* Back to Blog */}
 					<div className="mb-6 sm:mb-8">
@@ -122,19 +190,20 @@ export default async function BlogArticle({
 
 					{/* Article Header */}
 					<div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm mb-6 sm:mb-8">
-						<div className="mb-4 sm:mb-6">
-							{coverUrl && (
+						{coverUrl && (
+							<div className="mb-4 sm:mb-6">
 								<div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden">
 									<Image
 										src={coverUrl}
-										alt={a.title}
+										alt={data.title}
 										fill
 										className="object-cover"
-										sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+										sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 896px"
+										priority
 									/>
 								</div>
-							)}
-						</div>
+							</div>
+						)}
 
 						<div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 xs:gap-4 mb-4 sm:mb-6 text-sm text-gray-600">
 							{date && (
@@ -152,22 +221,23 @@ export default async function BlogArticle({
 						</div>
 
 						<h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mb-4 sm:mb-6 text-gray-800 leading-tight">
-							{a.title}
+							{data.title}
 						</h1>
 
-						{a.excerpt && (
-							<p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8">
-								{a.excerpt}
+						{data.excerpt && (
+							<p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8">
+								{data.excerpt}
 							</p>
 						)}
 					</div>
 
 					{/* Article Content */}
 					<div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm">
-						{a.content && (
+						{data.content && (
 							<div
-								className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-gray-700 leading-relaxed prose-headings:text-gray-800 prose-p:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-em:text-gray-700"
-								dangerouslySetInnerHTML={{ __html: a.content }}
+								className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-gray-700 leading-relaxed prose-headings:text-gray-800 prose-p:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-em:text-gray-700 prose-img:rounded-lg prose-img:shadow-md"
+								// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is from trusted CMS source
+								dangerouslySetInnerHTML={{ __html: data.content }}
 							/>
 						)}
 					</div>

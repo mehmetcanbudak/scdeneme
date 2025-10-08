@@ -71,10 +71,9 @@ components/             # Reusable components
 
 contexts/               # React context providers
 ├── auth-context.tsx            # Authentication state management
-├── cart-context.tsx            # Shopping cart state  
+├── cart-context.tsx            # Shopping cart state
 ├── product-context.tsx         # Product data management
-├── subscription-context.tsx    # Subscription management
-└── page-background-context.tsx # Page background themes
+└── subscription-context.tsx    # Subscription management
 
 hooks/                  # Custom React hooks
 ├── use-mobile.ts       # Mobile breakpoint detection

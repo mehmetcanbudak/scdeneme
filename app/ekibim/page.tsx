@@ -1,14 +1,54 @@
 "use client";
 
+import React, { useCallback, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
+/**
+ * Team member data interface
+ */
+interface TeamMember {
+	name: string;
+	role: string;
+	image: string;
+	description: string;
+}
+
+/**
+ * TeamMemberCard component - Displays a team member with their info
+ */
+const TeamMemberCard = React.memo<{ member: TeamMember }>(({ member }) => {
+	return (
+		<div className="text-center">
+			<div className="relative mb-6 overflow-hidden rounded-lg w-full h-48 mx-auto">
+				<Image
+					src={member.image || "/placeholder.svg"}
+					alt={member.name}
+					width={300}
+					height={192}
+					className="object-cover"
+				/>
+			</div>
+			<h3 className="text-xl font-medium mb-2">{member.name}</h3>
+			<p className="text-gray-600 font-medium mb-4">{member.role}</p>
+			<p className="text-gray-600 text-sm">{member.description}</p>
+		</div>
+	);
+});
+TeamMemberCard.displayName = "TeamMemberCard";
+
+/**
+ * Ekibim page component - Team page
+ */
 export default function Ekibim() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
-	const scrollToContent = () => {
+	/**
+	 * Scrolls smoothly to the main content section
+	 */
+	const scrollToContent = useCallback(() => {
 		const contentSection = document.querySelector("#main-content");
 		if (contentSection) {
 			const headerHeight = 64;
@@ -21,7 +61,35 @@ export default function Ekibim() {
 				behavior: "smooth",
 			});
 		}
-	};
+	}, []);
+
+	/**
+	 * Team members data array
+	 */
+	const teamMembers = useMemo<TeamMember[]>(
+		() => [
+			{
+				name: "Ahmet Yılmaz",
+				role: "Baş Agronom",
+				image: "/fresh-vegetables-and-greens-in-modern-greenhouse.png",
+				description: "15 yıllık deneyimi ile organik tarım konusunda uzman",
+			},
+			{
+				name: "Fatma Demir",
+				role: "Sera Yöneticisi",
+				image: "/organic-farming-greenhouse-vegetables.png",
+				description:
+					"Modern sera teknolojileri ve sürdürülebilir üretim uzmanı",
+			},
+			{
+				name: "Mehmet Kaya",
+				role: "Kalite Kontrol",
+				image: "/fresh-leafy-greens-and-herbs-in-baskets.png",
+				description: "Ürün kalitesi ve güvenliği konusunda sertifikalı uzman",
+			},
+		],
+		[]
+	);
 
 	return (
 		<div className="min-h-screen bg-white relative">
@@ -63,8 +131,8 @@ export default function Ekibim() {
 			</div>
 
 			{/* Main content with id and bg-white */}
-			<main id="main-content" className="py-12 px-6 relative z-10 bg-white">
-				<div className="mx-12">
+			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
 						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
@@ -77,47 +145,9 @@ export default function Ekibim() {
 
 					{/* Team Members */}
 					<div className="bg-white p-8 rounded-lg shadow-sm">
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-							{[
-								{
-									name: "Ahmet Yılmaz",
-									role: "Baş Agronom",
-									image:
-										"/fresh-vegetables-and-greens-in-modern-greenhouse.png",
-									description:
-										"15 yıllık deneyimi ile organik tarım konusunda uzman",
-								},
-								{
-									name: "Fatma Demir",
-									role: "Sera Yöneticisi",
-									image: "/organic-farming-greenhouse-vegetables.png",
-									description:
-										"Modern sera teknolojileri ve sürdürülebilir üretim uzmanı",
-								},
-								{
-									name: "Mehmet Kaya",
-									role: "Kalite Kontrol",
-									image: "/fresh-leafy-greens-and-herbs-in-baskets.png",
-									description:
-										"Ürün kalitesi ve güvenliği konusunda sertifikalı uzman",
-								},
-							].map((member, index) => (
-								<div key={index} className="text-center">
-									<div className="relative mb-6 overflow-hidden rounded-lg w-full h-48 mx-auto">
-										<Image
-											src={member.image || "/placeholder.svg"}
-											alt={member.name}
-											width={300}
-											height={192}
-											className="object-cover"
-										/>
-									</div>
-									<h3 className="text-xl font-medium mb-2">{member.name}</h3>
-									<p className="text-gray-600 font-medium mb-4">
-										{member.role}
-									</p>
-									<p className="text-gray-600 text-sm">{member.description}</p>
-								</div>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+							{teamMembers.map((member, index) => (
+								<TeamMemberCard key={index} member={member} />
 							))}
 						</div>
 					</div>

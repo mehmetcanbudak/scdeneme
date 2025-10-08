@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useCallback, useMemo } from "react";
 import {
 	CheckCircle,
 	ChevronDown,
@@ -10,11 +11,87 @@ import {
 } from "lucide-react";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
+/**
+ * Sustainable practice data interface
+ */
+interface SustainablePractice {
+	icon: React.ReactNode;
+	title: string;
+	description: string;
+	features: string[];
+}
+
+/**
+ * Production feature data interface
+ */
+interface ProductionFeature {
+	title: string;
+	description: string;
+	icon: React.ReactNode;
+}
+
+/**
+ * PracticeCard component - Displays a sustainable practice
+ */
+const PracticeCard = React.memo<{ practice: SustainablePractice }>(
+	({ practice }) => {
+		return (
+			<div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+				<div className="flex items-start space-x-4">
+					<div className="flex-shrink-0">{practice.icon}</div>
+					<div>
+						<h3 className="text-xl font-medium mb-3 text-gray-700">
+							{practice.title}
+						</h3>
+						<p className="text-gray-600 mb-4 leading-relaxed">
+							{practice.description}
+						</p>
+						<ul className="space-y-2">
+							{practice.features.map((feature, idx) => (
+								<li
+									key={idx}
+									className="flex items-center text-sm text-gray-600"
+								>
+									<span className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+									{feature}
+								</li>
+							))}
+						</ul>
+					</div>
+				</div>
+			</div>
+		);
+	}
+);
+PracticeCard.displayName = "PracticeCard";
+
+/**
+ * FeatureItem component - Displays a production feature
+ */
+const FeatureItem = React.memo<{ feature: ProductionFeature }>(({ feature }) => {
+	return (
+		<div className="flex items-start space-x-3">
+			<div className="flex-shrink-0 mt-1">{feature.icon}</div>
+			<div>
+				<h4 className="font-medium text-gray-700 mb-1">{feature.title}</h4>
+				<p className="text-sm text-gray-600">{feature.description}</p>
+			</div>
+		</div>
+	);
+});
+FeatureItem.displayName = "FeatureItem";
+
+/**
+ * Uretim page component - Production facilities page
+ */
 export default function Uretim() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
-	const scrollToContent = () => {
+	/**
+	 * Scrolls smoothly to the main content section
+	 */
+	const scrollToContent = useCallback(() => {
 		const contentSection = document.querySelector("#main-content");
 		if (contentSection) {
 			const headerHeight = 64;
@@ -27,73 +104,85 @@ export default function Uretim() {
 				behavior: "smooth",
 			});
 		}
-	};
+	}, []);
 
-	const sustainablePractices = [
-		{
-			icon: <Leaf className="w-8 h-8 text-green-600" />,
-			title: "Biyolojik Mücadele",
-			description:
-				"Zararlı böcekleri doğal yollarla kontrol altına alarak, pestisit kullanımını tamamen ortadan kaldırıyoruz.",
-			features: [
-				"Faydalı böcekler",
-				"Doğal düşmanlar",
-				"Biyolojik preparatlar",
-			],
-		},
-		{
-			icon: <Shield className="w-8 h-8 text-yellow-600" />,
-			title: "İyi Tarım Uygulamaları",
-			description:
-				"Uluslararası standartlarda üretim yaparak, güvenli ve kaliteli gıda üretimi sağlıyoruz.",
-			features: [
-				"GAP sertifikası",
-				"Kalite kontrol",
-				"Sürdürülebilir yöntemler",
-			],
-		},
-		{
-			icon: <Droplets className="w-8 h-8 text-green-600" />,
-			title: "Pestisitsiz Üretim",
-			description:
-				"Hiçbir kimyasal pestisit kullanmadan, tamamen doğal yöntemlerle üretim yapıyoruz.",
-			features: ["Organik sertifika", "Doğal koruma", "Güvenli ürünler"],
-		},
-		{
-			icon: <Zap className="w-8 h-8 text-green-600" />,
-			title: "Modern Teknoloji",
-			description:
-				"Hidroponik sistemler ve akıllı sera teknolojileri ile verimli üretim gerçekleştiriyoruz.",
-			features: ["Hidroponik sistem", "Akıllı sera", "Otomatik sulama"],
-		},
-	];
+	/**
+	 * Sustainable practices data array
+	 */
+	const sustainablePractices = useMemo<SustainablePractice[]>(
+		() => [
+			{
+				icon: <Leaf className="w-8 h-8 text-green-600" />,
+				title: "Biyolojik Mücadele",
+				description:
+					"Zararlı böcekleri doğal yollarla kontrol altına alarak, pestisit kullanımını tamamen ortadan kaldırıyoruz.",
+				features: [
+					"Faydalı böcekler",
+					"Doğal düşmanlar",
+					"Biyolojik preparatlar",
+				],
+			},
+			{
+				icon: <Shield className="w-8 h-8 text-yellow-600" />,
+				title: "İyi Tarım Uygulamaları",
+				description:
+					"Uluslararası standartlarda üretim yaparak, güvenli ve kaliteli gıda üretimi sağlıyoruz.",
+				features: [
+					"GAP sertifikası",
+					"Kalite kontrol",
+					"Sürdürülebilir yöntemler",
+				],
+			},
+			{
+				icon: <Droplets className="w-8 h-8 text-green-600" />,
+				title: "Pestisitsiz Üretim",
+				description:
+					"Hiçbir kimyasal pestisit kullanmadan, tamamen doğal yöntemlerle üretim yapıyoruz.",
+				features: ["Organik sertifika", "Doğal koruma", "Güvenli ürünler"],
+			},
+			{
+				icon: <Zap className="w-8 h-8 text-green-600" />,
+				title: "Modern Teknoloji",
+				description:
+					"Hidroponik sistemler ve akıllı sera teknolojileri ile verimli üretim gerçekleştiriyoruz.",
+				features: ["Hidroponik sistem", "Akıllı sera", "Otomatik sulama"],
+			},
+		],
+		[]
+	);
 
-	const productionFeatures = [
-		{
-			title: "Organik Sertifikalar",
-			description:
-				"Tüm üretim süreçlerimiz uluslararası organik tarım standartlarına uygun olarak sertifikalandırılmıştır.",
-			icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-		},
-		{
-			title: "Laboratuvar Testleri",
-			description:
-				"Her hasat öncesi ve sonrası detaylı laboratuvar analizleri ile ürün kalitesi garanti altına alınmaktadır.",
-			icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-		},
-		{
-			title: "Çevre Dostu Ambalaj",
-			description:
-				"Sürdürülebilir ve geri dönüştürülebilir ambalajlama çözümleri kullanılmaktadır.",
-			icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-		},
-		{
-			title: "Sıfır Atık Politikası",
-			description:
-				"Üretim süreçlerinde oluşan atıklar kompost yapılarak tekrar tarımda kullanılmaktadır.",
-			icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-		},
-	];
+	/**
+	 * Production features data array
+	 */
+	const productionFeatures = useMemo<ProductionFeature[]>(
+		() => [
+			{
+				title: "Organik Sertifikalar",
+				description:
+					"Tüm üretim süreçlerimiz uluslararası organik tarım standartlarına uygun olarak sertifikalandırılmıştır.",
+				icon: <CheckCircle className="w-6 h-6 text-green-600" />,
+			},
+			{
+				title: "Laboratuvar Testleri",
+				description:
+					"Her hasat öncesi ve sonrası detaylı laboratuvar analizleri ile ürün kalitesi garanti altına alınmaktadır.",
+				icon: <CheckCircle className="w-6 h-6 text-green-600" />,
+			},
+			{
+				title: "Çevre Dostu Ambalaj",
+				description:
+					"Sürdürülebilir ve geri dönüştürülebilir ambalajlama çözümleri kullanılmaktadır.",
+				icon: <CheckCircle className="w-6 h-6 text-green-600" />,
+			},
+			{
+				title: "Sıfır Atık Politikası",
+				description:
+					"Üretim süreçlerinde oluşan atıklar kompost yapılarak tekrar tarımda kullanılmaktadır.",
+				icon: <CheckCircle className="w-6 h-6 text-green-600" />,
+			},
+		],
+		[]
+	);
 
 	return (
 		<div className="min-h-screen bg-white relative">
@@ -138,8 +227,8 @@ export default function Uretim() {
 				</div>
 			</div>
 
-			<main id="main-content" className="py-12 px-6 relative z-10 bg-white">
-				<div className="mx-12">
+			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
 						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
@@ -152,35 +241,9 @@ export default function Uretim() {
 					</div>
 
 					{/* Sustainable Practices Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12">
 						{sustainablePractices.map((practice, index) => (
-							<div
-								key={index}
-								className="bg-white p-8 rounded-lg shadow-sm border border-gray-100"
-							>
-								<div className="flex items-start space-x-4">
-									<div className="flex-shrink-0">{practice.icon}</div>
-									<div>
-										<h3 className="text-xl font-medium mb-3 text-gray-700">
-											{practice.title}
-										</h3>
-										<p className="text-gray-600 mb-4 leading-relaxed">
-											{practice.description}
-										</p>
-										<ul className="space-y-2">
-											{practice.features.map((feature, idx) => (
-												<li
-													key={idx}
-													className="flex items-center text-sm text-gray-600"
-												>
-													<span className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-													{feature}
-												</li>
-											))}
-										</ul>
-									</div>
-								</div>
-							</div>
+							<PracticeCard key={index} practice={practice} />
 						))}
 					</div>
 
@@ -213,17 +276,7 @@ export default function Uretim() {
 								</h3>
 								<div className="space-y-4">
 									{productionFeatures.map((feature, index) => (
-										<div key={index} className="flex items-start space-x-3">
-											<div className="flex-shrink-0 mt-1">{feature.icon}</div>
-											<div>
-												<h4 className="font-medium text-gray-700 mb-1">
-													{feature.title}
-												</h4>
-												<p className="text-sm text-gray-600">
-													{feature.description}
-												</p>
-											</div>
-										</div>
+										<FeatureItem key={index} feature={feature} />
 									))}
 								</div>
 							</div>

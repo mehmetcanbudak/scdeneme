@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft, CreditCard } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { memo, useCallback } from "react";
 
+/**
+ * Main subscriptions page component with protected route
+ * @returns {JSX.Element} Subscriptions page with authentication protection
+ */
 export default function SubscriptionsPage() {
 	return (
 		<ProtectedRoute>
@@ -20,16 +25,34 @@ export default function SubscriptionsPage() {
 	);
 }
 
-function SubscriptionsContent() {
+/**
+ * Subscriptions content component displaying user's active subscriptions
+ * @returns {JSX.Element} Subscriptions content UI
+ */
+const SubscriptionsContent = memo(() => {
 	const router = useRouter();
 
+	/**
+	 * Navigates back to home page
+	 */
+	const handleNavigateHome = useCallback(() => {
+		router.push("/");
+	}, [router]);
+
+	/**
+	 * Navigates to subscription packages page
+	 */
+	const handleExploreSubscriptions = useCallback(() => {
+		router.push("/abonelik");
+	}, [router]);
+
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-32 pb-20 px-4">
+		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6">
 			<div className="max-w-4xl mx-auto">
 				<Button
 					variant="ghost"
 					className="mb-6 gap-2"
-					onClick={() => router.push("/")}
+					onClick={handleNavigateHome}
 				>
 					<ArrowLeft className="w-4 h-4" />
 					Ana Sayfaya Dön
@@ -42,7 +65,9 @@ function SubscriptionsContent() {
 								<CreditCard className="w-6 h-6 text-purple-600" />
 							</div>
 							<div>
-								<CardTitle className="text-2xl">Aboneliklerim</CardTitle>
+								<CardTitle className="text-xl sm:text-2xl">
+									Aboneliklerim
+								</CardTitle>
 								<CardDescription>
 									Aktif aboneliklerinizi yönetin
 								</CardDescription>
@@ -58,7 +83,7 @@ function SubscriptionsContent() {
 							<p className="text-gray-600 mb-6">
 								Düzenli teslimat için abonelik paketlerimize göz atın
 							</p>
-							<Button onClick={() => router.push("/abonelik")}>
+							<Button onClick={handleExploreSubscriptions}>
 								Abonelik Paketlerini İncele
 							</Button>
 						</div>
@@ -67,4 +92,6 @@ function SubscriptionsContent() {
 			</div>
 		</div>
 	);
-}
+});
+
+SubscriptionsContent.displayName = "SubscriptionsContent";

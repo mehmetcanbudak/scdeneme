@@ -1,4 +1,3 @@
-import React, { RefObject, useCallback, useEffect, useRef } from "react";
 import {
 	motion,
 	SpringOptions,
@@ -9,6 +8,7 @@ import {
 	useTransform,
 	useVelocity,
 } from "motion/react";
+import React, { RefObject, useCallback, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 

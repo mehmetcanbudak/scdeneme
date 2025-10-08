@@ -1,0 +1,103 @@
+import type React from "react";
+import { memo } from "react";
+
+/**
+ * Props for the FeaturesSection component
+ */
+interface FeaturesSectionProps {
+	className?: string;
+}
+
+/**
+ * Features section component displaying company highlights
+ * Shows four key features of the company in a grid layout
+ *
+ * @param {FeaturesSectionProps} props - Component props
+ * @returns {React.ReactElement} The features section component
+ */
+const FeaturesSection: React.FC<FeaturesSectionProps> = memo(({ className = "" }) => {
+	return (
+		<section
+			id="biz-ne-yapiyoruz-section"
+			className={`py-16 md:py-20 lg:py-24 bg-[#E7EBDE] relative z-10 overflow-x-hidden ${className}`}
+		>
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				<div className="text-center mb-12 md:mb-16">
+					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 text-gray-800">
+						Biz Ne Yapıyoruz
+					</h2>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
+						<div className="text-center">
+							<div className="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
+								<img
+									src="/Frame 169.svg"
+									alt="Skycrops Icon"
+									className="w-24 h-24 object-contain"
+								/>
+							</div>
+							<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								Biz Skycrops
+							</h3>
+							<p className="text-base text-gray-600 leading-relaxed">
+								Modern dikey tarım teknolojisiyle geleceğin tarımını
+								şekillendiriyoruz
+							</p>
+						</div>
+						<div className="text-center">
+							<div className="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
+								<img
+									src="/Frame 169.svg"
+									alt="Skycrops Icon"
+									className="w-24 h-24 object-contain"
+								/>
+							</div>
+							<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								Kapalı Alanda Dikey Tarım
+							</h3>
+							<p className="text-base text-gray-600 leading-relaxed">
+								Kontrollü ortamda sürdürülebilir ve verimli üretim
+								gerçekleştiriyoruz
+							</p>
+						</div>
+						<div className="text-center">
+							<div className="w-24 h-24 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
+								<img
+									src="/Frame 169.svg"
+									alt="Skycrops Icon"
+									className="w-24 h-24 object-contain"
+								/>
+							</div>
+							<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								Pestisitsiz Hormonsuz
+							</h3>
+							<p className="text-base text-gray-600 leading-relaxed">
+								Kimyevi müdahale olmadan doğal yöntemlerle sağlıklı ürünler
+								yetiştiriyoruz
+							</p>
+						</div>
+						<div className="text-center">
+							<div className="w-24 h-24 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center">
+								<img
+									src="/Frame 169.svg"
+									alt="Skycrops Icon"
+									className="w-24 h-24 object-contain"
+								/>
+							</div>
+							<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								Taptaze Yeşillikleri Ulaştırıyoruz
+							</h3>
+							<p className="text-base text-gray-600 leading-relaxed">
+								Hasattan dakikalar sonra kapınıza kadar taze ürünlerimizi
+								getiriyoruz
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+});
+
+FeaturesSection.displayName = "FeaturesSection";
+
+export default FeaturesSection;

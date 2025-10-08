@@ -4,9 +4,40 @@ import OTPLoginForm from "@/components/auth/otp-login-form";
 import { useAuth } from "@/contexts/auth-context";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { memo, useCallback, useEffect } from "react";
 
-export default function LoginPage() {
+/**
+ * Loading spinner component displayed during authentication checks
+ * @returns {JSX.Element} Loading state UI
+ */
+const LoadingState = memo(() => {
+	return (
+		<div className="min-h-screen relative flex items-center justify-center">
+			<div className="absolute inset-0">
+				<Image
+					src="/agricultural-figures-with-plants-and-sun.png"
+					alt="Skycrops Background"
+					fill
+					className="object-cover"
+				/>
+				<div className="absolute inset-0 bg-black/50" />
+			</div>
+			<div className="relative z-10 text-center text-white">
+				<div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+				<p className="text-white">Yükleniyor...</p>
+			</div>
+		</div>
+	);
+});
+
+LoadingState.displayName = "LoadingState";
+
+/**
+ * Login page component with OTP authentication
+ * Handles user authentication, redirects authenticated users to profile
+ * @returns {JSX.Element | null} Login page UI or null if redirecting
+ */
+function LoginPage() {
 	const { isAuthenticated, isLoading } = useAuth();
 	const router = useRouter();
 
@@ -19,37 +50,25 @@ export default function LoginPage() {
 		}
 	}, [isAuthenticated, isLoading, router]);
 
+	/**
+	 * Handles successful login completion
+	 * Redirect is handled by useEffect when isAuthenticated updates
+	 */
+	const handleLoginSuccess = useCallback(() => {
+		// Redirect will be handled automatically by the useEffect
+		// when isAuthenticated becomes true
+	}, []);
+
 	if (isLoading) {
-		return (
-			<div className="min-h-screen relative flex items-center justify-center">
-				<div className="absolute inset-0">
-					<Image
-						src="/agricultural-figures-with-plants-and-sun.png"
-						alt="Skycrops Background"
-						fill
-						className="object-cover"
-					/>
-					<div className="absolute inset-0 bg-black/50"></div>
-				</div>
-				<div className="relative z-10 text-center text-white">
-					<div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-					<p className="text-white">Yükleniyor...</p>
-				</div>
-			</div>
-		);
+		return <LoadingState />;
 	}
 
 	if (isAuthenticated) {
 		return null; // Will redirect
 	}
 
-	const handleLoginSuccess = () => {
-		// Redirect will be handled automatically by the useEffect
-		// when isAuthenticated becomes true
-	};
-
 	return (
-		<div className="min-h-screen relative flex items-center justify-center p-4">
+		<div className="min-h-screen relative flex items-center justify-center p-4 sm:p-6 md:p-8">
 			<div className="absolute inset-0">
 				<Image
 					src="/agricultural-figures-with-plants-and-sun.png"
@@ -57,7 +76,7 @@ export default function LoginPage() {
 					fill
 					className="object-cover"
 				/>
-				<div className="absolute inset-0 bg-black/50"></div>
+				<div className="absolute inset-0 bg-black/50" />
 			</div>
 			<div className="relative z-10 w-full max-w-md">
 				{/* Login Form */}
@@ -66,3 +85,5 @@ export default function LoginPage() {
 		</div>
 	);
 }
+
+export default memo(LoginPage);

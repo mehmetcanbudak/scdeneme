@@ -1,5 +1,3 @@
-import { Check, Star } from "lucide-react";
-import { memo, type ReactNode } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -7,6 +5,8 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Check, Star } from "lucide-react";
+import { memo, type ReactNode } from "react";
 
 interface SubscriptionPackageProps {
 	id: number;
@@ -232,7 +232,7 @@ export const CTASection = memo(function CTASection({
 	className = "",
 }: CTASectionProps) {
 	return (
-		<section className={`py-20 px-6 bg-gray-50 ${className}`}>
+		<section className={`py-20 px-6 bg-[#DF626B] ${className}`}>
 			<div className="max-w-4xl mx-auto text-center">
 				<div className="bg-white p-12 rounded-lg shadow-sm border border-gray-100">
 					<h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800">

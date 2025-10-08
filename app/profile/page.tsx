@@ -13,7 +13,124 @@ import { useAuth } from "@/contexts/auth-context";
 import { ArrowLeft, Mail, Phone, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { memo, useCallback } from "react";
 
+/**
+ * Props for ProfileHeader component
+ */
+interface ProfileHeaderProps {
+	user: {
+		picture?: string;
+		name?: string;
+		firstName?: string;
+	};
+	isGoogleUser: boolean;
+}
+
+/**
+ * User profile header with avatar and login method
+ * @param {ProfileHeaderProps} props - Component props
+ * @returns {JSX.Element} Profile header UI
+ */
+const ProfileHeader = memo(({ user, isGoogleUser }: ProfileHeaderProps) => {
+	return (
+		<CardHeader className="text-center pb-8">
+			{user.picture ? (
+				<div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 ring-4 ring-green-500/20">
+					<Image
+						src={user.picture}
+						alt={user.name || user.firstName || "User"}
+						width={96}
+						height={96}
+						className="w-full h-full object-cover"
+					/>
+				</div>
+			) : (
+				<div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+					<UserIcon className="w-12 h-12 text-green-600" />
+				</div>
+			)}
+			<CardTitle className="text-2xl mb-2">
+				{user.name || user.firstName || "Kullanıcı"}
+			</CardTitle>
+			<CardDescription>
+				{isGoogleUser ? "Google ile giriş yapıldı" : "Telefon ile giriş yapıldı"}
+			</CardDescription>
+		</CardHeader>
+	);
+});
+
+ProfileHeader.displayName = "ProfileHeader";
+
+/**
+ * Props for AccountInfoItem component
+ */
+interface AccountInfoItemProps {
+	icon: React.ReactNode;
+	label: string;
+	value: string;
+	iconBgColor: string;
+	iconColor: string;
+}
+
+/**
+ * Display a single account information item (email, phone, username)
+ * @param {AccountInfoItemProps} props - Component props
+ * @returns {JSX.Element} Account info item UI
+ */
+const AccountInfoItem = memo(
+	({ icon, label, value, iconBgColor, iconColor }: AccountInfoItemProps) => {
+		return (
+			<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+				<div
+					className={`w-10 h-10 ${iconBgColor} rounded-full flex items-center justify-center flex-shrink-0`}
+				>
+					<div className={iconColor}>{icon}</div>
+				</div>
+				<div className="flex-1">
+					<p className="text-sm text-gray-600 mb-1">{label}</p>
+					<p className="font-medium text-gray-900">{value}</p>
+				</div>
+			</div>
+		);
+	},
+);
+
+AccountInfoItem.displayName = "AccountInfoItem";
+
+/**
+ * Props for StatusCard component
+ */
+interface StatusCardProps {
+	label: string;
+	value: string;
+	isVerified: boolean;
+}
+
+/**
+ * Display a status card (phone verification, account status)
+ * @param {StatusCardProps} props - Component props
+ * @returns {JSX.Element} Status card UI
+ */
+const StatusCard = memo(({ label, value, isVerified }: StatusCardProps) => {
+	return (
+		<div className="p-4 bg-gray-50 rounded-lg text-center">
+			<p className="text-sm text-gray-600 mb-1">{label}</p>
+			<p
+				className={`font-semibold ${isVerified ? "text-green-600" : "text-orange-600"}`}
+			>
+				{value}
+			</p>
+		</div>
+	);
+});
+
+StatusCard.displayName = "StatusCard";
+
+/**
+ * Main profile page component
+ * @returns {JSX.Element} Profile page with protected route
+ */
 export default function ProfilePage() {
 	return (
 		<ProtectedRoute>
@@ -22,18 +139,42 @@ export default function ProfilePage() {
 	);
 }
 
-function ProfileContent() {
+/**
+ * Profile content component displaying user information and actions
+ * @returns {JSX.Element | null} Profile content UI
+ */
+const ProfileContent = memo(() => {
 	const { user, logout } = useAuth();
 	const router = useRouter();
 
-	const handleLogout = () => {
+	/**
+	 * Handles user logout and navigation to home
+	 */
+	const handleLogout = useCallback(() => {
 		logout();
 		router.push("/");
-	};
+	}, [logout, router]);
 
-	const handleBack = () => {
+	/**
+	 * Navigates back to home page
+	 */
+	const handleBack = useCallback(() => {
 		router.push("/");
-	};
+	}, [router]);
+
+	/**
+	 * Navigates to orders page
+	 */
+	const handleNavigateToOrders = useCallback(() => {
+		router.push("/orders");
+	}, [router]);
+
+	/**
+	 * Navigates to subscriptions page
+	 */
+	const handleNavigateToSubscriptions = useCallback(() => {
+		router.push("/subscriptions");
+	}, [router]);
 
 	if (!user) {
 		return null;
@@ -43,7 +184,7 @@ function ProfileContent() {
 	const isGoogleUser = !!user.picture;
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-32 pb-20 px-4">
+		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6">
 			<div className="max-w-2xl mx-auto">
 				<Button variant="ghost" className="mb-6 gap-2" onClick={handleBack}>
 					<ArrowLeft className="w-4 h-4" />
@@ -51,31 +192,7 @@ function ProfileContent() {
 				</Button>
 
 				<Card className="shadow-lg">
-					<CardHeader className="text-center pb-8">
-						{user.picture ? (
-							<div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 ring-4 ring-green-500/20">
-								<Image
-									src={user.picture}
-									alt={user.name || user.firstName || "User"}
-									width={96}
-									height={96}
-									className="w-full h-full object-cover"
-								/>
-							</div>
-						) : (
-							<div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-								<UserIcon className="w-12 h-12 text-green-600" />
-							</div>
-						)}
-						<CardTitle className="text-2xl mb-2">
-							{user.name || user.firstName || "Kullanıcı"}
-						</CardTitle>
-						<CardDescription>
-							{isGoogleUser
-								? "Google ile giriş yapıldı"
-								: "Telefon ile giriş yapıldı"}
-						</CardDescription>
-					</CardHeader>
+					<ProfileHeader user={user} isGoogleUser={isGoogleUser} />
 					<CardContent className="space-y-6">
 						<div className="space-y-4">
 							<h3 className="font-semibold text-lg text-gray-700 border-b pb-2">
@@ -84,41 +201,35 @@ function ProfileContent() {
 
 							{/* Email */}
 							{user.email && (
-								<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-									<div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-										<Mail className="w-5 h-5 text-green-600" />
-									</div>
-									<div className="flex-1">
-										<p className="text-sm text-gray-600 mb-1">E-posta</p>
-										<p className="font-medium text-gray-900">{user.email}</p>
-									</div>
-								</div>
+								<AccountInfoItem
+									icon={<Mail className="w-5 h-5" />}
+									label="E-posta"
+									value={user.email}
+									iconBgColor="bg-green-100"
+									iconColor="text-green-600"
+								/>
 							)}
 
 							{/* Phone */}
 							{user.phone && (
-								<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-									<div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-										<Phone className="w-5 h-5 text-blue-600" />
-									</div>
-									<div className="flex-1">
-										<p className="text-sm text-gray-600 mb-1">Telefon</p>
-										<p className="font-medium text-gray-900">{user.phone}</p>
-									</div>
-								</div>
+								<AccountInfoItem
+									icon={<Phone className="w-5 h-5" />}
+									label="Telefon"
+									value={user.phone}
+									iconBgColor="bg-blue-100"
+									iconColor="text-blue-600"
+								/>
 							)}
 
 							{/* Username */}
 							{user.username && (
-								<div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-									<div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-										<UserIcon className="w-5 h-5 text-purple-600" />
-									</div>
-									<div className="flex-1">
-										<p className="text-sm text-gray-600 mb-1">Kullanıcı Adı</p>
-										<p className="font-medium text-gray-900">{user.username}</p>
-									</div>
-								</div>
+								<AccountInfoItem
+									icon={<UserIcon className="w-5 h-5" />}
+									label="Kullanıcı Adı"
+									value={user.username}
+									iconBgColor="bg-purple-100"
+									iconColor="text-purple-600"
+								/>
 							)}
 						</div>
 
@@ -127,25 +238,17 @@ function ProfileContent() {
 							<h3 className="font-semibold text-lg text-gray-700 border-b pb-2">
 								Hesap Durumu
 							</h3>
-							<div className="grid grid-cols-2 gap-4">
-								<div className="p-4 bg-gray-50 rounded-lg text-center">
-									<p className="text-sm text-gray-600 mb-1">
-										Telefon Doğrulama
-									</p>
-									<p
-										className={`font-semibold ${user.phoneVerified ? "text-green-600" : "text-orange-600"}`}
-									>
-										{user.phoneVerified ? "Doğrulandı" : "Bekliyor"}
-									</p>
-								</div>
-								<div className="p-4 bg-gray-50 rounded-lg text-center">
-									<p className="text-sm text-gray-600 mb-1">Hesap Durumu</p>
-									<p
-										className={`font-semibold ${user.confirmed ? "text-green-600" : "text-orange-600"}`}
-									>
-										{user.confirmed ? "Aktif" : "Beklemede"}
-									</p>
-								</div>
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<StatusCard
+									label="Telefon Doğrulama"
+									value={user.phoneVerified ? "Doğrulandı" : "Bekliyor"}
+									isVerified={!!user.phoneVerified}
+								/>
+								<StatusCard
+									label="Hesap Durumu"
+									value={user.confirmed ? "Aktif" : "Beklemede"}
+									isVerified={!!user.confirmed}
+								/>
 							</div>
 						</div>
 
@@ -154,14 +257,14 @@ function ProfileContent() {
 							<Button
 								variant="outline"
 								className="w-full"
-								onClick={() => router.push("/orders")}
+								onClick={handleNavigateToOrders}
 							>
 								Siparişlerim
 							</Button>
 							<Button
 								variant="outline"
 								className="w-full"
-								onClick={() => router.push("/subscriptions")}
+								onClick={handleNavigateToSubscriptions}
 							>
 								Aboneliklerim
 							</Button>
@@ -178,4 +281,6 @@ function ProfileContent() {
 			</div>
 		</div>
 	);
-}
+});
+
+ProfileContent.displayName = "ProfileContent";

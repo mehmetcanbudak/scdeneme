@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useCallback, useMemo } from "react";
+import type { LucideIcon } from "lucide-react";
 import {
 	Award,
 	Clock,
@@ -14,11 +16,53 @@ import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
+/**
+ * FAQ data interface
+ */
+interface FAQData {
+	question: string;
+	answer: string;
+	icon: LucideIcon;
+}
+
+/**
+ * FAQCard component - Displays a single FAQ with icon
+ */
+const FAQCard = React.memo<{ faq: FAQData; colorClass: { bg: string; text: string } }>(
+	({ faq, colorClass }) => {
+		const IconComponent = faq.icon;
+		return (
+			<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+				<div className="flex items-start space-x-4">
+					<div
+						className={`w-12 h-12 ${colorClass.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
+					>
+						<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
+					</div>
+					<div>
+						<h3 className="text-xl font-semibold mb-3 text-gray-800">
+							{faq.question}
+						</h3>
+						<p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+);
+FAQCard.displayName = "FAQCard";
+
+/**
+ * Sorular page component - FAQ page
+ */
 export default function Sorular() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
-	const scrollToContent = () => {
+	/**
+	 * Scrolls smoothly to the main content section
+	 */
+	const scrollToContent = useCallback(() => {
 		const contentSection = document.querySelector("#main-content");
 		if (contentSection) {
 			const headerHeight = 64;
@@ -31,55 +75,82 @@ export default function Sorular() {
 				behavior: "smooth",
 			});
 		}
-	};
+	}, []);
 
-	const heroSlides = [
-		{
-			title: "",
-			subtitle: "",
-			buttonText: "",
-			image: "/organic-farming-greenhouse-vegetables.png",
-		},
-	];
+	/**
+	 * Hero slides configuration
+	 */
+	const heroSlides = useMemo(
+		() => [
+			{
+				title: "",
+				subtitle: "",
+				buttonText: "",
+				image: "/organic-farming-greenhouse-vegetables.png",
+			},
+		],
+		[]
+	);
 
-	const faqData = [
-		{
-			question: "Ürünleriniz gerçekten organik mi?",
-			answer:
-				"Evet, tüm ürünlerimiz organik tarım standartlarına uygun olarak üretilmektedir. Global Gap sertifikalarımız ve iyi tarım uygulamalarımız ile kalitemizi garanti ediyoruz.",
-			icon: Leaf,
-		},
-		{
-			question: "Teslimat süreleri ne kadar?",
-			answer:
-				"Ürünleriniz sipariş verildikten sonra 24-48 saat içerisinde dalından taze olarak toplanıp kargoya verilmektedir. Kargo süresi bölgenize göre 1-3 iş günü arasında değişmektedir.",
-			icon: Clock,
-		},
-		{
-			question: "Pestisit kullanıyor musunuz?",
-			answer:
-				"Hayır, hiçbir kimyasal pestisit kullanmıyoruz. Zararlılarla mücadelede biyolojik yöntemler ve doğal preparatlar kullanarak üretim yapıyoruz.",
-			icon: Shield,
-		},
-		{
-			question: "Abonelik sistemi nasıl çalışır?",
-			answer:
-				"Abonelik sistemi ile düzenli olarak taze ürünler alabilirsiniz. Haftalık, iki haftalık veya aylık periyotlarda seçim yapabilir, istediğiniz zaman duraklatabilir veya iptal edebilirsiniz.",
-			icon: Users,
-		},
-		{
-			question: "Hangi bölgelere teslimat yapıyorsunuz?",
-			answer:
-				"Şu anda İstanbul, Ankara, İzmir, Bursa, Antalya ve çevre illere teslimat yapmaktayız. Yeni bölgeler eklenmektedir.",
-			icon: Award,
-		},
-		{
-			question: "Ürün kalitesi nasıl garanti ediliyor?",
-			answer:
-				"Her ürün dalından toplandıktan sonra kalite kontrolünden geçirilmekte, sadece en kaliteli ürünler paketlenmektedir. Memnun kalmadığınız ürünler için iade garantisi sunuyoruz.",
-			icon: FileText,
-		},
-	];
+	/**
+	 * FAQ data array
+	 */
+	const faqData = useMemo<FAQData[]>(
+		() => [
+			{
+				question: "Ürünleriniz gerçekten organik mi?",
+				answer:
+					"Evet, tüm ürünlerimiz organik tarım standartlarına uygun olarak üretilmektedir. Global Gap sertifikalarımız ve iyi tarım uygulamalarımız ile kalitemizi garanti ediyoruz.",
+				icon: Leaf,
+			},
+			{
+				question: "Teslimat süreleri ne kadar?",
+				answer:
+					"Ürünleriniz sipariş verildikten sonra 24-48 saat içerisinde dalından taze olarak toplanıp kargoya verilmektedir. Kargo süresi bölgenize göre 1-3 iş günü arasında değişmektedir.",
+				icon: Clock,
+			},
+			{
+				question: "Pestisit kullanıyor musunuz?",
+				answer:
+					"Hayır, hiçbir kimyasal pestisit kullanmıyoruz. Zararlılarla mücadelede biyolojik yöntemler ve doğal preparatlar kullanarak üretim yapıyoruz.",
+				icon: Shield,
+			},
+			{
+				question: "Abonelik sistemi nasıl çalışır?",
+				answer:
+					"Abonelik sistemi ile düzenli olarak taze ürünler alabilirsiniz. Haftalık, iki haftalık veya aylık periyotlarda seçim yapabilir, istediğiniz zaman duraklatabilir veya iptal edebilirsiniz.",
+				icon: Users,
+			},
+			{
+				question: "Hangi bölgelere teslimat yapıyorsunuz?",
+				answer:
+					"Şu anda İstanbul, Ankara, İzmir, Bursa, Antalya ve çevre illere teslimat yapmaktayız. Yeni bölgeler eklenmektedir.",
+				icon: Award,
+			},
+			{
+				question: "Ürün kalitesi nasıl garanti ediliyor?",
+				answer:
+					"Her ürün dalından toplandıktan sonra kalite kontrolünden geçirilmekte, sadece en kaliteli ürünler paketlenmektedir. Memnun kalmadığınız ürünler için iade garantisi sunuyoruz.",
+				icon: FileText,
+			},
+		],
+		[]
+	);
+
+	/**
+	 * Color classes for FAQ cards
+	 */
+	const colorClasses = useMemo(
+		() => [
+			{ bg: "bg-green-100", text: "text-green-600" },
+			{ bg: "bg-green-100", text: "text-green-600" },
+			{ bg: "bg-yellow-100", text: "text-yellow-600" },
+			{ bg: "bg-purple-100", text: "text-purple-600" },
+			{ bg: "bg-red-100", text: "text-red-600" },
+			{ bg: "bg-indigo-100", text: "text-indigo-600" },
+		],
+		[]
+	);
 
 	return (
 		<div className="min-h-screen bg-white relative">
@@ -93,8 +164,8 @@ export default function Sorular() {
 				customHeight="65vh"
 			/>
 
-			<main id="main-content" className="py-12 px-6 relative z-10 bg-white">
-				<div className="mx-12">
+			<main id="main-content" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 relative z-10 bg-white">
+				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">
 						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-gray-800">
@@ -106,41 +177,14 @@ export default function Sorular() {
 					</div>
 
 					{/* FAQ Grid */}
-					<div className="grid md:grid-cols-2 gap-8 mb-16">
-						{faqData.map((faq, index) => {
-							const IconComponent = faq.icon;
-							const colorClasses = [
-								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-green-100", text: "text-green-600" },
-								{ bg: "bg-yellow-100", text: "text-yellow-600" },
-								{ bg: "bg-purple-100", text: "text-purple-600" },
-								{ bg: "bg-red-100", text: "text-red-600" },
-								{ bg: "bg-indigo-100", text: "text-indigo-600" },
-							];
-							const colorClass = colorClasses[index % colorClasses.length];
-							return (
-								<div
-									key={index}
-									className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-								>
-									<div className="flex items-start space-x-4">
-										<div
-											className={`w-12 h-12 ${colorClass.bg} rounded-lg flex items-center justify-center flex-shrink-0`}
-										>
-											<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
-										</div>
-										<div>
-											<h3 className="text-xl font-semibold mb-3 text-gray-800">
-												{faq.question}
-											</h3>
-											<p className="text-gray-600 leading-relaxed">
-												{faq.answer}
-											</p>
-										</div>
-									</div>
-								</div>
-							);
-						})}
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-16">
+						{faqData.map((faq, index) => (
+							<FAQCard
+								key={index}
+								faq={faq}
+								colorClass={colorClasses[index % colorClasses.length]}
+							/>
+						))}
 					</div>
 
 					{/* Contact Section */}

@@ -1,9 +1,10 @@
 import Footer from "@/components/footer";
-import Navigation from "@/components/navigation";
+import Header from "@/components/header";
+import InitialLoader from "@/components/initial-loader";
 import { NavigationProvider } from "@/components/navigation-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
-import { PageBackgroundProvider } from "@/contexts/page-background-context";
+import { FooterColorProvider } from "@/contexts/footer-color-context";
 import { ProductProvider } from "@/contexts/product-context";
 import { SubscriptionProvider } from "@/contexts/subscription-context";
 import { Analytics } from "@vercel/analytics/next";
@@ -26,29 +27,31 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="tr" className="overflow-x-hidden">
+		<html lang="tr" className="overflow-x-hidden" suppressHydrationWarning>
 			<head>
 				<script src="https://accounts.google.com/gsi/client" async></script>
 			</head>
 			<body
 				className={`font-sans ${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden`}
+				suppressHydrationWarning
 			>
-				<PageBackgroundProvider>
-					<AuthProvider>
-						<ProductProvider>
-							<CartProvider>
-								<SubscriptionProvider>
+				<InitialLoader />
+				<AuthProvider>
+					<ProductProvider>
+						<CartProvider>
+							<SubscriptionProvider>
+								<FooterColorProvider>
 									<NavigationProvider>
 										<ScrollToTop />
-										<Navigation />
+										<Header />
 										{children}
 										<Footer />
 									</NavigationProvider>
-								</SubscriptionProvider>
-							</CartProvider>
-						</ProductProvider>
-					</AuthProvider>
-				</PageBackgroundProvider>
+								</FooterColorProvider>
+							</SubscriptionProvider>
+						</CartProvider>
+					</ProductProvider>
+				</AuthProvider>
 				<Analytics />
 			</body>
 		</html>

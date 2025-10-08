@@ -44,17 +44,17 @@ interface HeroHeaderProps {
 const HeroHeader = memo(function HeroHeader({
 	slides,
 	onScrollToNext,
-	showDots = true,
-	showButton = true,
-	singleImage = false,
+	showDots = false,
+	showButton = false,
+	singleImage = true,
 	customHeight = "100vh",
-	autoPlay = true,
+	autoPlay = false,
 	autoPlayInterval = 5000,
 	className = "",
 	contentClassName = "",
 	overlayClassName = "",
 	showScrollButton = true,
-	mediaFit = "cover",
+	mediaFit = "contain", // other options: "contain"
 	backgroundColor = "transparent",
 }: HeroHeaderProps) {
 	const [currentSlide, setCurrentSlide] = useState(0);
@@ -227,10 +227,10 @@ const HeroHeader = memo(function HeroHeader({
 					/>
 				)}
 				{/* Overlay */}
-				<div
+				{/* <div
 					className={`absolute inset-0 bg-black/25 ${overlayClassName}`}
 					aria-hidden="true"
-				/>
+				/> */}
 			</div>
 
 			{/* Content */}

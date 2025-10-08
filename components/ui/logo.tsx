@@ -14,14 +14,16 @@ const Logo = memo(function Logo({
 	const logoSrc = shouldBeTransparent ? "/sclogoblack.svg" : "/sclogo.svg";
 
 	return (
-		<Image
-			src={logoSrc}
-			alt="SkyCrops Logo"
-			width={220}
-			height={64}
-			priority
-			className={className}
-		/>
+		<div className="animate-logo-entrance">
+			<Image
+				src={logoSrc}
+				alt="SkyCrops Logo"
+				width={220}
+				height={64}
+				priority
+				className={className}
+			/>
+		</div>
 	);
 });
 

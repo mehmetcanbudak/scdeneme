@@ -37,7 +37,7 @@ export const Section = memo(function Section({
 	containerClassName = "",
 }: SectionProps) {
 	return (
-		<section className={`py-12 relative z-10 bg-white ${className}`}>
+		<section className={`py-12 relative z-10 ${className}`}>
 			<div className={`mx-12 ${containerClassName}`}>{children}</div>
 		</section>
 	);
