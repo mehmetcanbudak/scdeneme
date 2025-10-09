@@ -1,6 +1,7 @@
 "use client";
 
 import HeroHeader from "@/components/hero-header";
+import GallerySlider from "@/components/product/gallery-slider";
 import BasicAccordion from "@/components/smoothui/ui/BasicAccordion";
 import FeatureCard from "@/components/subscription/feature-card";
 import {
@@ -11,12 +12,8 @@ import {
 import SubscriptionProductPreview from "@/components/subscription/subscription-product-preview";
 import WeeklyProgram from "@/components/subscription/weekly-program";
 import { Button } from "@/components/ui/button";
-import { Grid, Section, SectionHeader } from "@/components/ui/page-layout";
-import {
-	BenefitCard,
-	CTASection,
-	TestimonialCard,
-} from "@/components/ui/subscription-components";
+import { Section } from "@/components/ui/page-layout";
+import { CTASection } from "@/components/ui/subscription-components";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
@@ -212,6 +209,51 @@ const Abonelik: React.FC = memo(() => {
 					"Geleceğin tarım teknolojisini desteklemek ve doğal ürünler tüketmek için harika bir fırsat. Kesinlikle tavsiye ederim.",
 				rating: 5,
 				image: "/testimonial-4.jpg",
+			},
+		],
+		[],
+	);
+
+	/**
+	 * Gallery items data with memoization
+	 */
+	const galleryItems = useMemo(
+		() => [
+			{
+				image: "/feslegen.png",
+				title: "Fesleğen",
+				description: "Taze ve aromalı fesleğen yaprağı",
+				benefits: ["Antioksidan", "Anti-bakteriyel", "Vitamin K"],
+			},
+			{
+				image: "/roka.png",
+				title: "Roka",
+				description: "Acımsı lezzeti ile bilinen roka",
+				benefits: ["Vitamin C", "Folat", "Kalsiyum"],
+			},
+			{
+				image: "/maydanoz.png",
+				title: "Maydanoz",
+				description: "Her yemeğin vazgeçilmezi",
+				benefits: ["Vitamin A", "Demir", "Potasyum"],
+			},
+			{
+				image: "/kivircik.png",
+				title: "Kıvırcık Marul",
+				description: "Çıtır çıtır taze marul yaprakları",
+				benefits: ["Lif", "Vitamin K", "Folat"],
+			},
+			{
+				image: "/reyhan.png",
+				title: "Reyhan",
+				description: "Nane ailesinden aromatik bitki",
+				benefits: ["Antioksidan", "Omega-3", "Magnezyum"],
+			},
+			{
+				image: "/kekik.png",
+				title: "Kekik",
+				description: "Doğal antiseptik özellikli",
+				benefits: ["Timol", "Vitamin C", "Antimikrobiyal"],
 			},
 		],
 		[],
@@ -604,22 +646,9 @@ const Abonelik: React.FC = memo(() => {
 					</div>
 				</Section>
 
-				{/* Benefits Section */}
+				{/* Package Content Section */}
 				<Section className="bg-[#DF626B]">
-					<SectionHeader
-						title="Neden Skycrops?"
-						subtitle="Dikey tarımın avantajlarını yaşayın"
-					/>
-					<Grid cols={4}>
-						{benefits.map((benefit, index) => (
-							<BenefitCard
-								key={benefit.title}
-								icon={benefit.icon}
-								title={benefit.title}
-								description={benefit.description}
-							/>
-						))}
-					</Grid>
+					<GallerySlider items={galleryItems} />
 				</Section>
 
 				{/* FAQ Section */}
@@ -649,24 +678,6 @@ const Abonelik: React.FC = memo(() => {
 							className="bg-white shadow-sm border border-gray-100"
 						/>
 					</div>
-				</Section>
-
-				{/* Testimonials Section */}
-				<Section className="bg-[#DF626B]">
-					<SectionHeader
-						title="Müşteri Yorumları"
-						subtitle="Mutlu müşterilerimizin deneyimleri"
-					/>
-					<Grid cols={4}>
-						{testimonials.map((testimonial, index) => (
-							<TestimonialCard
-								key={testimonial.name}
-								name={testimonial.name}
-								comment={testimonial.comment}
-								rating={testimonial.rating}
-							/>
-						))}
-					</Grid>
 				</Section>
 
 				{/* CTA Section */}

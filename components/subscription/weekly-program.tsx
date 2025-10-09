@@ -60,9 +60,6 @@ const WeeklyProgram: React.FC<WeeklyProgramProps> = memo(
 			<div className={`lg:sticky lg:top-8 ${className}`}>
 				<div className="bg-[#FDFBE2] rounded-3xl p-8 shadow-sm border border-black hover:shadow-md transition-all duration-300">
 					<div className="text-center mb-8">
-						<div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-							<span className="text-3xl">📅</span>
-						</div>
 						<h3 className="text-3xl font-medium text-gray-800 mb-4">
 							Örnek Haftalık Programlar
 						</h3>

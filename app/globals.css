@@ -184,5 +184,5 @@ body,
 /* Custom header background color override */
 .bg-\[\#B2A79D\] {
 	--tw-bg-opacity: 1;
-	background-color: rgb(204 232 255 / var(--tw-bg-opacity, 1));
+	background-color: rgb(165 212 217 / var(--tw-bg-opacity, 1));
 }

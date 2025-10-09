@@ -4,6 +4,7 @@ import HeroHeader from "@/components/hero-header";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
 import SubscriptionBenefitsSection from "@/components/home/subscription-benefits-section";
 import SustainabilityCTASection from "@/components/home/sustainability-cta-section";
+import WhatWeDoSection from "@/components/home/what-we-do-section";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -207,6 +208,9 @@ const Home: React.FC = memo(() => {
 				showButton={true}
 				customHeight="100vh"
 			/>
+
+			{/* What We Do Section - Biz Ne Yapıyoruz */}
+			<WhatWeDoSection />
 
 			{/* Vegetables Section - Farmımızda Yetişen Sebzeler */}
 			<Suspense

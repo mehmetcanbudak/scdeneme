@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useRef, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { memo, useCallback, useRef, useState } from "react";
 
 /**
  * Gallery item interface
@@ -75,10 +75,10 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 		<div className="py-12 sm:py-16">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="text-center mb-8 sm:mb-12">
-					<h2 className="text-2xl sm:text-3xl font-light text-gray-800 mb-4">
+					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-white">
 						Paket İçeriği
 					</h2>
-					<p className="text-base sm:text-lg text-gray-600">
+					<p className="text-base leading-relaxed text-white/80">
 						Taze yeşillikler paketimizde bulunan organik ürünler
 					</p>
 				</div>
@@ -95,7 +95,7 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 								key={`gallery-${item.title}-${index}`}
 								className="flex-shrink-0 w-72 sm:w-80"
 							>
-								<div className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 h-full">
+								<div className="bg-[#FDFBE2] rounded-3xl overflow-hidden shadow-sm border border-black h-full hover:shadow-md transition-all duration-300">
 									<div className="relative overflow-hidden">
 										<img
 											src={item.image}
@@ -141,7 +141,7 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 							<button
 								type="button"
 								onClick={scrollLeft}
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300"
+								className="w-12 h-12 rounded-full bg-[#FDFBE2] shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300 border border-black"
 							>
 								<ChevronLeft className="w-5 h-5 text-gray-600" />
 							</button>
@@ -153,7 +153,7 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 							<button
 								type="button"
 								onClick={scrollRight}
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300"
+								className="w-12 h-12 rounded-full bg-[#FDFBE2] shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300 border border-black"
 							>
 								<ChevronRight className="w-5 h-5 text-gray-600" />
 							</button>

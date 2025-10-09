@@ -1,31 +1,30 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { notFound } from "next/navigation";
-import {
-	CheckCircle,
-	ShoppingCart,
-	X,
-	Heart,
-	Share2,
-	Award,
-	Clock,
-	Leaf,
-	Shield,
-	Truck,
-	Users,
-} from "lucide-react";
+import FAQSection from "@/components/product/faq-section";
+import ProductInfoSection from "@/components/product/product-info-section";
+import ProductionVideoSection from "@/components/product/production-video-section";
+import PurchaseOptionsPanel from "@/components/product/purchase-options-panel";
+import StickyImageGallery from "@/components/product/sticky-image-gallery";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
-import StickyImageGallery from "@/components/product/sticky-image-gallery";
-import ProductInfoSection from "@/components/product/product-info-section";
-import PurchaseOptionsPanel from "@/components/product/purchase-options-panel";
-import ProductionVideoSection from "@/components/product/production-video-section";
-import GallerySlider from "@/components/product/gallery-slider";
-import FAQSection from "@/components/product/faq-section";
+import {
+	Award,
+	CheckCircle,
+	Clock,
+	Heart,
+	Leaf,
+	Share2,
+	Shield,
+	ShoppingCart,
+	Truck,
+	Users,
+	X,
+} from "lucide-react";
+import { notFound } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Subscription interval interface
@@ -618,9 +617,6 @@ export default function TazeYesilliklerPaketi() {
 
 			{/* Section 2: Production Video */}
 			<ProductionVideoSection />
-
-			{/* Section 3: Gallery Slider */}
-			<GallerySlider items={galleryItems} />
 
 			{/* Section 4: FAQ */}
 			<FAQSection items={faqData} />
