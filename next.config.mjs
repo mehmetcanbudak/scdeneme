@@ -24,6 +24,13 @@ const withPWA = nextPWA({
 	additionalManifestEntries: assetManifest.map((url) => ({ url, revision: null })),
 });
 
+// Derive backend media host from PAYLOAD_API_URL (works on Vercel at build-time)
+const payloadUrl = process.env.PAYLOAD_API_URL;
+let payloadHost;
+try {
+	payloadHost = payloadUrl ? new URL(payloadUrl).hostname : undefined;
+} catch {}
+
 const nextConfig = withPWA({
 	eslint: {
 		ignoreDuringBuilds: true,
@@ -39,6 +46,13 @@ const nextConfig = withPWA({
 				hostname: "localhost",
 				pathname: "/**",
 			},
+			// Allow Payload media host (both http and https) if provided
+			...(payloadHost
+				? [
+					{ protocol: "https", hostname: payloadHost, pathname: "/**" },
+					{ protocol: "http", hostname: payloadHost, pathname: "/**" },
+				]
+				: []),
 		],
 		qualities: [75, 85],
 		formats: ["image/webp", "image/avif"],
