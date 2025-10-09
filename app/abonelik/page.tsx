@@ -23,7 +23,8 @@ import { notFound, useRouter } from "next/navigation";
 import type React from "react";
 import { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+// Images returned by internal APIs are absolute; no base URL needed
+const API_BASE_URL = "";
 
 /**
  * Benefit interface
@@ -426,9 +427,7 @@ const Abonelik: React.FC = memo(() => {
 						product.image.formats?.small?.url;
 
 			if (imageUrl) {
-				images.push(
-					imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`,
-				);
+				images.push(imageUrl);
 			}
 		}
 
@@ -444,11 +443,7 @@ const Abonelik: React.FC = memo(() => {
 							img.formats?.small?.url;
 
 				if (imageUrl) {
-					images.push(
-						imageUrl.startsWith("http")
-							? imageUrl
-							: `${API_BASE_URL}${imageUrl}`,
-					);
+					images.push(imageUrl);
 				}
 			});
 		}
@@ -526,7 +521,7 @@ const Abonelik: React.FC = memo(() => {
 					<div className="text-red-600 mb-4">
 						<X className="w-12 h-12 mx-auto" />
 					</div>
-					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 						Bir Hata Oluştu
 					</h2>
 					<p className="text-base leading-relaxed mb-6">{error}</p>
@@ -547,7 +542,7 @@ const Abonelik: React.FC = memo(() => {
 			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
 				<div className="text-center">
 					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
-					<p className="text-gray-600">Ürün yükleniyor...</p>
+					<p className="text-black">Ürün yükleniyor...</p>
 				</div>
 			</div>
 		);
@@ -587,16 +582,12 @@ const Abonelik: React.FC = memo(() => {
 				<Section className="py-20 bg-[#DF626B]">
 					{/* Main Hero Title */}
 					<div className="text-center mb-16">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
-							Her Hafta Taptaze Yeşillikler
-							<span className="block text-white/90 font-semibold">
-								Kapınızda!
-							</span>
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-black">
+							Tazeliğe Abone Ol
 						</h1>
-						<p className="text-lg leading-relaxed max-w-4xl mx-auto text-white/80">
-							Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze, en
-							lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en
-							kolay yolu.
+						<p className="text-lg leading-relaxed max-w-4xl mx-auto text-black/80">
+							Skycrops aboneliğiyle şehirde yetişen en taze yeşillikler senin
+							seçtiğin sıklıkta doğrudan sofrana gelir.
 						</p>
 						<div className="mt-8">
 							<Button
@@ -658,10 +649,10 @@ const Abonelik: React.FC = memo(() => {
 				<Section className="bg-[#DF626B]">
 					<div className="max-w-4xl mx-auto">
 						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-white">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 								Sıkça Sorulan Sorular
 							</h2>
-							<p className="text-base leading-relaxed text-white/80">
+							<p className="text-base leading-relaxed text-black/80">
 								Merak ettiklerinizin cevapları
 							</p>
 						</div>
@@ -671,7 +662,7 @@ const Abonelik: React.FC = memo(() => {
 								id: item.id,
 								title: item.question,
 								content: (
-									<div className="text-gray-600 leading-relaxed text-base whitespace-pre-line">
+									<div className="text-black leading-relaxed text-base whitespace-pre-line">
 										{item.answer}
 									</div>
 								),

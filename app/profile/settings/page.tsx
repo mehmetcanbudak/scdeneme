@@ -24,7 +24,7 @@ export default function ProfileSettingsPage() {
 
 					<div className="mb-8">
 						<h1 className="text-3xl font-bold mb-2">Profil Ayarları</h1>
-						<p className="text-gray-600">
+						<p className="text-black">
 							Kişisel bilgilerinizi güncelleyin ve email adresinizi doğrulayın
 						</p>
 					</div>

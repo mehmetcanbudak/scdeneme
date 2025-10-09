@@ -127,7 +127,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 
 		return (
 			<div>
-				<h3 className="font-medium mb-4 text-gray-800 text-lg">
+				<h3 className="font-medium mb-4 text-black text-lg">
 					Abonelik Seçenekleri
 				</h3>
 				{!product.is_active && (
@@ -160,10 +160,10 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 								>
 									<div className="flex items-center justify-between mb-4">
 										<div>
-											<div className="font-medium text-gray-800 text-lg">
+											<div className="font-medium text-black text-lg">
 												Abonelik
 											</div>
-											<div className="text-sm text-gray-600">
+											<div className="text-sm text-black">
 												Düzenli teslimat ile %
 												{Math.round(
 													((product.price -
@@ -208,15 +208,15 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 												>
 													<div className="flex items-center justify-between mb-3">
 														<div>
-															<div className="font-medium text-gray-800">
+															<div className="font-medium text-black">
 																{interval.name}
 															</div>
-															<div className="text-sm text-gray-600">
+															<div className="text-sm text-black">
 																{interval.description}
 															</div>
 														</div>
 														<div className="text-right">
-															<div className="font-medium text-gray-800">
+															<div className="font-medium text-black">
 																{formatPrice(interval.price, interval.currency)}
 															</div>
 															<div className="text-sm text-green-600">
@@ -232,7 +232,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 														<div className="space-y-4 pt-4 border-t border-gray-200">
 															{/* Quantity */}
 															<div className="flex items-center justify-between">
-																<span className="font-medium text-gray-700">
+																<span className="font-medium text-black">
 																	Adet:
 																</span>
 																<div className="flex items-center space-x-3">
@@ -265,7 +265,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 															{/* Delivery Day */}
 															<div>
 																<div className="flex items-center justify-between mb-2">
-																	<span className="font-medium text-gray-700">
+																	<span className="font-medium text-black">
 																		Teslimat Günü:
 																	</span>
 																	<span className="text-sm text-gray-500">
@@ -305,7 +305,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 																							? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
 																							: isSelected
 																								? "border-gray-600 bg-gray-600 text-white"
-																								: "border-gray-200 hover:border-gray-300 text-gray-700"
+																								: "border-gray-200 hover:border-gray-300 text-black"
 																					}`}
 																				>
 																					<span
@@ -317,7 +317,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 																					</span>
 																				</button>
 																				{day.alwaysInactive && day.id === 1 ? (
-																					<span className="text-xs text-center mt-1 text-gray-600 font-medium">
+																					<span className="text-xs text-center mt-1 text-black font-medium">
 																						Kalan Stok:
 																					</span>
 																				) : !day.alwaysInactive ? (
@@ -363,15 +363,15 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 							>
 								<div className="flex items-center justify-between mb-4">
 									<div>
-										<div className="font-medium text-gray-800 text-lg">
+										<div className="font-medium text-black text-lg">
 											Tek Seferlik Satın Al
 										</div>
-										<div className="text-sm text-gray-600">
+										<div className="text-sm text-black">
 											Şimdi satın al, istediğin zaman tekrar sipariş ver
 										</div>
 									</div>
 									<div className="text-right">
-										<div className="text-xl font-medium text-gray-800">
+										<div className="text-xl font-medium text-black">
 											{formatPrice(
 												product.sale_price || product.price,
 												product.currency,
@@ -386,7 +386,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 								<div className="pt-4 border-t border-gray-200 space-y-4">
 									{/* Quantity Selector */}
 									<div className="flex items-center justify-between">
-										<span className="font-medium text-gray-700">Adet:</span>
+										<span className="font-medium text-black">Adet:</span>
 										<div className="flex items-center space-x-3">
 											<button
 												type="button"
@@ -416,7 +416,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 									{/* Delivery Day Selector */}
 									<div>
 										<div className="flex items-center justify-between mb-2">
-											<span className="font-medium text-gray-700">
+											<span className="font-medium text-black">
 												Teslimat Günü:
 											</span>
 											<span className="text-sm text-gray-500">
@@ -449,7 +449,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 																	? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
 																	: isSelected
 																		? "border-gray-600 bg-gray-600 text-white"
-																		: "border-gray-200 hover:border-gray-300 text-gray-700"
+																		: "border-gray-200 hover:border-gray-300 text-black"
 															}`}
 														>
 															<span
@@ -479,7 +479,7 @@ const PurchaseOptionsPanel: React.FC<PurchaseOptionsPanelProps> = memo(
 
 									{/* Summary */}
 									<div className="bg-gray-50 p-3 rounded text-sm">
-										<p className="text-gray-700">
+										<p className="text-black">
 											<strong>{quantity} adet</strong> ürün,{" "}
 											<strong>
 												{

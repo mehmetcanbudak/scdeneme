@@ -75,10 +75,10 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 		<div className="py-12 sm:py-16">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="text-center mb-8 sm:mb-12">
-					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-white">
+					<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 						Paket İçeriği
 					</h2>
-					<p className="text-base leading-relaxed text-white/80">
+					<p className="text-base leading-relaxed text-black/80">
 						Taze yeşillikler paketimizde bulunan organik ürünler
 					</p>
 				</div>
@@ -108,14 +108,14 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 										/>
 									</div>
 									<div className="p-6">
-										<h3 className="font-medium mb-2 text-gray-800 text-lg">
+										<h3 className="font-medium mb-2 text-black text-lg">
 											{item.title}
 										</h3>
-										<p className="text-gray-600 text-sm mb-4">
+										<p className="text-black text-sm mb-4">
 											{item.description}
 										</p>
 										<div className="space-y-2">
-											<h4 className="font-medium text-gray-800 text-sm">
+											<h4 className="font-medium text-black text-sm">
 												Besin Değerleri:
 											</h4>
 											<div className="flex flex-wrap gap-2">
@@ -143,7 +143,7 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 								onClick={scrollLeft}
 								className="w-12 h-12 rounded-full bg-[#FDFBE2] shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300 border border-black"
 							>
-								<ChevronLeft className="w-5 h-5 text-gray-600" />
+								<ChevronLeft className="w-5 h-5 text-black" />
 							</button>
 						</div>
 					)}
@@ -155,7 +155,7 @@ const GallerySlider: React.FC<GallerySliderProps> = memo(({ items }) => {
 								onClick={scrollRight}
 								className="w-12 h-12 rounded-full bg-[#FDFBE2] shadow-lg flex items-center justify-center hover:shadow-xl transition-all duration-300 border border-black"
 							>
-								<ChevronRight className="w-5 h-5 text-gray-600" />
+								<ChevronRight className="w-5 h-5 text-black" />
 							</button>
 						</div>
 					)}

@@ -83,10 +83,10 @@ const Ciftlik = React.memo(() => {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
-						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-black">
 							Çiftliğimiz
 						</h1>
-						<p className="text-lg text-gray-600">
+						<p className="text-lg text-black">
 							Modern teknoloji ile sürdürülebilir tarım
 						</p>
 					</div>
@@ -95,16 +95,16 @@ const Ciftlik = React.memo(() => {
 					<div className="bg-white p-8 rounded-lg shadow-sm mb-8">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 							<div>
-								<h2 className="text-3xl font-light mb-6 text-gray-700">
+								<h2 className="text-3xl font-light mb-6 text-black">
 									Sürdürülebilir Tarım
 								</h2>
-								<p className="text-gray-600 mb-6 leading-relaxed">
+								<p className="text-black mb-6 leading-relaxed">
 									Modern sera teknolojisi ile doğal yöntemleri harmanlayarak, en
 									taze ve sağlıklı sebzeleri yetiştiriyoruz. Çevre dostu üretim
 									yöntemlerimiz ile hem doğayı koruyor hem de size en kaliteli
 									ürünleri sunuyoruz.
 								</p>
-								<ul className="space-y-3 text-gray-600">
+								<ul className="space-y-3 text-black">
 									{features.map((feature, index) => (
 										<li key={index} className="flex items-center">
 											<span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>

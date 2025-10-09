@@ -45,7 +45,7 @@ const ContentSection = memo(function ContentSection({
 				/>
 			</div>
 			<div className={isLeft ? "order-1 md:order-2" : "order-1 md:order-1"}>
-				<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700">
+				<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 					{title}
 				</h2>
 				{contentArray.map((paragraph, index) => (
@@ -99,7 +99,7 @@ const FeatureCard = memo(function FeatureCard({
 					<span className="text-2xl">{icon}</span>
 				)}
 			</div>
-			<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-4 text-gray-700">
+			<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-4 text-black">
 				{title}
 			</h3>
 			<ul className="text-base leading-relaxed space-y-2 text-left">
@@ -228,23 +228,15 @@ const Hakkimizda = memo(function Hakkimizda() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-8 sm:mb-12">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-white">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 							Hakkımızda
 						</h1>
-						<p className="text-lg leading-relaxed text-gray-200">
-							Taze sebze deneyiminin hikayesi
-						</p>
-						<div className="mt-6 sm:mt-8 flex justify-center">
-							<Button asChild>
-								<Link href="/abonelik">Abonelik Paketleri</Link>
-							</Button>
-						</div>
 					</div>
 
 					{/* Misyonumuz Section */}
 					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 								Misyonumuz
 							</h2>
 							<p className="text-lg leading-relaxed mb-8 text-center max-w-4xl mx-auto">
@@ -263,7 +255,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 					{/* Vizyonumuz Section */}
 					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 								Vizyonumuz
 							</h2>
 							<p className="text-lg leading-relaxed mb-8 text-center max-w-4xl mx-auto">
@@ -281,7 +273,7 @@ const Hakkimizda = memo(function Hakkimizda() {
 					{/* Neden Dikey Tarım Section */}
 					<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow mb-8">
 						<div className="mb-12 sm:mb-16">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 								Neden Dikey Tarım
 							</h2>
 
@@ -289,7 +281,6 @@ const Hakkimizda = memo(function Hakkimizda() {
 								{featureCards.map((card) => (
 									<FeatureCard
 										key={card.title}
-										icon={card.icon}
 										title={card.title}
 										items={card.items}
 										bgColor={card.bgColor}

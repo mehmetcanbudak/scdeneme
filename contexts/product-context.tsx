@@ -155,7 +155,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 					throw new Error(response.error.message);
 				}
 
-				const productsData = response.data || [];
+				const productsData = (response.data || []) as Product[];
 				setProducts(productsData);
 				setCachedData(cacheKey, productsData);
 			} catch (err) {
@@ -199,7 +199,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 					throw new Error(response.error.message);
 				}
 
-				return response.data || null;
+				return (response.data as Product) || null;
 			} catch (err) {
 				const errorMessage =
 					err instanceof Error ? err.message : "Ürün yüklenemedi";
@@ -239,7 +239,9 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 				throw new Error(response.error.message);
 			}
 
-			setCategories(response.data || []);
+			setCategories(
+				(Array.isArray(response.data) ? response.data : []) as Category[],
+			);
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Kategoriler yüklenemedi";
@@ -283,7 +285,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 				throw new Error(response.error.message);
 			}
 
-			setTags(response.data || []);
+			setTags((Array.isArray(response.data) ? response.data : []) as Tag[]);
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Etiketler yüklenemedi";
@@ -324,7 +326,9 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 				throw new Error(response.error.message);
 			}
 
-			setProducts(response.data || []);
+			setProducts(
+				(Array.isArray(response.data) ? response.data : []) as Product[],
+			);
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Arama yapılamadı";
@@ -351,7 +355,9 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 				throw new Error(response.error.message);
 			}
 
-			setProducts(response.data || []);
+			setProducts(
+				(Array.isArray(response.data) ? response.data : []) as Product[],
+			);
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Filtreleme yapılamadı";

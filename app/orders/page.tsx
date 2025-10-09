@@ -77,10 +77,10 @@ const OrdersContent = memo(() => {
 					<CardContent>
 						<div className="text-center py-12">
 							<Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-							<h3 className="text-lg font-semibold text-gray-700 mb-2">
+							<h3 className="text-lg font-semibold text-black mb-2">
 								Henüz sipariş yok
 							</h3>
-							<p className="text-gray-600 mb-6">
+							<p className="text-black mb-6">
 								İlk siparişinizi oluşturmak için ürünlerimize göz atın
 							</p>
 							<Button onClick={handleExploreProducts}>Ürünleri Keşfet</Button>

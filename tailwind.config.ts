@@ -12,22 +12,34 @@ const config: Config = {
 				nav: "1350px",
 			},
 			fontFamily: {
-				sans: ["var(--font-roboto)", "system-ui", "sans-serif"],
-				roboto: ["var(--font-roboto)", "system-ui", "sans-serif"],
-				poppins: ["var(--font-poppins)", "system-ui", "sans-serif"],
+				sans: ["var(--font-montserrat)", "system-ui", "sans-serif"],
+				montserrat: ["var(--font-montserrat)", "system-ui", "sans-serif"],
 			},
 			fontSize: {
-				xs: ["0.75rem", { lineHeight: "1rem" }],
-				sm: ["0.875rem", { lineHeight: "1.25rem" }],
-				base: ["1rem", { lineHeight: "1.625rem" }],
-				lg: ["1.125rem", { lineHeight: "1.75rem" }],
-				xl: ["1.25rem", { lineHeight: "1.875rem" }],
-				"2xl": ["1.5rem", { lineHeight: "2rem" }],
-				"3xl": ["1.875rem", { lineHeight: "2.375rem" }],
-				"4xl": ["2.25rem", { lineHeight: "2.75rem" }],
-				"5xl": ["3rem", { lineHeight: "1.2" }],
-				"6xl": ["3.75rem", { lineHeight: "1.2" }],
-				"7xl": ["4.5rem", { lineHeight: "1" }],
+				// Utility sizes
+				xs: ["0.75rem", { lineHeight: "1.4" }], // 12px - caption, overline
+				sm: ["0.875rem", { lineHeight: "1.5" }], // 14px - body-small, label
+				base: ["1rem", { lineHeight: "1.5" }], // 16px - body, button
+				lg: ["1.125rem", { lineHeight: "1.6" }], // 18px - body-large, h6
+				xl: ["1.25rem", { lineHeight: "1.6" }], // 20px - body-xl, h5
+				"2xl": ["1.5rem", { lineHeight: "1.35" }], // 24px - h4
+				"3xl": ["1.875rem", { lineHeight: "1.3" }], // 30px - h3
+				"4xl": ["2.25rem", { lineHeight: "1.25" }], // 36px - h2
+				"5xl": ["3rem", { lineHeight: "1.2" }], // 48px - h1
+				"6xl": ["3.75rem", { lineHeight: "1.15" }], // 60px - display-2
+				"7xl": ["4.5rem", { lineHeight: "1.1" }], // 72px - display-1
+				// Extended sizes
+				"8xl": ["6rem", { lineHeight: "1" }], // 96px
+				"9xl": ["8rem", { lineHeight: "1" }], // 128px
+				// Responsive sizes for specific use
+				"display-1": ["clamp(3rem, 8vw, 4.5rem)", { lineHeight: "1.1" }],
+				"display-2": ["clamp(2.5rem, 6vw, 3.75rem)", { lineHeight: "1.15" }],
+				h1: ["clamp(2rem, 5vw, 3rem)", { lineHeight: "1.2" }],
+				h2: ["clamp(1.75rem, 4vw, 2.25rem)", { lineHeight: "1.25" }],
+				h3: ["clamp(1.5rem, 3vw, 1.875rem)", { lineHeight: "1.3" }],
+				h4: ["clamp(1.25rem, 2.5vw, 1.5rem)", { lineHeight: "1.35" }],
+				h5: ["clamp(1.125rem, 2vw, 1.25rem)", { lineHeight: "1.4" }],
+				h6: ["1.125rem", { lineHeight: "1.45" }],
 			},
 			lineHeight: {
 				none: "1",

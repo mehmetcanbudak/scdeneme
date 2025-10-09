@@ -40,18 +40,15 @@ const PracticeCard = React.memo<{ practice: SustainablePractice }>(
 				<div className="flex items-start space-x-4">
 					<div className="flex-shrink-0">{practice.icon}</div>
 					<div>
-						<h3 className="text-xl font-medium mb-3 text-gray-700">
+						<h3 className="text-xl font-medium mb-3 text-black">
 							{practice.title}
 						</h3>
-						<p className="text-gray-600 mb-4 leading-relaxed">
+						<p className="text-black mb-4 leading-relaxed">
 							{practice.description}
 						</p>
 						<ul className="space-y-2">
 							{practice.features.map((feature, idx) => (
-								<li
-									key={idx}
-									className="flex items-center text-sm text-gray-600"
-								>
+								<li key={idx} className="flex items-center text-sm text-black">
 									<span className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
 									{feature}
 								</li>
@@ -74,8 +71,8 @@ const FeatureItem = React.memo<{ feature: ProductionFeature }>(
 			<div className="flex items-start space-x-3">
 				<div className="flex-shrink-0 mt-1">{feature.icon}</div>
 				<div>
-					<h4 className="font-medium text-gray-700 mb-1">{feature.title}</h4>
-					<p className="text-sm text-gray-600">{feature.description}</p>
+					<h4 className="font-medium text-black mb-1">{feature.title}</h4>
+					<p className="text-sm text-black">{feature.description}</p>
 				</div>
 			</div>
 		);
@@ -206,7 +203,7 @@ export default function Uretim() {
 							<h2 className="text-sm uppercase tracking-[0.3em] mb-4 opacity-90">
 								SÜRDÜRÜLEBİLİR VE ORGANİK
 							</h2>
-							<h1 className="text-5xl md:text-7xl font-light mb-8 tracking-wide">
+							<h1 className="text-5xl md:text-7xl font-light mb-8 tracking-wide text-black">
 								TESİSLERİMİZ
 							</h1>
 							<p className="text-lg opacity-90 max-w-2xl mx-auto">
@@ -224,7 +221,7 @@ export default function Uretim() {
 						onClick={scrollToContent}
 						className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
 					>
-						<ChevronDown className="w-5 h-5 text-gray-600" />
+						<ChevronDown className="w-5 h-5 text-black" />
 					</button>
 				</div>
 			</div>
@@ -236,10 +233,10 @@ export default function Uretim() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
-						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-black">
 							Sürdürülebilir Tarım Tesislerimiz
 						</h1>
-						<p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+						<p className="text-lg text-black max-w-3xl mx-auto leading-relaxed">
 							Biyolojik mücadele, iyi tarım uygulamaları ve pestisitsiz üretim
 							ile doğaya ve insan sağlığına saygılı tarım yapıyoruz.
 						</p>
@@ -255,10 +252,10 @@ export default function Uretim() {
 					{/* Production Facility */}
 					<div className="bg-white p-8 rounded-lg shadow-sm mb-12">
 						<div className="text-center mb-12">
-							<h2 className="text-2xl font-medium mb-4 text-gray-700">
+							<h2 className="text-2xl font-medium mb-4 text-black">
 								Üretim Tesisimiz
 							</h2>
-							<p className="text-gray-600 max-w-3xl mx-auto leading-relaxed">
+							<p className="text-black max-w-3xl mx-auto leading-relaxed">
 								Modern sera teknolojisi ile geleneksel tarım yöntemlerini
 								birleştiren üretim tesisimizde, her ürün en yüksek kalite
 								standartlarında yetiştirilmektedir. Biyolojik mücadele
@@ -276,7 +273,7 @@ export default function Uretim() {
 								/>
 							</div>
 							<div>
-								<h3 className="text-xl font-medium mb-6 text-gray-700">
+								<h3 className="text-xl font-medium mb-6 text-black">
 									Kalite ve Güvenlik Standartları
 								</h3>
 								<div className="space-y-4">
@@ -289,31 +286,31 @@ export default function Uretim() {
 
 						{/* Technology Showcase */}
 						<div className="bg-gray-50 p-6 rounded-lg">
-							<h4 className="text-lg font-medium mb-4 text-gray-700 text-center">
+							<h4 className="text-lg font-medium mb-4 text-black text-center">
 								Kullandığımız Teknolojiler
 							</h4>
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
 								<div className="p-3 bg-white rounded-lg">
 									<div className="text-2xl mb-2">🌱</div>
-									<div className="text-sm font-medium text-gray-700">
+									<div className="text-sm font-medium text-black">
 										Hidroponik Sistem
 									</div>
 								</div>
 								<div className="p-3 bg-white rounded-lg">
 									<div className="text-2xl mb-2">💧</div>
-									<div className="text-sm font-medium text-gray-700">
+									<div className="text-sm font-medium text-black">
 										Akıllı Sulama
 									</div>
 								</div>
 								<div className="p-3 bg-white rounded-lg">
 									<div className="text-2xl mb-2">🌡️</div>
-									<div className="text-sm font-medium text-gray-700">
+									<div className="text-sm font-medium text-black">
 										İklim Kontrolü
 									</div>
 								</div>
 								<div className="p-3 bg-white rounded-lg">
 									<div className="text-2xl mb-2">📊</div>
-									<div className="text-sm font-medium text-gray-700">
+									<div className="text-sm font-medium text-black">
 										IoT Sensörler
 									</div>
 								</div>

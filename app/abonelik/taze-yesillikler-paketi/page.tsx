@@ -249,11 +249,7 @@ export default function TazeYesilliklerPaketi() {
 							img.formats?.small?.url;
 
 				if (imageUrl) {
-					images.push(
-						imageUrl.startsWith("http")
-							? imageUrl
-							: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`,
-					);
+					images.push(imageUrl);
 				}
 			});
 		}
@@ -269,11 +265,7 @@ export default function TazeYesilliklerPaketi() {
 							img.formats?.small?.url;
 
 				if (imageUrl) {
-					images.push(
-						imageUrl.startsWith("http")
-							? imageUrl
-							: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`,
-					);
+					images.push(imageUrl);
 				}
 			});
 		}
@@ -465,7 +457,7 @@ export default function TazeYesilliklerPaketi() {
 			<div className="min-h-screen bg-white flex items-center justify-center pt-24">
 				<div className="text-center">
 					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
-					<p className="text-gray-600">Ürün yükleniyor...</p>
+					<p className="text-black">Ürün yükleniyor...</p>
 				</div>
 			</div>
 		);

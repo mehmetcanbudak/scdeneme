@@ -30,7 +30,7 @@ const ContactInfoItem = memo(function ContactInfoItem({
 				{icon}
 			</div>
 			<div>
-				<h3 className="text-xl md:text-2xl font-medium leading-snug mb-2 text-gray-700">
+				<h3 className="text-xl md:text-2xl font-medium leading-snug mb-2 text-black">
 					{title}
 				</h3>
 				{children}
@@ -72,19 +72,16 @@ const FormInput = memo(function FormInput({
 	hasPhonePrefix = false,
 }: FormInputProps) {
 	const inputClassName =
-		"w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800";
+		"w-full px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-black";
 
 	return (
 		<div>
-			<label
-				htmlFor={id}
-				className="block text-sm font-medium text-gray-700 mb-2"
-			>
+			<label htmlFor={id} className="block text-sm font-medium text-black mb-2">
 				{label} {required && "*"}
 			</label>
 			{hasPhonePrefix ? (
 				<div className="flex">
-					<div className="flex items-center px-3.5 py-3.5 border-[1.5px] border-black border-r-0 rounded-l-lg bg-gray-100 text-gray-600 shadow-[2.5px_3px_0_#000]">
+					<div className="flex items-center px-3.5 py-3.5 border-[1.5px] border-black border-r-0 rounded-l-lg bg-gray-100 text-black shadow-[2.5px_3px_0_#000]">
 						<span className="text-base">+90</span>
 					</div>
 					<input
@@ -94,7 +91,7 @@ const FormInput = memo(function FormInput({
 						placeholder={placeholder}
 						value={value}
 						onChange={onChange}
-						className={`flex-1 px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-r-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800`}
+						className={`flex-1 px-3.5 py-3.5 text-base border-[1.5px] border-black rounded-r-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-black`}
 						required={required}
 					/>
 				</div>
@@ -228,14 +225,14 @@ export default function Iletisim() {
 	const contactInfoItems = useMemo(
 		() => [
 			{
-				icon: <MapPin className="w-5 h-5 text-gray-600" />,
+				icon: <MapPin className="w-5 h-5 text-black" />,
 				title: "Adres",
 				content: (
 					<a
 						href="https://share.google/cDKuEwHtK70zb8SgS"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-gray-600 hover:text-gray-800 transition-colors leading-relaxed"
+						className="text-black hover:text-black transition-colors leading-relaxed"
 					>
 						Çorlu 1 OSB
 						<br />
@@ -246,34 +243,34 @@ export default function Iletisim() {
 				),
 			},
 			{
-				icon: <Phone className="w-5 h-5 text-gray-600" />,
+				icon: <Phone className="w-5 h-5 text-black" />,
 				title: "Telefon",
 				content: (
 					<a
 						href="tel:+902826854383"
-						className="text-gray-600 hover:text-gray-800 transition-colors"
+						className="text-black hover:text-black transition-colors"
 					>
 						+90 282 685 43 83
 					</a>
 				),
 			},
 			{
-				icon: <Mail className="w-5 h-5 text-gray-600" />,
+				icon: <Mail className="w-5 h-5 text-black" />,
 				title: "E-posta",
 				content: (
 					<a
 						href="mailto:info@skycrops.farm"
-						className="text-gray-600 hover:text-gray-800 transition-colors"
+						className="text-black hover:text-black transition-colors"
 					>
 						info@skycrops.farm
 					</a>
 				),
 			},
 			{
-				icon: <Clock className="w-5 h-5 text-gray-600" />,
+				icon: <Clock className="w-5 h-5 text-black" />,
 				title: "Çalışma Saatleri",
 				content: (
-					<p className="text-gray-600">
+					<p className="text-black">
 						Pazartesi - Cuma: 9:00 AM - 6:00 PM
 						<br />
 						Cumartesi: 9:00 AM - 4:00 PM
@@ -304,10 +301,10 @@ export default function Iletisim() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12 sm:mb-16">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 							İletişim
 						</h1>
-						<p className="text-lg leading-relaxed text-gray-700">
+						<p className="text-lg leading-relaxed text-black">
 							Sorularınız için bizimle iletişime geçin. Size hızlıca dönüş
 							yapacağız.
 						</p>
@@ -317,7 +314,7 @@ export default function Iletisim() {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 mb-16">
 						{/* Contact Form */}
 						<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 								Bize Ulaşın
 							</h2>
 							<form onSubmit={handleSubmit} className="space-y-6">
@@ -394,7 +391,7 @@ export default function Iletisim() {
 									/>
 									<label
 										htmlFor={`${formBaseId}-agreeToPolicy`}
-										className="text-sm text-gray-700"
+										className="text-sm text-black"
 									>
 										Gizlilik politikamızı kabul ediyorum.{" "}
 										<Link
@@ -416,7 +413,7 @@ export default function Iletisim() {
 
 						{/* Contact Information */}
 						<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow">
-							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+							<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 								İletişim Bilgileri
 							</h2>
 

@@ -60,10 +60,10 @@ const WeeklyProgram: React.FC<WeeklyProgramProps> = memo(
 			<div className={`lg:sticky lg:top-8 ${className}`}>
 				<div className="bg-[#FDFBE2] rounded-3xl p-8 shadow-sm border border-black hover:shadow-md transition-all duration-300">
 					<div className="text-center mb-8">
-						<h3 className="text-3xl font-medium text-gray-800 mb-4">
+						<h3 className="text-3xl font-medium text-black mb-4">
 							Örnek Haftalık Programlar
 						</h3>
-						<p className="text-gray-600 leading-relaxed">
+						<p className="text-black leading-relaxed">
 							Aboneliğinizle birlikte her hafta sofranıza farklı
 							kombinasyonlarda 8 adet taptaze yeşillik gelir.
 						</p>
@@ -76,13 +76,13 @@ const WeeklyProgram: React.FC<WeeklyProgramProps> = memo(
 								key={week.weekNumber}
 								className="bg-white rounded-3xl p-6 border border-black shadow-sm hover:shadow-md transition-all duration-300"
 							>
-								<h4 className="font-medium text-gray-800 mb-3 flex items-center">
+								<h4 className="font-medium text-black mb-3 flex items-center">
 									<span className="w-8 h-8 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">
 										{week.weekNumber}
 									</span>
 									Örnek Hafta
 								</h4>
-								<p className="text-sm text-gray-600 leading-relaxed">
+								<p className="text-sm text-black leading-relaxed">
 									{week.description}
 								</p>
 							</div>

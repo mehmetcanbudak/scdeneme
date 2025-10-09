@@ -65,12 +65,10 @@ const BenefitCard = React.memo<{ benefit: HealthBenefit; index: number }>(
 						<IconComponent className={`w-6 h-6 ${benefit.iconColor}`} />
 					</div>
 					<div>
-						<h3 className="text-xl font-semibold mb-3 text-gray-800">
+						<h3 className="text-xl font-semibold mb-3 text-black">
 							{benefit.title}
 						</h3>
-						<p className="text-gray-600 leading-relaxed">
-							{benefit.description}
-						</p>
+						<p className="text-black leading-relaxed">{benefit.description}</p>
 					</div>
 				</div>
 			</div>
@@ -85,24 +83,22 @@ BenefitCard.displayName = "BenefitCard";
 const NutritionCard = React.memo<{ fact: NutritionFact }>(({ fact }) => {
 	return (
 		<div className="bg-white rounded-lg p-6 text-center shadow-sm">
-			<h3 className="text-lg font-semibold mb-4 text-gray-800">
-				{fact.product}
-			</h3>
+			<h3 className="text-lg font-semibold mb-4 text-black">{fact.product}</h3>
 			<div className="space-y-2 text-sm">
 				<div className="flex justify-between">
-					<span className="text-gray-600">C Vitamini:</span>
+					<span className="text-black">C Vitamini:</span>
 					<span className="font-medium">{fact.vitaminC}</span>
 				</div>
 				<div className="flex justify-between">
-					<span className="text-gray-600">Lif:</span>
+					<span className="text-black">Lif:</span>
 					<span className="font-medium">{fact.fiber}</span>
 				</div>
 				<div className="flex justify-between">
-					<span className="text-gray-600">Potasyum:</span>
+					<span className="text-black">Potasyum:</span>
 					<span className="font-medium">{fact.potassium}</span>
 				</div>
 				<div className="flex justify-between">
-					<span className="text-gray-600">Kalori:</span>
+					<span className="text-black">Kalori:</span>
 					<span className="font-medium">{fact.calories}</span>
 				</div>
 			</div>
@@ -311,10 +307,10 @@ export default function Saglik() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">
-						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-black">
 							Sağlık
 						</h1>
-						<p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+						<p className="text-xl text-black max-w-4xl mx-auto leading-relaxed">
 							Organik tarımın sağlığınıza faydaları ve beslenme değerleri
 							hakkında detaylı bilgi edinin
 						</p>
@@ -322,7 +318,7 @@ export default function Saglik() {
 
 					{/* Health Benefits Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Organik Ürünlerin Sağlık Faydaları
 						</h2>
 
@@ -335,7 +331,7 @@ export default function Saglik() {
 
 					{/* Nutrition Facts Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Beslenme Değerleri
 						</h2>
 
@@ -350,7 +346,7 @@ export default function Saglik() {
 
 					{/* Why Choose Organic Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Neden Organik Ürün Seçmelisiniz?
 						</h2>
 
@@ -359,10 +355,10 @@ export default function Saglik() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Leaf className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Doğal Yetiştirme
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Kimyasal gübre ve pestisit kullanılmadan, doğal yöntemlerle
 									yetiştirilir
 								</p>
@@ -372,10 +368,10 @@ export default function Saglik() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Users className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Çiftçi Sağlığı
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Zararlı kimyasallara maruz kalmayan çiftçiler tarafından
 									üretilir
 								</p>
@@ -385,10 +381,10 @@ export default function Saglik() {
 								<div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Award className="w-8 h-8 text-yellow-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Kalite Garantisi
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Sertifikalı organik üretim standartlarına uygun kalite
 								</p>
 							</div>
@@ -397,27 +393,27 @@ export default function Saglik() {
 
 					{/* Daily Health Tips */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Günlük Sağlık İpuçları
 						</h2>
 
 						<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
 								<div>
-									<h3 className="text-xl font-semibold mb-4 text-gray-800">
+									<h3 className="text-xl font-semibold mb-4 text-black">
 										Güne Başlarken
 									</h3>
-									<ul className="space-y-2 text-gray-600">
+									<ul className="space-y-2 text-black">
 										{morningTips.map((tip, index) => (
 											<TipListItem key={index} tip={tip} />
 										))}
 									</ul>
 								</div>
 								<div>
-									<h3 className="text-xl font-semibold mb-4 text-gray-800">
+									<h3 className="text-xl font-semibold mb-4 text-black">
 										Gün Boyunca
 									</h3>
-									<ul className="space-y-2 text-gray-600">
+									<ul className="space-y-2 text-black">
 										{dailyTips.map((tip, index) => (
 											<TipListItem key={index} tip={tip} />
 										))}

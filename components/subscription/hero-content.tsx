@@ -21,11 +21,11 @@ const HeroContent: React.FC<HeroContentProps> = memo(
 	({ onSubscribeClick, className = "" }) => {
 		return (
 			<div className={`text-center mb-16 ${className}`}>
-				<h1 className="text-5xl md:text-6xl font-light mb-6 tracking-wide text-gray-800 leading-tight">
+				<h1 className="text-5xl md:text-6xl font-light mb-6 tracking-wide text-black leading-tight">
 					Her Hafta Taptaze Yeşillikler
-					<span className="block text-gray-600 font-medium">Kapınızda!</span>
+					<span className="block text-black font-medium">Kapınızda!</span>
 				</h1>
-				<p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+				<p className="text-xl text-black max-w-4xl mx-auto leading-relaxed">
 					Skycrops abonelik sistemiyle tanışın: Şehirde yaşarken en taze, en
 					lezzetli ve en sağlıklı yeşilliklere zahmetsizce ulaşmanın en kolay
 					yolu.

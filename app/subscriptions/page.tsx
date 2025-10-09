@@ -77,10 +77,10 @@ const SubscriptionsContent = memo(() => {
 					<CardContent>
 						<div className="text-center py-12">
 							<CreditCard className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-							<h3 className="text-lg font-semibold text-gray-700 mb-2">
+							<h3 className="text-lg font-semibold text-black mb-2">
 								Henüz abonelik yok
 							</h3>
-							<p className="text-gray-600 mb-6">
+							<p className="text-black mb-6">
 								Düzenli teslimat için abonelik paketlerimize göz atın
 							</p>
 							<Button onClick={handleExploreSubscriptions}>

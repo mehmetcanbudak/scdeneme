@@ -31,8 +31,8 @@ const TeamMemberCard = React.memo<{ member: TeamMember }>(({ member }) => {
 				/>
 			</div>
 			<h3 className="text-xl font-medium mb-2">{member.name}</h3>
-			<p className="text-gray-600 font-medium mb-4">{member.role}</p>
-			<p className="text-gray-600 text-sm">{member.description}</p>
+			<p className="text-black font-medium mb-4">{member.role}</p>
+			<p className="text-black text-sm">{member.description}</p>
 		</div>
 	);
 });
@@ -110,7 +110,7 @@ export default function Ekibim() {
 				<div className="relative z-10 h-full flex items-center justify-center text-center text-white">
 					<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="mb-8">
-							<h1 className="text-5xl md:text-7xl font-light mb-8 tracking-wide">
+							<h1 className="text-5xl md:text-7xl font-light mb-8 tracking-wide text-black">
 								EKİBİMİZ
 							</h1>
 						</div>
@@ -125,7 +125,7 @@ export default function Ekibim() {
 						onClick={scrollToContent}
 						className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
 					>
-						<ChevronDown className="w-5 h-5 text-gray-600" />
+						<ChevronDown className="w-5 h-5 text-black" />
 					</button>
 				</div>
 			</div>
@@ -138,10 +138,10 @@ export default function Ekibim() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
-						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-black">
 							Ekibimiz
 						</h1>
-						<p className="text-lg text-gray-600">
+						<p className="text-lg text-black">
 							Deneyimli ve tutkulu tarım uzmanları
 						</p>
 					</div>

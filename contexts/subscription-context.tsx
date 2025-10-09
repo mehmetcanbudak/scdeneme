@@ -220,11 +220,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 				throw new Error(response.error.message);
 			}
 
-			const userSubscriptions = response.data || [];
+			const userSubscriptions = (response.data || []) as Subscription[];
 			setSubscriptions(userSubscriptions);
 
 			// Find active subscription
-			const active = userSubscriptions.find(
+			const active = (userSubscriptions as Subscription[]).find(
 				(sub: Subscription) => sub.status === "active",
 			);
 			setActiveSubscription(active || null);
@@ -290,7 +290,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 			return {
 				success: true,
 				message: "Abonelik başarıyla oluşturuldu",
-				subscription: response.data,
+				subscription: response.data as Subscription,
 			};
 		} catch (err) {
 			const errorMessage =

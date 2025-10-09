@@ -33,7 +33,7 @@ const ActionIcons = memo(function ActionIcons({
 	// Determine icon color based on page and transparency
 	const isHomePage = pathname === "/";
 	const iconColor =
-		isHomePage && !shouldBeTransparent ? "text-gray-800" : "text-white";
+		isHomePage && !shouldBeTransparent ? "text-black" : "text-white";
 	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${iconColor}`;
 
 	const handleUserClick = () => {

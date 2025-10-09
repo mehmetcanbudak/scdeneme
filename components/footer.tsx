@@ -35,9 +35,9 @@ const FooterLink = memo(function FooterLink({
 	ariaLabel,
 	type = "link",
 	className,
-	textColorClass = "text-gray-600",
-	textHoverClass = "hover:text-gray-800",
-	textFocusClass = "focus:text-gray-800",
+	textColorClass = "text-black",
+	textHoverClass = "hover:text-black",
+	textFocusClass = "focus:text-black",
 }: FooterLinkProps) {
 	const isExternal = external || href.startsWith("http");
 	const isSpecialType = type === "email" || type === "tel";
@@ -89,21 +89,12 @@ const Footer = memo(function Footer({
 	const footerRef = useRef<HTMLDivElement | null>(null);
 	const [footerHeight, setFooterHeight] = useState(DEFAULT_FOOTER_HEIGHT);
 
-	// Determine if footer should use white text (for red/pink backgrounds)
-	const isRedBackground = footerColor === "#DC4F34";
-	const isPinkBackground = footerColor === "#DF626B";
-	const shouldUseWhiteText = isRedBackground || isPinkBackground;
-	const textColorClass = shouldUseWhiteText ? "text-white" : "text-gray-600";
-	const textHoverClass = shouldUseWhiteText
-		? "hover:text-gray-200"
-		: "hover:text-gray-800";
-	const textFocusClass = shouldUseWhiteText
-		? "focus:text-gray-200"
-		: "focus:text-gray-800";
-	const titleColorClass = shouldUseWhiteText ? "text-white" : "text-gray-800";
-	const borderColorClass = shouldUseWhiteText
-		? "border-gray-400"
-		: "border-gray-300";
+	// All footers now use black text
+	const textColorClass = "text-black";
+	const textHoverClass = "hover:text-black";
+	const textFocusClass = "focus:text-black";
+	const titleColorClass = "text-black";
+	const borderColorClass = "border-gray-700";
 
 	useEffect(() => {
 		const node = footerRef.current;

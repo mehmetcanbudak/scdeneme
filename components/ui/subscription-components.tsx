@@ -47,23 +47,21 @@ export const SubscriptionPackage = memo(function SubscriptionPackage({
 
 			{/* Package Content */}
 			<div className="p-8">
-				<h3 className="text-2xl font-medium mb-4 leading-tight text-gray-700">
+				<h3 className="text-2xl font-medium mb-4 leading-tight text-black">
 					{name}
 				</h3>
-				<p className="text-gray-600 mb-6 text-lg leading-relaxed">
-					{description}
-				</p>
+				<p className="text-black mb-6 text-lg leading-relaxed">{description}</p>
 
 				{/* Weekly Items */}
 				{weeklyItems && (
 					<div className="mb-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
-						<h4 className="font-medium text-gray-700 mb-4 flex items-center">
-							<Check className="w-5 h-5 text-gray-600 mr-2" />
+						<h4 className="font-medium text-black mb-4 flex items-center">
+							<Check className="w-5 h-5 text-black mr-2" />
 							Bu hafta paketinizde:
 						</h4>
 						<ul className="space-y-2">
 							{weeklyItems.map((item, index) => (
-								<li key={index} className="flex items-center text-gray-600">
+								<li key={index} className="flex items-center text-black">
 									<div className="w-2 h-2 bg-gray-600 rounded-full mr-3 flex-shrink-0"></div>
 									<span>{item}</span>
 								</li>
@@ -74,13 +72,11 @@ export const SubscriptionPackage = memo(function SubscriptionPackage({
 
 				{/* Features */}
 				<div className="mb-8">
-					<h4 className="font-medium text-gray-700 mb-4">
-						Abonelik Avantajları:
-					</h4>
+					<h4 className="font-medium text-black mb-4">Abonelik Avantajları:</h4>
 					<ul className="space-y-3">
 						{features.map((feature, index) => (
-							<li key={index} className="flex items-center text-gray-600">
-								<Check className="w-5 h-5 text-gray-600 mr-3 flex-shrink-0" />
+							<li key={index} className="flex items-center text-black">
+								<Check className="w-5 h-5 text-black mr-3 flex-shrink-0" />
 								<span>{feature}</span>
 							</li>
 						))}
@@ -90,7 +86,7 @@ export const SubscriptionPackage = memo(function SubscriptionPackage({
 				{/* Pricing */}
 				<div className="flex items-center justify-between mb-8 bg-gray-50 rounded-lg p-6 border border-gray-200">
 					<div className="flex items-center space-x-4">
-						<span className="text-4xl font-bold text-gray-800">
+						<span className="text-4xl font-bold text-black">
 							{discountedPrice}₺
 						</span>
 						<span className="text-xl text-gray-500 line-through">
@@ -98,7 +94,7 @@ export const SubscriptionPackage = memo(function SubscriptionPackage({
 						</span>
 					</div>
 					<div className="text-right">
-						<div className="text-sm text-gray-600">Aylık</div>
+						<div className="text-sm text-black">Aylık</div>
 						<div className="text-lg font-semibold text-red-600">
 							%33 İndirim
 						</div>
@@ -130,8 +126,8 @@ export const BenefitCard = memo(function BenefitCard({
 			<div className="flex justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
 				{icon}
 			</div>
-			<h3 className="text-xl font-medium text-gray-700 mb-3">{title}</h3>
-			<p className="text-gray-600 leading-relaxed">{description}</p>
+			<h3 className="text-xl font-medium text-black mb-3">{title}</h3>
+			<p className="text-black leading-relaxed">{description}</p>
 		</div>
 	);
 });
@@ -154,7 +150,7 @@ export const TestimonialCard = memo(function TestimonialCard({
 					<Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
 				))}
 			</div>
-			<p className="text-gray-600 mb-6 italic leading-relaxed text-sm">
+			<p className="text-black mb-6 italic leading-relaxed text-sm">
 				"{comment}"
 			</p>
 			<div className="flex items-center">
@@ -164,7 +160,7 @@ export const TestimonialCard = memo(function TestimonialCard({
 					</span>
 				</div>
 				<div>
-					<h4 className="font-medium text-gray-700 text-sm">{name}</h4>
+					<h4 className="font-medium text-black text-sm">{name}</h4>
 					<p className="text-xs text-gray-500">Abone Müşteri</p>
 				</div>
 			</div>
@@ -190,8 +186,8 @@ export const FAQSection = memo(function FAQSection({
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div className="text-center mb-12">
-				<h2 className="text-2xl font-medium mb-4 text-gray-700">{title}</h2>
-				{subtitle && <p className="text-gray-600">{subtitle}</p>}
+				<h2 className="text-2xl font-medium mb-4 text-black">{title}</h2>
+				{subtitle && <p className="text-black">{subtitle}</p>}
 			</div>
 
 			<div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -202,10 +198,10 @@ export const FAQSection = memo(function FAQSection({
 							value={item.id}
 							className="border-gray-100 px-8 last:border-b-0"
 						>
-							<AccordionTrigger className="py-6 text-left hover:no-underline hover:bg-gray-50 px-0 rounded-lg transition-all duration-300 text-lg font-medium text-gray-700">
+							<AccordionTrigger className="py-6 text-left hover:no-underline hover:bg-gray-50 px-0 rounded-lg transition-all duration-300 text-lg font-medium text-black">
 								{item.question}
 							</AccordionTrigger>
-							<AccordionContent className="pb-6 px-0 text-gray-600 leading-relaxed text-base">
+							<AccordionContent className="pb-6 px-0 text-black leading-relaxed text-base">
 								{item.answer}
 							</AccordionContent>
 						</AccordionItem>
@@ -234,10 +230,10 @@ export const CTASection = memo(function CTASection({
 	return (
 		<section className={`py-20 px-6 bg-[#DF626B] ${className}`}>
 			<div className="max-w-4xl mx-auto text-center">
-				<h2 className="text-4xl md:text-5xl font-light mb-6 text-white">
+				<h2 className="text-4xl md:text-5xl font-light mb-6 text-black">
 					{title}
 				</h2>
-				<p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+				<p className="text-xl text-black/80 mb-8 max-w-3xl mx-auto leading-relaxed">
 					{subtitle}
 				</p>
 				<Button onClick={onButtonClick} className="px-8 py-4 text-lg">

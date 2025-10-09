@@ -221,19 +221,19 @@ Custom configuration in `tailwind.config.ts` with:
 ### Next.js
 Configuration in `next.config.mjs`:
 - Image optimization and domain configuration
-- Strapi CMS integration
+- Payload CMS integration (via internal API routes)
 - Performance optimizations with scroll restoration
 - Build configurations with error handling
 
 ### API Integration
-- **Strapi CMS**: Headless CMS integration
+- **Payload CMS**: Headless CMS integration
 - **API Client**: Centralized API client configuration
 - **Environment Variables**: Secure API endpoint management
 
 ## 🔌 API Reference
 
 ### Base Configuration
-- **Base URL**: `process.env.NEXT_PUBLIC_API_URL` (falls back to `http://localhost:1337`)
+- **Base URL**: Internal Next.js API routes (backend base configured via `PAYLOAD_API_URL`)
 - **Authentication**: Bearer JWT token stored in `localStorage` as `token`
 - **Client**: Centralized `apiClient` wrapper in `lib/api-client.ts`
 - **Response Format**: All endpoints return `{ data?, error?, message? }`

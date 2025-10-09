@@ -138,7 +138,7 @@ export default function ShoppingCart({
 										<p className="font-medium text-sm truncate">
 											{item.product.name}
 										</p>
-										<p className="text-xs text-gray-600">
+										<p className="text-xs text-black">
 											{formatCartItemDescription(item)}
 										</p>
 										<p className="text-sm font-medium text-green-600">
@@ -267,7 +267,7 @@ export default function ShoppingCart({
 					{items.length === 0 ? (
 						<div className="text-center py-12">
 							<ShoppingCartIcon className="w-24 h-24 mx-auto mb-4 text-gray-300" />
-							<h3 className="text-xl font-medium mb-2 text-gray-600">
+							<h3 className="text-xl font-medium mb-2 text-black">
 								Sepetiniz boş
 							</h3>
 							<p className="text-gray-500 mb-6">
@@ -297,7 +297,7 @@ export default function ShoppingCart({
 												<h3 className="font-medium text-lg mb-1">
 													{item.product.name}
 												</h3>
-												<p className="text-gray-600 mb-2">
+												<p className="text-black mb-2">
 													{formatCartItemDescription(item)}
 												</p>
 												<div className="flex items-center gap-4">
@@ -341,7 +341,7 @@ export default function ShoppingCart({
 													</div>
 													<div className="flex items-center gap-4 ml-auto">
 														<div className="text-right">
-															<p className="text-sm text-gray-600">
+															<p className="text-sm text-black">
 																{item.formatted_unit_price} x {item.quantity}
 															</p>
 															<p className="font-semibold text-lg text-green-600">

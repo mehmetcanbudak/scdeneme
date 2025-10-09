@@ -44,10 +44,10 @@ const FAQSection: React.FC<FAQSectionProps> = memo(({ items }) => {
 		<div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
 			<div className="max-w-4xl mx-auto">
 				<div className="text-center mb-12">
-					<h2 className="text-3xl font-light text-gray-800 mb-4">
+					<h2 className="text-3xl font-light text-black mb-4">
 						Sıkça Sorulan Sorular
 					</h2>
-					<p className="text-lg text-gray-600">
+					<p className="text-lg text-black">
 						Taze yeşillikler paketi hakkında merak edilenler
 					</p>
 				</div>
@@ -68,12 +68,10 @@ const FAQSection: React.FC<FAQSectionProps> = memo(({ items }) => {
 										<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
 									</div>
 									<div>
-										<h3 className="text-lg font-semibold mb-3 text-gray-800">
+										<h3 className="text-lg font-semibold mb-3 text-black">
 											{faq.question}
 										</h3>
-										<p className="text-gray-600 leading-relaxed">
-											{faq.answer}
-										</p>
+										<p className="text-black leading-relaxed">{faq.answer}</p>
 									</div>
 								</div>
 							</div>
@@ -94,7 +92,7 @@ const FAQSection: React.FC<FAQSectionProps> = memo(({ items }) => {
 						<Link href="/iletisim">
 							<Button
 								variant="outline"
-								className="bg-transparent border-white text-white hover:bg-white hover:text-gray-600"
+								className="bg-transparent border-white text-white hover:bg-white hover:text-black"
 							>
 								<HelpCircle className="w-4 h-4 mr-2" />
 								İletişime Geç

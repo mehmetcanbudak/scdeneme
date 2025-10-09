@@ -363,7 +363,7 @@ export default function ProfileSettings({ onSuccess }: ProfileSettingsProps) {
 				<CardHeader>
 					<div className="flex items-center gap-3">
 						<div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-							<User className="w-5 h-5 text-gray-600" />
+							<User className="w-5 h-5 text-black" />
 						</div>
 						<div>
 							<CardTitle>Profil Bilgilerim</CardTitle>

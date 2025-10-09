@@ -33,11 +33,11 @@ export type ButtonVariant = keyof typeof variantStyles;
 export type ButtonSize = keyof typeof sizeStyles;
 
 export interface ButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-		React.AnchorHTMLAttributes<HTMLAnchorElement> {
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	asChild?: boolean;
 	variant?: ButtonVariant;
 	size?: ButtonSize;
+	offset?: boolean;
 }
 
 const coreClasses =

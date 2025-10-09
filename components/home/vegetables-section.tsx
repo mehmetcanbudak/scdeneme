@@ -78,11 +78,6 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 					image: "/farmımızda_yetisen_sebzeler/frenk_sogani.svg",
 				},
 				{
-					name: "ISPANAK",
-					subtitle: "VİTAMİN DEPOSU",
-					image: "/farmımızda_yetisen_sebzeler/ispanak.svg",
-				},
-				{
 					name: "KALE",
 					subtitle: "SÜPER BESİN",
 					image: "/farmımızda_yetisen_sebzeler/kale.svg",
@@ -91,11 +86,6 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 					name: "KEKİK",
 					subtitle: "AROMATIK OT",
 					image: "/farmımızda_yetisen_sebzeler/kekik.svg",
-				},
-				{
-					name: "KIRMIZI YAĞLI YAPRAK",
-					subtitle: "KIRMIZI YAPRAK",
-					image: "/farmımızda_yetisen_sebzeler/kirmizi_ yagli_yaprak.svg",
 				},
 				{
 					name: "KIRMIZI DAMARLI KUZUKULAĞI",
@@ -113,11 +103,6 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 					image: "/farmımızda_yetisen_sebzeler/kuzukulagi.svg",
 				},
 				{
-					name: "LOLLO ROSSO",
-					subtitle: "KIRMIZI YAPRAK",
-					image: "/farmımızda_yetisen_sebzeler/lolorosso.svg",
-				},
-				{
 					name: "MAYDANOZ",
 					subtitle: "VİTAMİN DEPOSU",
 					image: "/farmımızda_yetisen_sebzeler/maydanoz.svg",
@@ -131,11 +116,6 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 					name: "MOR FESLEĞEN",
 					subtitle: "AROMATIK REYHAN",
 					image: "/farmımızda_yetisen_sebzeler/mor_feslegen(reyhan).svg",
-				},
-				{
-					name: "NANE",
-					subtitle: "FERAHLATICI OT",
-					image: "/farmımızda_yetisen_sebzeler/nane.svg",
 				},
 				{
 					name: "PAZI",
@@ -249,13 +229,9 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
-							Farmımızda Yetişen Sebzeler
+						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
+							Skycrops'ta Büyüyen Taze Yeşillikler
 						</h2>
-						<p className="text-base leading-relaxed mt-4">
-							1 ay içiinde farmımızda yetiştirdiğimiz bütün çesitler evinize
-							ulaşmış olacak.
-						</p>
 					</div>
 				</div>
 
@@ -292,7 +268,7 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 								<h3 className="text-xl md:text-2xl font-medium leading-snug mb-1 tracking-wide">
 									{vegetable.name}
 								</h3>
-								<p className="text-sm text-gray-600 uppercase tracking-widest">
+								<p className="text-sm text-black uppercase tracking-widest">
 									{vegetable.subtitle}
 								</p>
 							</div>
@@ -308,7 +284,7 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
 								aria-label="Scroll left"
 							>
-								<ChevronLeft className="w-5 h-5 text-gray-600" />
+								<ChevronLeft className="w-5 h-5 text-black" />
 							</button>
 						</div>
 					)}
@@ -321,7 +297,7 @@ const VegetablesSection: React.FC<VegetablesSectionProps> = memo(
 								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
 								aria-label="Scroll right"
 							>
-								<ChevronRight className="w-5 h-5 text-gray-600" />
+								<ChevronRight className="w-5 h-5 text-black" />
 							</button>
 						</div>
 					)}

@@ -3,63 +3,32 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getArticleBySlug } from "@/lib/cms";
 
 // ========================================
 // Types
 // ========================================
 
-/** Article data structure from Strapi */
-interface ArticleData {
+type ArticleData = {
 	title: string;
 	excerpt?: string;
 	content?: string;
-	publishedAt?: string;
+	createdAt?: string;
 	readTime?: number;
-	cover?: {
-		url: string;
-	};
-}
+	cover?: { url: string } | null;
+};
 
-/** Page params structure */
-interface PageParams {
+type PageParams = {
 	params: Promise<{ slug: string }>;
-}
+};
 
 // ========================================
 // Server Functions
 // ========================================
 
-/**
- * Fetches a single article by slug from Strapi
- * @param slug - The article slug identifier
- * @returns The article data or null if not found
- */
 async function fetchArticle(slug: string): Promise<ArticleData | null> {
 	try {
-		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
-		const TOKEN = process.env.STRAPI_API_TOKEN;
-		if (!STRAPI_URL) {
-			console.error("Missing NEXT_PUBLIC_API_URL");
-			return null;
-		}
-
-		// Fetch directly from Strapi in production to avoid self-fetch deadlocks
-		const headers: HeadersInit = {};
-		if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
-
-		const res = await fetch(
-			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}/`,
-			{
-				// Use no-store to ensure fresh content and avoid build-time caching issues on Vercel
-				cache: "no-store",
-				headers,
-			},
-		);
-		if (!res.ok) {
-			console.error("Upstream error fetching article", slug, res.status);
-			return null;
-		}
-		const json = await res.json();
+		const json = await getArticleBySlug(slug);
 		return json?.data || null;
 	} catch (error) {
 		console.error(`Error fetching article ${slug}:`, error);
@@ -67,33 +36,12 @@ async function fetchArticle(slug: string): Promise<ArticleData | null> {
 	}
 }
 
-/**
- * Generates metadata for SEO and social sharing
- * @param params - Page params containing the article slug
- * @returns Metadata object for Next.js
- */
 export async function generateMetadata({ params: paramsPromise }: PageParams) {
 	const { slug } = await paramsPromise;
 	try {
-		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
-		const TOKEN = process.env.STRAPI_API_TOKEN;
-		if (!STRAPI_URL) return {};
-		const res = await fetch(
-			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}/`,
-			{
-				headers: TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {},
-				cache: "force-cache",
-			},
-		);
-		if (!res.ok) return {};
-		const json = await res.json();
+		const json = await getArticleBySlug(slug);
 		const a = json?.data || {};
-		const API_URL = STRAPI_URL;
-		const imgUrl = a?.cover?.url
-			? a.cover.url.startsWith("http")
-				? a.cover.url
-				: `${API_URL}${a.cover.url}`
-			: undefined;
+		const imgUrl = a?.cover?.url;
 
 		return {
 			title: a?.title ? `${a.title} | Skycrops` : "Blog | Skycrops",
@@ -106,7 +54,7 @@ export async function generateMetadata({ params: paramsPromise }: PageParams) {
 				images: imgUrl ? [{ url: imgUrl }] : undefined,
 			},
 			alternates: { canonical: `/blog/${slug}` },
-		};
+		} as const;
 	} catch {
 		return {};
 	}
@@ -118,35 +66,11 @@ export const dynamic = "force-dynamic";
 // Helper Functions
 // ========================================
 
-/**
- * Constructs the full cover image URL
- * @param cover - Cover object from Strapi
- * @param apiUrl - Base API URL
- * @returns Full image URL or null
- */
-function getCoverUrl(
-	cover: { url: string } | undefined,
-	apiUrl: string,
-): string | null {
-	if (!cover?.url) return null;
-	return cover.url.startsWith("http") ? cover.url : `${apiUrl}${cover.url}`;
-}
-
-/**
- * Formats a date string to Turkish locale
- * @param dateString - ISO date string
- * @returns Formatted date string or undefined
- */
 function formatDate(dateString: string | undefined): string | undefined {
 	if (!dateString) return undefined;
 	return new Date(dateString).toLocaleDateString("tr-TR");
 }
 
-/**
- * Formats read time in minutes
- * @param readTime - Read time in minutes
- * @returns Formatted read time string or undefined
- */
 function formatReadTime(readTime: number | undefined): string | undefined {
 	if (!readTime) return undefined;
 	return `${readTime} dk okuma`;
@@ -156,11 +80,6 @@ function formatReadTime(readTime: number | undefined): string | undefined {
 // Main Component
 // ========================================
 
-/**
- * Blog article detail page component
- * Server-rendered page that displays a single blog article with metadata
- * @param params - Page params containing the article slug
- */
 export default async function BlogArticle({
 	params: paramsPromise,
 }: PageParams) {
@@ -168,10 +87,8 @@ export default async function BlogArticle({
 	const data = await fetchArticle(params.slug);
 	if (!data) return notFound();
 
-	// Handle Strapi v5 data structure (fields are directly on data object)
-	const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-	const coverUrl = getCoverUrl(data.cover, API_URL);
-	const date = formatDate(data.publishedAt);
+	const coverUrl = data.cover?.url || null;
+	const date = formatDate(data.createdAt);
 	const readTime = formatReadTime(data.readTime);
 
 	return (
@@ -182,7 +99,7 @@ export default async function BlogArticle({
 					<div className="mb-6 sm:mb-8">
 						<Link
 							href="/blog"
-							className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors text-sm sm:text-base py-2 px-3 -mx-3 rounded-md hover:bg-gray-50 touch-manipulation"
+							className="inline-flex items-center text-black hover:text-black transition-colors text-sm sm:text-base py-2 px-3 -mx-3 rounded-md hover:bg-gray-50 touch-manipulation"
 						>
 							<ArrowLeft className="w-4 h-4 mr-2 flex-shrink-0" />
 							<span className="hidden xs:inline">Blog'a Dön</span>
@@ -207,7 +124,7 @@ export default async function BlogArticle({
 							</div>
 						)}
 
-						<div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 xs:gap-4 mb-4 sm:mb-6 text-sm text-gray-600">
+						<div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 xs:gap-4 mb-4 sm:mb-6 text-sm text-black">
 							{date && (
 								<div className="flex items-center">
 									<Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -222,12 +139,12 @@ export default async function BlogArticle({
 							)}
 						</div>
 
-						<h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mb-4 sm:mb-6 text-gray-800 leading-tight">
+						<h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mb-4 sm:mb-6 text-black leading-tight">
 							{data.title}
 						</h1>
 
 						{data.excerpt && (
-							<p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mb-6 sm:mb-8">
+							<p className="text-base sm:text-lg md:text-xl text-black leading-relaxed mb-6 sm:mb-8">
 								{data.excerpt}
 							</p>
 						)}
@@ -237,7 +154,7 @@ export default async function BlogArticle({
 					<div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm">
 						{data.content && (
 							<div
-								className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-gray-700 leading-relaxed prose-headings:text-gray-800 prose-p:text-gray-700 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-em:text-gray-700 prose-img:rounded-lg prose-img:shadow-md"
+								className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-black leading-relaxed prose-headings:text-black prose-p:text-black prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-black prose-em:text-black prose-img:rounded-lg prose-img:shadow-md"
 								// biome-ignore lint/security/noDangerouslySetInnerHtml: Content is from trusted CMS source
 								dangerouslySetInnerHTML={{ __html: data.content }}
 							/>

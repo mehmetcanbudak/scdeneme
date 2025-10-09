@@ -14,7 +14,7 @@ const HamburgerMenu = memo(function HamburgerMenu({
 	...buttonProps
 }: HamburgerMenuProps) {
 	const iconClass = `w-5 h-5 transition-colors ${
-		shouldBeTransparent ? "text-white" : "text-gray-600"
+		shouldBeTransparent ? "text-white" : "text-black"
 	}`;
 
 	return (

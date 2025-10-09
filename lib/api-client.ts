@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
+const API_BASE_URL = "";
 
 interface ApiResponse<T = any> {
 	data?: T;
@@ -122,7 +122,11 @@ class ApiClient {
 		endpoint: string,
 		options: RequestInit = {},
 	): Promise<ApiResponse<T>> {
-		const url = `${this.baseURL}${endpoint}`;
+		const url = endpoint.startsWith("http")
+			? endpoint
+			: endpoint.startsWith("/api/")
+				? endpoint // use same-origin for internal API routes
+				: `${this.baseURL}${endpoint}`;
 		const method = (options.method || "GET").toString().toUpperCase();
 
 		// Wait for token to be initialized for authenticated endpoints

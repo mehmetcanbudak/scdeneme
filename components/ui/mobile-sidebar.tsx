@@ -72,7 +72,7 @@ const MobileSidebar = memo(function MobileSidebar({
 				onClick={handleBackdropClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") {
-						handleBackdropClick(e);
+						onClose();
 					}
 				}}
 				tabIndex={-1}
@@ -97,7 +97,7 @@ const MobileSidebar = memo(function MobileSidebar({
 							className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
 							aria-label="Close menu"
 						>
-							<X className="w-5 h-5 text-gray-600" />
+							<X className="w-5 h-5 text-black" />
 						</button>
 					</div>
 
@@ -125,8 +125,8 @@ const MobileSidebar = memo(function MobileSidebar({
 											onClick={onClose}
 											className={`relative block py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
 												active
-													? "text-gray-800 bg-gray-100 border-l-4 border-gray-600"
-													: "text-gray-700 hover:text-black hover:bg-gray-50"
+													? "text-black bg-gray-100 border-l-4 border-gray-600"
+													: "text-black hover:text-black hover:bg-gray-50"
 											}`}
 										>
 											<span className="relative z-10">{item.label}</span>
@@ -149,18 +149,14 @@ const MobileSidebar = memo(function MobileSidebar({
 								onClick={onClose}
 								className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200"
 							>
-								<ShoppingBag className="w-5 h-5 text-gray-600" />
-								<span className="text-sm font-medium text-gray-700">
-									Sepetim
-								</span>
+								<ShoppingBag className="w-5 h-5 text-black" />
+								<span className="text-sm font-medium text-black">Sepetim</span>
 							</Link>
 
 							{/* Language Selector */}
 							<div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200">
-								<span className="text-sm text-gray-600">🇹🇷</span>
-								<span className="text-sm font-medium text-gray-700">
-									Türkçe
-								</span>
+								<span className="text-sm text-black">🇹🇷</span>
+								<span className="text-sm font-medium text-black">Türkçe</span>
 							</div>
 
 							<Link
@@ -168,8 +164,8 @@ const MobileSidebar = memo(function MobileSidebar({
 								onClick={onClose}
 								className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors duration-200"
 							>
-								<User className="w-5 h-5 text-gray-600" />
-								<span className="text-sm font-medium text-gray-700">
+								<User className="w-5 h-5 text-black" />
+								<span className="text-sm font-medium text-black">
 									Giriş Yap
 								</span>
 							</Link>

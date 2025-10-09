@@ -39,24 +39,9 @@ const nextConfig = withPWA({
 				hostname: "localhost",
 				pathname: "/**",
 			},
-			{
-				protocol: "https",
-				hostname: "dynamic-spirit-b1c4404b11.strapiapp.com",
-				pathname: "/**",
-			},
-			{
-				protocol: "https",
-				hostname: "dynamic-spirit-b1c4404b11.media.strapiapp.com",
-				pathname: "/**",
-			},
 		],
 		qualities: [75, 85],
 		formats: ["image/webp", "image/avif"],
-	},
-	env: {
-		NEXT_PUBLIC_API_URL:
-			process.env.NEXT_PUBLIC_API_URL ||
-			"https://dynamic-spirit-b1c4404b11.strapiapp.com",
 	},
 	experimental: {
 		scrollRestoration: true,

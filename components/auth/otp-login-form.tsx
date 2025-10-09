@@ -107,10 +107,10 @@ export default function OTPLoginForm({
 			<div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 hover:shadow-md transition-shadow w-full max-w-md mx-auto">
 				<div className="text-center mb-6">
 					<div className="mx-auto mb-4 w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-						<Phone className="w-6 h-6 text-gray-600" />
+						<Phone className="w-6 h-6 text-black" />
 					</div>
-					<h2 className="text-2xl font-medium text-gray-700 mb-2">Giriş Yap</h2>
-					<p className="text-gray-600">
+					<h2 className="text-2xl font-medium text-black mb-2">Giriş Yap</h2>
+					<p className="text-black">
 						Telefon numaranızı girin, size OTP kodu gönderelim
 					</p>
 				</div>
@@ -119,7 +119,7 @@ export default function OTPLoginForm({
 					<div className="space-y-2">
 						<Label
 							htmlFor="phone"
-							className="block text-sm font-medium text-gray-700"
+							className="block text-sm font-medium text-black"
 						>
 							Telefon Numarası
 						</Label>
@@ -130,9 +130,9 @@ export default function OTPLoginForm({
 							value={phone}
 							onChange={(e) => setPhone(e.target.value)}
 							required
-							className="w-full px-3.5 py-3.5 border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-gray-800 text-center text-lg"
+							className="w-full px-3.5 py-3.5 border-[1.5px] border-black rounded-lg shadow-[2.5px_3px_0_#000] focus:shadow-[5.5px_7px_0_#000] outline-none transition-all duration-200 ease-in-out bg-white placeholder:text-gray-500 text-black text-center text-lg"
 						/>
-						<p className="text-xs text-gray-600 text-center">
+						<p className="text-xs text-black text-center">
 							Türkiye telefon numarası girin
 						</p>
 					</div>
@@ -162,7 +162,7 @@ export default function OTPLoginForm({
 						<Button
 							type="button"
 							variant="outline"
-							className="w-full bg-transparent border-gray-300 text-gray-600 hover:bg-gray-50 transition-all duration-300"
+							className="w-full bg-transparent border-gray-300 text-black hover:bg-gray-50 transition-all duration-300"
 							onClick={onCancel}
 						>
 							İptal
@@ -197,7 +197,7 @@ export default function OTPLoginForm({
 		<Card className="w-full max-w-md mx-auto">
 			<CardHeader className="text-center">
 				<div className="mx-auto mb-4 w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-					<Phone className="w-6 h-6 text-gray-600" />
+					<Phone className="w-6 h-6 text-black" />
 				</div>
 				<CardTitle className="text-2xl">OTP Doğrulama</CardTitle>
 				<CardDescription>

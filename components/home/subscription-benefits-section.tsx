@@ -99,10 +99,10 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 
 									{/* Content */}
 									<div className="flex-1">
-										<h3 className="text-xl md:text-2xl font-bold tracking-tight leading-snug mb-3 text-gray-800">
+										<h3 className="text-xl md:text-2xl font-bold tracking-tight leading-snug mb-3 text-black">
 											{benefit.title}
 										</h3>
-										<p className="text-base leading-relaxed text-gray-800">
+										<p className="text-base leading-relaxed text-black">
 											{benefit.description}
 										</p>
 									</div>

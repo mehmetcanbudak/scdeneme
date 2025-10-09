@@ -1,5 +1,5 @@
 import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Navbar from "@/components/navbar";
 import InitialLoader from "@/components/initial-loader";
 import { NavigationProvider } from "@/components/navigation-context";
 import DebugPanel from "@/components/debug/debug-panel";
@@ -10,7 +10,7 @@ import { ProductProvider } from "@/contexts/product-context";
 import { SubscriptionProvider } from "@/contexts/subscription-context";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
-import { Poppins, Roboto } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import ScrollToTop from "../components/scroll-to-top";
 import "./globals.css";
 
@@ -21,18 +21,11 @@ export const metadata: Metadata = {
 	generator: "Next.js",
 };
 
-// Configure Google Fonts with display swap for better performance
-const roboto = Roboto({
+// Configure Montserrat font with multiple weights for typography system
+const montserrat = Montserrat({
 	subsets: ["latin"],
-	weight: ["300", "400", "500", "700"],
-	variable: "--font-roboto",
-	display: "swap",
-});
-
-const poppins = Poppins({
-	subsets: ["latin"],
-	weight: ["300", "400", "500", "600", "700"],
-	variable: "--font-poppins",
+	weight: ["300", "400", "500", "600", "700", "800"],
+	variable: "--font-montserrat",
 	display: "swap",
 });
 
@@ -89,7 +82,7 @@ export default function RootLayout({
 				{/* Removed video preloads as they're heavy and not critical for initial load */}
 			</head>
 			<body
-				className={`font-sans ${roboto.variable} ${poppins.variable} overflow-x-hidden`}
+				className={`${montserrat.variable} font-sans overflow-x-hidden`}
 				suppressHydrationWarning
 			>
 				<InitialLoader />
@@ -100,7 +93,7 @@ export default function RootLayout({
 								<FooterColorProvider>
 									<NavigationProvider>
 										<ScrollToTop />
-										<Header />
+										<Navbar />
 										{children}
 										<Footer />
 										<DebugPanel />

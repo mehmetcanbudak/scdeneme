@@ -94,7 +94,7 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 				<div className="mb-8">
 					<Link
 						href="/abonelik"
-						className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+						className="inline-flex items-center text-black hover:text-black transition-colors"
 					>
 						<ArrowLeft className="w-4 h-4 mr-2" />
 						Abonelik Sayfasına Dön
@@ -104,7 +104,7 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 				<div className="space-y-8">
 					{/* Product Title and Price */}
 					<div>
-						<h1 className="text-4xl font-light mb-4 text-gray-800">
+						<h1 className="text-4xl font-light mb-4 text-black">
 							{product.name}
 						</h1>
 
@@ -129,7 +129,7 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 						</div>
 
 						{/* Price */}
-						<div className="text-4xl font-light text-gray-800 mb-2">
+						<div className="text-4xl font-light text-black mb-2">
 							{discountInfo?.hasDiscount ? (
 								<div className="space-y-2">
 									<div className="flex items-center space-x-3">
@@ -153,15 +153,15 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 						</div>
 
 						{/* VAT Info */}
-						<p className="text-sm text-gray-600 mb-6">KDV dahil</p>
+						<p className="text-sm text-black mb-6">KDV dahil</p>
 					</div>
 
 					{/* Description */}
 					<div>
-						<h3 className="font-medium mb-3 text-gray-800 text-lg">
+						<h3 className="font-medium mb-3 text-black text-lg">
 							Ürün Açıklaması
 						</h3>
-						<p className="text-gray-600 leading-relaxed">
+						<p className="text-black leading-relaxed">
 							{product.description ||
 								"Organik ve taze yeşilliklerden oluşan özel paketimiz. Fesleğen, roka, maydanoz, marul ve daha birçok vitamin deposu yeşillik bir arada. Dalından taze toplanır, soğuk zincirle size ulaştırılır."}
 						</p>
@@ -174,10 +174,8 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 								<Package className="w-6 h-6 text-green-600" />
 							</div>
 							<div>
-								<div className="font-medium text-gray-800">Taze Ürün</div>
-								<div className="text-sm text-gray-600">
-									Dalından taze toplanır
-								</div>
+								<div className="font-medium text-black">Taze Ürün</div>
+								<div className="text-sm text-black">Dalından taze toplanır</div>
 							</div>
 						</div>
 
@@ -186,8 +184,8 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 								<Shield className="w-6 h-6 text-green-600" />
 							</div>
 							<div>
-								<div className="font-medium text-gray-800">100% Organik</div>
-								<div className="text-sm text-gray-600">Pestisitsiz, doğal</div>
+								<div className="font-medium text-black">100% Organik</div>
+								<div className="text-sm text-black">Pestisitsiz, doğal</div>
 							</div>
 						</div>
 
@@ -196,8 +194,8 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 								<Truck className="w-6 h-6 text-yellow-600" />
 							</div>
 							<div>
-								<div className="font-medium text-gray-800">Hızlı Teslimat</div>
-								<div className="text-sm text-gray-600">24-48 saat içinde</div>
+								<div className="font-medium text-black">Hızlı Teslimat</div>
+								<div className="text-sm text-black">24-48 saat içinde</div>
 							</div>
 						</div>
 
@@ -206,8 +204,8 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = memo(
 								<Clock className="w-6 h-6 text-purple-600" />
 							</div>
 							<div>
-								<div className="font-medium text-gray-800">Güvenli Ödeme</div>
-								<div className="text-sm text-gray-600">SSL korumalı</div>
+								<div className="font-medium text-black">Güvenli Ödeme</div>
+								<div className="text-sm text-black">SSL korumalı</div>
 							</div>
 						</div>
 					</div>

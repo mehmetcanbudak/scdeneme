@@ -52,11 +52,11 @@ const PracticeCard = React.memo<{ practice: PracticeData }>(({ practice }) => {
 					{practice.icon}
 				</div>
 				<div>
-					<h3 className="text-xl font-semibold mb-3 text-gray-800">
+					<h3 className="text-xl font-semibold mb-3 text-black">
 						{practice.title}
 					</h3>
-					<p className="text-gray-600 mb-4">{practice.description}</p>
-					<ul className="text-sm text-gray-600 space-y-2">
+					<p className="text-black mb-4">{practice.description}</p>
+					<ul className="text-sm text-black space-y-2">
 						{practice.features.map((feature, idx) => (
 							<li key={idx}>• {feature}</li>
 						))}
@@ -84,10 +84,10 @@ const CertificateCard = React.memo<{
 				</div>
 			</div>
 			<div className="p-6">
-				<h3 className="font-semibold text-lg mb-2 text-gray-800">
+				<h3 className="font-semibold text-lg mb-2 text-black">
 					{certificate.title}
 				</h3>
-				<p className="text-gray-600 text-sm mb-4">{certificate.description}</p>
+				<p className="text-black text-sm mb-4">{certificate.description}</p>
 				<Button className="w-full" onClick={onView}>
 					<FileText className="w-4 h-4 mr-2" />
 					İncele
@@ -114,10 +114,10 @@ const AnalysisReportCard = React.memo<{
 				</div>
 			</div>
 			<div className="p-6">
-				<h3 className="font-semibold text-lg mb-2 text-gray-800">
+				<h3 className="font-semibold text-lg mb-2 text-black">
 					{report.title}
 				</h3>
-				<p className="text-gray-600 text-sm mb-4">{report.description}</p>
+				<p className="text-black text-sm mb-4">{report.description}</p>
 				<Button className="w-full" onClick={onView}>
 					<FileText className="w-4 h-4 mr-2" />
 					İncele
@@ -328,10 +328,10 @@ export default function Sertifikalar() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">
-						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-black">
 							Sertifikalar ve Analizler
 						</h1>
-						<p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+						<p className="text-xl text-black max-w-4xl mx-auto leading-relaxed">
 							İçiniz rahat olsun, meyvemiz temiz, kontrolümüz altında
 						</p>
 					</div>
@@ -343,10 +343,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Bug className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Biyolojik Mücadele
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Zararlılarla biyolojik mücadele yöntemleri kullanarak doğal
 									üretim
 								</p>
@@ -355,10 +355,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Award className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									İyi Tarım Uygulamaları
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Global Gap sertifikaları ile onaylanmış kalite standartları
 								</p>
 							</div>
@@ -366,10 +366,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Shield className="w-8 h-8 text-yellow-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Pestisitsiz Üretim
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Hiçbir işleme tabi tutulmadan dalından taze gönderim
 								</p>
 							</div>
@@ -379,7 +379,7 @@ export default function Sertifikalar() {
 					{/* Enhanced Description Section */}
 					<div className="text-center mb-16">
 						<div className="max-w-4xl mx-auto">
-							<p className="text-lg text-gray-700 leading-relaxed mb-6">
+							<p className="text-lg text-black leading-relaxed mb-6">
 								Zararlılarla biyolojik mücadele, iyi tarım uygulamaları, Global
 								Gap sertifikaları ve Skycrops'in üretim anlayışıyla;
 								meyvelerinizi mevsiminde dalından toplayıp, mumlama yapmadan,
@@ -387,13 +387,13 @@ export default function Sertifikalar() {
 								meyve ağaçlarından, dalından koparıp yercesine taze haliyle size
 								ulaştırmak için çok emek veriyoruz.
 							</p>
-							<p className="text-lg text-gray-700 leading-relaxed mb-6">
+							<p className="text-lg text-black leading-relaxed mb-6">
 								Pestisitsiz, iyi tarım uygulamaları ve biyolojik mücadele
 								uygulamalarıyla yetiştirdiğimiz, dalında olgunlaştığı haliyle
 								toplanıp paketlenen meyvelerimizin, iç rahatlığıyla kabuğundan
 								çekirdeğine kadar her dilimin tadını çıkarın.
 							</p>
-							<p className="text-lg text-gray-700 leading-relaxed">
+							<p className="text-lg text-black leading-relaxed">
 								Sertifikalarımız ve üretim süreçlerimiz hakkında daha fazla
 								bilgi almak için aşağıdaki belgelerimizi inceleyebilirsiniz.
 							</p>
@@ -402,7 +402,7 @@ export default function Sertifikalar() {
 
 					{/* Sustainable Practices Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Sürdürülebilir Tarım Uygulamalarımız
 						</h2>
 
@@ -415,7 +415,7 @@ export default function Sertifikalar() {
 
 					{/* Certificates Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							2024-2025 Üretim Sezonu
 							<br />
 							<span className="text-2xl">Analiz Raporları ve Belgelerimiz</span>
@@ -434,7 +434,7 @@ export default function Sertifikalar() {
 
 					{/* Analysis Reports Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Ürün Analiz Raporları
 						</h2>
 
@@ -451,7 +451,7 @@ export default function Sertifikalar() {
 
 					{/* Environmental Impact Section */}
 					<div className="mb-16">
-						<h2 className="text-3xl font-light mb-8 text-center text-gray-800">
+						<h2 className="text-3xl font-light mb-8 text-center text-black">
 							Çevresel Etki ve Sürdürülebilirlik
 						</h2>
 
@@ -460,10 +460,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Trees className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Biyoçeşitlilik
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Doğal ekosistemleri koruyarak biyoçeşitliliği destekliyoruz
 								</p>
 							</div>
@@ -472,10 +472,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Sun className="w-8 h-8 text-green-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Güneş Enerjisi
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Tesislerimizde yenilenebilir enerji kaynakları kullanıyoruz
 								</p>
 							</div>
@@ -484,10 +484,10 @@ export default function Sertifikalar() {
 								<div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
 									<Sprout className="w-8 h-8 text-yellow-600" />
 								</div>
-								<h3 className="text-lg font-semibold mb-2 text-gray-800">
+								<h3 className="text-lg font-semibold mb-2 text-black">
 									Toprak Sağlığı
 								</h3>
-								<p className="text-gray-600 text-sm">
+								<p className="text-black text-sm">
 									Organik gübreler ile toprak verimliliğini artırıyoruz
 								</p>
 							</div>

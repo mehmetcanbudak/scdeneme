@@ -1,22 +1,19 @@
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import type React from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 /**
- * FAQ item interface
+ * Benefit card interface
  */
-interface FAQItem {
-	id: string;
-	question: string;
-	answer: string;
+interface BenefitCard {
+	icon: string;
+	iconAlt: string;
+	title: string;
+	description: string;
+	backgroundColor: string;
+	borderColor: string;
 }
 
 /**
@@ -36,44 +33,44 @@ interface PackagesFAQSectionProps {
  */
 const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 	({ packageImage = "/bundle4.png", className = "" }) => {
-		/**
-		 * FAQ items data with memoization
-		 */
-		const faqItems: FAQItem[] = useMemo(
-			() => [
-				{
-					id: "item-1",
-					question: "Paketlerimiz nasıl hazırlanır?",
-					answer:
-						"Her paket, taze hasat edilmiş sebzelerimizden özenle seçilerek hazırlanır. Kalite kontrolümüzden geçen ürünler, hijyenik koşullarda paketlenir ve en kısa sürede teslim edilmek üzere hazır hale getirilir.",
-				},
-				{
-					id: "item-2",
-					question: "Teslimat süresi ne kadardır?",
-					answer:
-						"Siparişleriniz genellikle 24 saat içinde hazırlanır ve İstanbul içi teslimat için 2-3 iş günü, diğer bölgeler için 3-5 iş günü sürer. Hafta sonu siparişleri pazartesi günü işleme alınır.",
-				},
-				{
-					id: "item-3",
-					question: "Ürünlerin tazeliği nasıl korunur?",
-					answer:
-						"Ürünlerimiz hasattan sonra hemen soğuk zincirde saklanır ve teslimata kadar bu koşullarda muhafaza edilir. Her paket, teslimattan önce taze kalite kontrolünden geçer.",
-				},
-				{
-					id: "item-4",
-					question: "Paket içeriği değiştirilebilir mi?",
-					answer:
-						"Evet, özel ihtiyaçlarınıza göre paket içeriğini kişiselleştirebilirsiniz. Alerji durumunuz, tercih ettiğiniz sebzeler veya miktar değişiklikleri için müşteri hizmetlerimizle iletişime geçebilirsiniz.",
-				},
-				{
-					id: "item-5",
-					question: "İptal ve iade koşulları nelerdir?",
-					answer:
-						"Siparişiniz ulaştıktan sonra 24 saat içinde ürün kalitesi ile ilgili sorunlarınızı bildirebilirsiniz. Kalite garantisi kapsamındaki ürünler için tam geri ödeme yapılır.",
-				},
-			],
-			[],
-		);
+		const benefits: BenefitCard[] = [
+			{
+				icon: "/farmımızda_yetisen_sebzeler/her_hafta_taze_cesitler.svg",
+				iconAlt: "Her Hafta Farklı Çeşitler",
+				title: "HER HAFTA FARKLI ÇEŞİTLER",
+				description:
+					"Skycrops abonelik programıyla sofranıza her hafta farklı tatlar geliyor. Programımızda yalnızca 2 maral çeşidi sabit kalıyor; diğer tüm ürünler haftadan haftaya değişiyor. Böylece her kutuda 8 adet yeşillik ile hem tanıdık lezzetleri koruyor hem de yeni tatlarla mutfağınıza sürprizler ekliyoruz. Roka, fesleğen, maydanoz, semizotu ve daha niceleri...",
+				backgroundColor: "bg-[#fbf9d5]",
+				borderColor: "border-[#fbf9d5]",
+			},
+			{
+				icon: "/abone_olun_bize_bırakin.svg",
+				iconAlt: "Abone Olun",
+				title: "Abone olun, gerisini bize bırakın",
+				description:
+					"Tek yapmanız gereken size en uygun abonelik planını seçmek. İster her hafta, ister iki haftada bir sepetiniz kapınıza gelsin",
+				backgroundColor: "bg-[#e9f2dd]",
+				borderColor: "border-[#e9f2dd]",
+			},
+			{
+				icon: "/farmımızda_yetisen_sebzeler/dogal_ve_guvenilir.svg",
+				iconAlt: "Doğal ve Güvenilir Üretim",
+				title: "Doğal ve güvenilir üretim",
+				description:
+					"Pestisitsiz, %90 daha az suyla yetiştirilen yeşilliklerimiz kontrollü koşullarda üretilir ve sofranıza en yüksek tazelikle ulaşır.",
+				backgroundColor: "bg-[#759f72]",
+				borderColor: "border-[#7BA785]",
+			},
+			{
+				icon: "/farmımızda_yetisen_sebzeler/dogal_ve_guvenilir.svg",
+				iconAlt: "Doğal ve Güvenilir Üretim",
+				title: "Doğal ve güvenilir üretim",
+				description:
+					"Pestisitsiz, %90 daha az suyla yetiştirilen yeşilliklerimiz kontrollü koşullarda üretilir ve sofranıza en yüksek tazelikle ulaşır.",
+				backgroundColor: "bg-[#D4A574]",
+				borderColor: "border-[#D4A574]",
+			},
+		];
 
 		return (
 			<section
@@ -81,8 +78,8 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 			>
 				<div className="mx-6">
 					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
-							Sebze Paketleri
+						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
+							Abonelik Paketimiz Hakkında
 						</h2>
 						<p className="text-base leading-relaxed">
 							En taze sebzellerimizin özenle seçilmiş koleksiyonları, sağlıklı
@@ -90,7 +87,7 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 						</p>
 					</div>
 
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
 						{/* Package Image - Left Side */}
 						<div className="flex items-center justify-center">
 							<div className="w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg">
@@ -104,32 +101,42 @@ const PackagesFAQSection: React.FC<PackagesFAQSectionProps> = memo(
 							</div>
 						</div>
 
-						{/* FAQ Accordion - Right Side */}
+						{/* Benefits Grid - Right Side */}
 						<div className="space-y-4">
-							<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-4 md:mb-6 text-gray-700">
-								Paketlerimiz Hakkında
-							</h3>
-							<Accordion type="single" collapsible defaultValue="item-1">
-								{faqItems.map((faq) => (
-									<AccordionItem
-										key={faq.id}
-										value={faq.id}
-										className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black px-5 mb-3 overflow-hidden hover:shadow-md transition-shadow"
+							{/* Benefits Cards in 2x2 Grid */}
+							<div className="flex flex-col gap-6">
+								{benefits.map((benefit, index) => (
+									<div
+										key={`${benefit.title}-${index}`}
+										className={`${benefit.backgroundColor} border-2 border-black rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300`}
 									>
-										<AccordionTrigger className="hover:no-underline py-4">
-											<h4 className="text-xl md:text-2xl font-medium leading-snug text-left text-gray-800">
-												{faq.question}
-											</h4>
-										</AccordionTrigger>
-										<AccordionContent className="pb-4 pr-4">
-											<p className="text-base leading-relaxed">{faq.answer}</p>
-										</AccordionContent>
-									</AccordionItem>
+										<div className="flex items-start gap-6">
+											{/* Icon */}
+											<div className="w-16 h-16 rounded-full bg-white border-2 border-gray-800 flex items-center justify-center flex-shrink-0">
+												<Image
+													src={benefit.icon}
+													alt={benefit.iconAlt}
+													width={40}
+													height={40}
+													className="w-10 h-10 object-contain"
+												/>
+											</div>
+											{/* Content */}
+											<div>
+												<h4 className="text-base font-bold leading-tight mb-2 text-black">
+													{benefit.title}
+												</h4>
+												<p className="text-sm leading-relaxed text-black">
+													{benefit.description}
+												</p>
+											</div>
+										</div>
+									</div>
 								))}
-							</Accordion>
+							</div>
 
 							{/* Subscribe Button */}
-							<div className="mt-12 text-center">
+							<div className="mt-6 text-center">
 								<Link href="/abonelik/taze-yesillikler-paketi">
 									<Button className="w-full sm:w-auto px-8 py-3">
 										Abone Ol

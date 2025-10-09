@@ -194,8 +194,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 			if (url.startsWith("http://") || url.startsWith("https://")) {
 				return url;
 			}
-			// Otherwise, prepend the API base URL
-			return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
+			// Otherwise, return as-is (internal APIs provide absolute URLs)
+			return url;
 		};
 
 		// Use medium size if available, otherwise fallback to original

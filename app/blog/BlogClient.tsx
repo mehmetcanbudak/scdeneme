@@ -3,7 +3,7 @@
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
+import { getArticles, getMediaUrl } from "@/lib/cms";
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,7 +55,7 @@ export default function BlogClient({
 				const json = await getArticles({ page: 1, pageSize });
 				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
 					const a = item?.attributes ?? item ?? {};
-					const coverUrl = getStrapiMediaUrl(a.cover);
+					const coverUrl = getMediaUrl(a.cover);
 					const date =
 						a.publishedAt || a.createdAt
 							? new Date(a.publishedAt || a.createdAt).toLocaleDateString(
@@ -98,7 +98,7 @@ export default function BlogClient({
 				const json = await getArticles({ page, pageSize });
 				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
 					const a = item?.attributes ?? item ?? {};
-					const coverUrl = getStrapiMediaUrl(a.cover);
+					const coverUrl = getMediaUrl(a.cover);
 					const date =
 						a.publishedAt || a.createdAt
 							? new Date(a.publishedAt || a.createdAt).toLocaleDateString(
@@ -217,28 +217,23 @@ export default function BlogClient({
 				<div className="mx-auto max-w-7xl">
 					{/* Header */}
 					<div className="text-center mb-8 sm:mb-12">
-						<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 sm:mb-4 tracking-wide text-gray-800">
+						<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 sm:mb-4 tracking-wide text-black">
 							Blog
 						</h1>
-						<p className="text-base sm:text-lg text-gray-600 px-4">
-							Ekibimizce yazılan blog yazılarımız.
-						</p>
 					</div>
 
 					{/* Featured / Empty / Error */}
 					{loading ? (
-						<div className="p-6 sm:p-8 text-center text-gray-600">
-							Yükleniyor…
-						</div>
+						<div className="p-6 sm:p-8 text-center text-black">Yükleniyor…</div>
 					) : error ? (
 						<div className="p-6 sm:p-8 text-center text-red-600">{error}</div>
 					) : posts.length === 0 ? (
-						<div className="p-6 sm:p-8 text-center text-gray-600 bg-green-50 rounded-lg">
+						<div className="p-6 sm:p-8 text-center text-black bg-green-50 rounded-lg">
 							Henüz makale yok. Yakında içerikler eklenecek.
 						</div>
 					) : featured ? (
 						<div className="bg-green-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm mb-6 sm:mb-8">
-							<p className="text-xs sm:text-sm uppercase tracking-widest text-gray-600 mb-4 sm:mb-6">
+							<p className="text-xs sm:text-sm uppercase tracking-widest text-black mb-4 sm:mb-6">
 								Son Makale
 							</p>
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
@@ -255,21 +250,21 @@ export default function BlogClient({
 								</div>
 								<div className="order-1 lg:order-2">
 									<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
-										<div className="flex items-center text-sm text-gray-600">
+										<div className="flex items-center text-sm text-black">
 											<Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
 											<span className="truncate">{featured.date}</span>
 										</div>
 										{featured.readTime && (
-											<span className="text-sm text-gray-600">
+											<span className="text-sm text-black">
 												{featured.readTime}
 											</span>
 										)}
 									</div>
-									<h2 className="text-lg sm:text-xl lg:text-2xl font-medium mb-3 sm:mb-4 text-gray-700 leading-tight">
+									<h2 className="text-lg sm:text-xl lg:text-2xl font-medium mb-3 sm:mb-4 text-black leading-tight">
 										{featured.title}
 									</h2>
 									{featured.excerpt && (
-										<p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+										<p className="text-black leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
 											{featured.excerpt}
 										</p>
 									)}
@@ -288,10 +283,10 @@ export default function BlogClient({
 					{!loading && posts.length > 1 && (
 						<div className="bg-green-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-sm mb-6 sm:mb-8">
 							<div className="text-center mb-8 sm:mb-12">
-								<h2 className="text-xl sm:text-2xl font-medium mb-3 sm:mb-4 text-gray-700">
+								<h2 className="text-xl sm:text-2xl font-medium mb-3 sm:mb-4 text-black">
 									Blog
 								</h2>
-								<p className="text-gray-600 text-sm sm:text-base px-4">
+								<p className="text-black text-sm sm:text-base px-4">
 									Sağlıklı yaşam ve taze sebzeler hakkında güncel içerikler
 								</p>
 							</div>
@@ -322,7 +317,7 @@ export default function BlogClient({
 													</div>
 												</div>
 												<div className="p-4 sm:p-6">
-													<div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 xs:gap-4 mb-3 text-sm text-gray-600">
+													<div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 xs:gap-4 mb-3 text-sm text-black">
 														<div className="flex items-center">
 															<Calendar className="w-4 h-4 mr-1 flex-shrink-0" />
 															<span className="truncate">{post.date}</span>
@@ -333,15 +328,15 @@ export default function BlogClient({
 															</span>
 														)}
 													</div>
-													<h3 className="font-medium mb-3 text-gray-800 leading-tight group-hover:text-gray-600 transition-colors text-sm sm:text-base line-clamp-2">
+													<h3 className="font-medium mb-3 text-black leading-tight group-hover:text-black transition-colors text-sm sm:text-base line-clamp-2">
 														{post.title}
 													</h3>
 													{post.excerpt && (
-														<p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-3">
+														<p className="text-black text-xs sm:text-sm leading-relaxed mb-4 line-clamp-3">
 															{post.excerpt}
 														</p>
 													)}
-													<div className="flex items-center text-xs sm:text-sm font-medium uppercase tracking-widest group-hover:text-gray-600 transition-colors">
+													<div className="flex items-center text-xs sm:text-sm font-medium uppercase tracking-widest group-hover:text-black transition-colors">
 														DEVAMINI OKU
 														<ArrowRight className="w-4 h-4 ml-2" />
 													</div>
@@ -358,7 +353,7 @@ export default function BlogClient({
 											onClick={scrollBlogLeft}
 											className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300 touch-manipulation min-w-[44px] min-h-[44px]"
 										>
-											<ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+											<ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
 										</button>
 									</div>
 								)}
@@ -369,7 +364,7 @@ export default function BlogClient({
 											onClick={scrollBlogRight}
 											className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300 touch-manipulation min-w-[44px] min-h-[44px]"
 										>
-											<ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+											<ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
 										</button>
 									</div>
 								)}
@@ -390,7 +385,7 @@ export default function BlogClient({
 							>
 								Önceki
 							</button>
-							<span className="text-sm text-gray-600">
+							<span className="text-sm text-black">
 								Sayfa {page}
 								{pageCount ? ` / ${pageCount}` : ""}
 							</span>

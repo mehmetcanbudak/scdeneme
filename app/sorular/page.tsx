@@ -43,10 +43,10 @@ const FAQCard = React.memo<{
 					<IconComponent className={`w-6 h-6 ${colorClass.text}`} />
 				</div>
 				<div>
-					<h3 className="text-xl font-semibold mb-3 text-gray-800">
+					<h3 className="text-xl font-semibold mb-3 text-black">
 						{faq.question}
 					</h3>
-					<p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+					<p className="text-black leading-relaxed">{faq.answer}</p>
 				</div>
 			</div>
 		</div>
@@ -177,10 +177,10 @@ export default function Sorular() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-16">
-						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-gray-800">
+						<h1 className="text-4xl md:text-5xl font-light mb-6 tracking-wide text-black">
 							Sıkça Sorulan Sorular
 						</h1>
-						<p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+						<p className="text-xl text-black max-w-4xl mx-auto leading-relaxed">
 							Müşterilerimizin en çok merak ettiği konular ve detaylı cevapları
 						</p>
 					</div>

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type React from "react";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo } from "react";
 
 /**
  * Blog post UI type
@@ -36,48 +36,6 @@ interface BlogSectionProps {
  */
 const BlogSection: React.FC<BlogSectionProps> = memo(
 	({ posts, loading = false, error = null, className = "" }) => {
-		const blogScrollRef = useRef<HTMLDivElement>(null);
-		const [showLeftButton, setShowLeftButton] = useState(false);
-		const [showRightButton, setShowRightButton] = useState(true);
-
-		/**
-		 * Scroll blog container left
-		 */
-		const scrollBlogLeft = useCallback(() => {
-			const blogContainer = blogScrollRef.current;
-			if (blogContainer) {
-				blogContainer.scrollBy({
-					left: -320,
-					behavior: "smooth",
-				});
-			}
-		}, []);
-
-		/**
-		 * Scroll blog container right
-		 */
-		const scrollBlogRight = useCallback(() => {
-			const blogContainer = blogScrollRef.current;
-			if (blogContainer) {
-				blogContainer.scrollBy({
-					left: 320,
-					behavior: "smooth",
-				});
-			}
-		}, []);
-
-		/**
-		 * Handle blog scroll event
-		 */
-		const handleBlogScroll = useCallback(() => {
-			const blogContainer = blogScrollRef.current;
-			if (blogContainer) {
-				const { scrollLeft, scrollWidth, clientWidth } = blogContainer;
-				setShowLeftButton(scrollLeft > 0);
-				setShowRightButton(scrollLeft < scrollWidth - clientWidth - 10);
-			}
-		}, []);
-
 		if (loading) {
 			return (
 				<section
@@ -85,7 +43,7 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 				>
 					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 						<div className="text-center">
-							<p className="text-gray-600">Blog yazıları yükleniyor...</p>
+							<p className="text-black">Blog yazıları yükleniyor...</p>
 						</div>
 					</div>
 				</section>
@@ -112,81 +70,62 @@ const BlogSection: React.FC<BlogSectionProps> = memo(
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-12">
-						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 							Blog - Basında Biz
 						</h2>
 					</div>
 				</div>
 
-				<div className="relative w-full px-4 sm:px-8 lg:px-16">
-					<div
-						ref={blogScrollRef}
-						className="flex space-x-6 overflow-x-auto pb-4 px-6 justify-center"
-						onScroll={handleBlogScroll}
-						style={{
-							scrollBehavior: "smooth",
-							scrollbarWidth: "none",
-							msOverflowStyle: "none",
-							maxWidth: "100vw",
-							width: "100%",
-						}}
-					>
+				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="space-y-6">
 						{posts.map((post, index) => (
 							<Link
 								key={`${post.slug}-${index}`}
 								href={`/blog/${post.slug}`}
-								className="flex-shrink-0 w-80 sm:w-96"
+								className="block"
 							>
-								<div className="bg-gray-50 rounded-3xl border border-black overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-									<div className="aspect-video relative">
-										<Image
-											src={post.image || "/placeholder.svg"}
-											alt={post.title}
-											fill
-											className="object-cover"
-											quality={85}
-											sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-										/>
-									</div>
-									<div className="p-6">
-										<div className="text-sm text-gray-500 mb-2">
-											{post.date}
+								<div className="bg-green-50 rounded-3xl shadow-sm border border-black p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow">
+									<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+										<div className="order-2 lg:order-1">
+											<div className="relative w-full h-48 sm:h-64 lg:h-80 rounded-lg overflow-hidden">
+												<Image
+													src={post.image || "/placeholder.svg"}
+													alt={post.title}
+													fill
+													className="object-cover"
+													sizes="(max-width: 1024px) 100vw, 50vw"
+												/>
+											</div>
 										</div>
-										<h3 className="text-xl md:text-2xl font-medium leading-snug mb-3 line-clamp-2">
-											{post.title}
-										</h3>
-										<p className="text-base leading-relaxed line-clamp-3">
-											{post.excerpt}
-										</p>
+										<div className="order-1 lg:order-2">
+											<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
+												<div className="flex items-center text-sm text-black">
+													<span className="truncate">{post.date}</span>
+												</div>
+												{post.readTime && (
+													<span className="text-sm text-black">
+														{post.readTime}
+													</span>
+												)}
+											</div>
+											<h3 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-3 sm:mb-4 text-black">
+												{post.title}
+											</h3>
+											{post.excerpt && (
+												<p className="text-lg leading-relaxed mb-4 sm:mb-6">
+													{post.excerpt}
+												</p>
+											)}
+											<div className="flex items-center text-xs sm:text-sm font-medium uppercase tracking-widest text-black">
+												DEVAMINI OKU
+												<ArrowRight className="w-4 h-4 ml-2" />
+											</div>
+										</div>
 									</div>
 								</div>
 							</Link>
 						))}
 					</div>
-
-					{showLeftButton && (
-						<div className="absolute top-1/2 left-4 sm:left-6 transform -translate-y-1/2 z-30">
-							<button
-								onClick={scrollBlogLeft}
-								type="button"
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-							>
-								<ChevronLeft className="w-5 h-5 text-gray-600" />
-							</button>
-						</div>
-					)}
-
-					{showRightButton && (
-						<div className="absolute top-1/2 right-4 sm:right-6 transform -translate-y-1/2 z-30">
-							<button
-								onClick={scrollBlogRight}
-								type="button"
-								className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300"
-							>
-								<ChevronRight className="w-5 h-5 text-gray-600" />
-							</button>
-						</div>
-					)}
 				</div>
 
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

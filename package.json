@@ -36,6 +36,7 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --apply .",
 		"type-check": "tsc --noEmit",
+		"check": "tsc --noEmit",
 		"clean": "rm -rf .next out dist .turbo",
 		"clean:all": "rm -rf .next out dist .turbo node_modules pnpm-lock.yaml",
 		"analyze": "ANALYZE=true pnpm build",

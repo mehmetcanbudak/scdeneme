@@ -17,10 +17,10 @@ const ProductionVideoSection: React.FC = memo(() => {
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 					{/* Left - Info */}
 					<div className="space-y-6">
-						<h2 className="text-3xl font-light text-gray-800">
+						<h2 className="text-3xl font-light text-black">
 							Sera Teknolojisi ile Üretim
 						</h2>
-						<p className="text-lg text-gray-600 leading-relaxed">
+						<p className="text-lg text-black leading-relaxed">
 							En modern sera teknolojileri kullanarak, controlled environment
 							agriculture (CEA) sistemleriyle ürünlerimizi yetiştiriyoruz. Bu
 							sayede yıl boyunca aynı kalitede, taze ve besleyici ürünler
@@ -30,8 +30,8 @@ const ProductionVideoSection: React.FC = memo(() => {
 							<div className="flex items-start space-x-3">
 								<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
 								<div>
-									<h4 className="font-medium text-gray-800">Su Tasarrufu</h4>
-									<p className="text-gray-600">
+									<h4 className="font-medium text-black">Su Tasarrufu</h4>
+									<p className="text-black">
 										Geleneksel tarıma göre %95 daha az su kullanımı
 									</p>
 								</div>
@@ -39,10 +39,10 @@ const ProductionVideoSection: React.FC = memo(() => {
 							<div className="flex items-start space-x-3">
 								<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
 								<div>
-									<h4 className="font-medium text-gray-800">
+									<h4 className="font-medium text-black">
 										Pestisit Kullanmıyoruz
 									</h4>
-									<p className="text-gray-600">
+									<p className="text-black">
 										Kapalı sistem sayesinde zararlılardan doğal koruma
 									</p>
 								</div>
@@ -50,8 +50,8 @@ const ProductionVideoSection: React.FC = memo(() => {
 							<div className="flex items-start space-x-3">
 								<CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
 								<div>
-									<h4 className="font-medium text-gray-800">Yıl Boyu Üretim</h4>
-									<p className="text-gray-600">
+									<h4 className="font-medium text-black">Yıl Boyu Üretim</h4>
+									<p className="text-black">
 										Mevsim şartlarından bağımsız sürekli hasat
 									</p>
 								</div>
@@ -76,7 +76,7 @@ const ProductionVideoSection: React.FC = memo(() => {
 									type="button"
 									className="w-20 h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all"
 								>
-									<Play className="w-8 h-8 text-gray-600 ml-1" />
+									<Play className="w-8 h-8 text-black ml-1" />
 								</button>
 							</div>
 						</div>

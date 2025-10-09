@@ -1,82 +1,50 @@
 import { NextResponse } from "next/server";
+import { lexicalToHTML } from "@/lib/lexicalToHtml";
+
+function toAbsoluteUrl(
+	url: string | null | undefined,
+	base: string,
+): string | null {
+	if (!url) return null;
+	if (url.startsWith("http")) return url;
+	if (url.startsWith("/")) return `${base}${url}`;
+	return `${base}/${url}`;
+}
 
 export async function GET(
 	_req: Request,
-	context: { params: { slug: string } },
+	context: { params: Promise<{ slug: string }> },
 ) {
 	try {
 		const { slug } = await context.params;
 
-		const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL;
-		const TOKEN = process.env.STRAPI_API_TOKEN;
-
-		if (!STRAPI_URL) {
+		const PAYLOAD_URL = process.env.PAYLOAD_API_URL;
+		if (!PAYLOAD_URL) {
 			return NextResponse.json(
-				{ error: "Missing NEXT_PUBLIC_API_URL" },
+				{ error: "Missing PAYLOAD_API_URL" },
 				{ status: 500 },
 			);
 		}
 
-		// Build headers with optional authentication
-		const headers: HeadersInit = {
-			"Content-Type": "application/json",
-		};
-		if (TOKEN) {
-			headers.Authorization = `Bearer ${TOKEN}`;
-		}
+		const qs = new URLSearchParams();
+		qs.set("where[slug][equals]", slug);
+		qs.set("limit", "1");
+		qs.set("depth", "1");
 
-		// Use direct slug endpoint that matches the working Strapi endpoint
-		const res = await fetch(
-			`${STRAPI_URL}/api/articles/${encodeURIComponent(slug)}/`,
-			{
-				headers,
-				cache: "no-store",
-			},
-		);
+		const res = await fetch(`${PAYLOAD_URL}/api/articles?${qs.toString()}`, {
+			cache: "no-store",
+			headers: { "Content-Type": "application/json" },
+		});
 
 		if (!res.ok) {
 			const txt = await res.text();
-
-			// Handle other specific Strapi errors
-			if (res.status === 401) {
-				return NextResponse.json(
-					{
-						error: "Authentication failed",
-						message:
-							"Unable to connect to content management system. Please try again later.",
-						details: txt,
-					},
-					{ status: 503 },
-				);
-			}
-
 			if (res.status === 404) {
-				return NextResponse.json(
-					{
-						error: "Article not found",
-						message: `The article "${slug}" could not be found.`,
-						details: txt,
-					},
-					{ status: 404 },
-				);
+				return NextResponse.json({ data: null }, { status: 404 });
 			}
-
-			if (res.status >= 500) {
-				return NextResponse.json(
-					{
-						error: "Server error",
-						message:
-							"Content management system is temporarily unavailable. Please try again later.",
-						details: txt,
-					},
-					{ status: 503 },
-				);
-			}
-
 			return NextResponse.json(
 				{
 					error: "Upstream error",
-					message: "Failed to fetch article from content management system",
+					message: "Failed to fetch article from Payload",
 					details: txt,
 				},
 				{ status: res.status },
@@ -84,16 +52,26 @@ export async function GET(
 		}
 
 		const json = await res.json();
+		const doc =
+			Array.isArray(json?.docs) && json.docs.length > 0 ? json.docs[0] : null;
 
-		// Direct slug endpoint returns single article data object
-		const article = json?.data;
-
-		// If no article found, return 404
-		if (!article) {
+		if (!doc) {
 			return NextResponse.json({ data: null }, { status: 404 });
 		}
 
-		// Return the article object directly
+		const article = {
+			title: doc.title,
+			slug: doc.slug,
+			excerpt: doc.excerpt,
+			content: doc.content ? lexicalToHTML(doc.content) : undefined,
+			readTime: doc.readTime,
+			createdAt: doc.createdAt,
+			cover:
+				doc.cover && typeof doc.cover === "object"
+					? { url: toAbsoluteUrl(doc.cover.url || doc.cover?.url, PAYLOAD_URL) }
+					: undefined,
+		};
+
 		return NextResponse.json({ data: article }, { status: 200 });
 	} catch (err: unknown) {
 		return NextResponse.json(

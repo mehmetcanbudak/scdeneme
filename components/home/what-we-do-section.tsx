@@ -15,7 +15,7 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-8 sm:p-12 lg:p-16 hover:shadow-md transition-shadow">
 					<div className="mb-12 sm:mb-16">
-						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
+						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-black text-center">
 							Biz Ne Yapıyoruz
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20 mt-12 justify-items-center">
@@ -30,10 +30,10 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Biz Skycrops
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Modern dikey tarım teknolojisiyle geleceğin tarımını
 									şekillendiriyoruz
 								</p>
@@ -49,10 +49,10 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Kapalı Alanda Dikey Tarım
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Kontrollü ortamda sürdürülebilir ve verimli üretim
 									gerçekleştiriyoruz
 								</p>
@@ -68,10 +68,10 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Pestisitsiz Hormonsuz
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Kimyevi müdahale olmadan doğal yöntemlerle sağlıklı ürünler
 									yetiştiriyoruz
 								</p>
@@ -87,10 +87,10 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Taptaze Yeşillikleri Ulaştırıyoruz
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Hasattan dakikalar sonra kapınıza kadar taze ürünlerimizi
 									getiriyoruz
 								</p>

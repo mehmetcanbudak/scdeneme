@@ -52,7 +52,7 @@ import type { UiPost } from "@/components/home/blog-section";
 import { useProducts } from "@/contexts/product-context";
 import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
-import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
+import { getArticles, getMediaUrl } from "@/lib/cms";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -148,7 +148,7 @@ const Home: React.FC = memo(() => {
 				const json = await getArticles({ page: 1, pageSize: 4, preview: true }); // Reduced from 8 to 4
 				const mapped: UiPost[] = (json?.data ?? []).map((item: any) => {
 					const a = item?.attributes ?? item ?? {};
-					const coverUrl = getStrapiMediaUrl(a.cover);
+					const coverUrl = getMediaUrl(a.cover);
 					const date =
 						a.publishedAt || a.createdAt
 							? new Date(a.publishedAt || a.createdAt).toLocaleDateString(

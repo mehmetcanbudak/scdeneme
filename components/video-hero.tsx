@@ -28,7 +28,8 @@ const VideoHero = memo(function VideoHero({
 	showButton = true,
 }: VideoHeroProps) {
 	const { isMobileSidebarOpen } = useNavigation();
-	const videoRef = useRef<HTMLVideoElement>(null);
+	const videoElRef = useRef<HTMLVideoElement>(null);
+	const fallbackRef = useRef<HTMLDivElement>(null);
 	const [isInView, setIsInView] = useState(false);
 	const [isLoaded, setIsLoaded] = useState(false);
 
@@ -50,8 +51,9 @@ const VideoHero = memo(function VideoHero({
 			{ threshold: 0.1, rootMargin: "50px" },
 		);
 
-		if (videoRef.current) {
-			observer.observe(videoRef.current);
+		const target = (videoElRef.current as Element) || (fallbackRef.current as Element);
+		if (target) {
+			observer.observe(target);
 		}
 
 		return () => observer.disconnect();
@@ -83,7 +85,7 @@ const VideoHero = memo(function VideoHero({
 				<div className="absolute inset-0">
 					{isLoaded ? (
 						<video
-							ref={videoRef}
+							ref={videoElRef}
 							autoPlay
 							loop
 							muted
@@ -97,7 +99,7 @@ const VideoHero = memo(function VideoHero({
 						</video>
 					) : (
 						<div
-							ref={videoRef}
+							ref={fallbackRef}
 							className="w-full h-full bg-gray-900 animate-pulse"
 						/>
 					)}
@@ -135,7 +137,7 @@ const VideoHero = memo(function VideoHero({
 							className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-110"
 							aria-label="Aşağı kaydır"
 						>
-							<ChevronDown className="w-5 h-5 text-gray-600" />
+							<ChevronDown className="w-5 h-5 text-black" />
 						</button>
 					</div>
 				)}

@@ -102,9 +102,6 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 		if (!product) return ["/bundle4.png"];
 
 		const images: string[] = [];
-		const API_BASE_URL =
-			process.env.NEXT_PUBLIC_API_URL ||
-			"https://dynamic-spirit-b1c4404b11.strapiapp.com";
 
 		// Add multiple images if exists
 		if (product.images && Array.isArray(product.images)) {
@@ -118,11 +115,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 							img.formats?.small?.url;
 
 				if (imageUrl) {
-					images.push(
-						imageUrl.startsWith("http")
-							? imageUrl
-							: `${API_BASE_URL}${imageUrl}`,
-					);
+					images.push(imageUrl);
 				}
 			});
 		}
@@ -211,10 +204,10 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 			{/* Right Column - Product Info */}
 			<div className="space-y-6">
 				<div>
-					<h1 className="text-3xl md:text-4xl font-light mb-2 text-gray-800">
+					<h1 className="text-3xl md:text-4xl font-light mb-2 text-black">
 						{product.name || "Taze Yeşillikler Paketi"}
 					</h1>
-					<p className="text-gray-600 text-lg italic leading-relaxed">
+					<p className="text-black text-lg italic leading-relaxed">
 						{product.description ||
 							product.short_description ||
 							"Dikey tarım ürünleri ile sağlıklı yaşamın keyfini çıkarın. Her hafta 8 adet özenle seçilmiş taptaze yeşillik kapınıza gelir."}
@@ -238,8 +231,8 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 						>
 							<div className="flex items-center justify-between mb-3">
 								<div>
-									<div className="font-medium text-gray-800">Abonelik</div>
-									<div className="text-sm text-gray-600">
+									<div className="font-medium text-black">Abonelik</div>
+									<div className="text-sm text-black">
 										{selectedInterval
 											? `Düzenli teslimat ile %${Math.round(selectedInterval.discount)} tasarruf et`
 											: "Düzenli teslimat ile %35 tasarruf et"}
@@ -263,7 +256,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 						{/* Subscription Details */}
 						{purchaseType === "subscription" && (
 							<div className="space-y-3 mt-3 pt-3 border-t border-gray-200">
-								<div className="space-y-2 text-sm text-gray-700">
+								<div className="space-y-2 text-sm text-black">
 									<div>
 										+ %35 indirim ilk üç siparişte, sonrasında %20 indirim
 									</div>
@@ -288,7 +281,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 												onIntervalChange(interval);
 											}
 										}}
-										className="w-full p-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-gray-200 focus:border-gray-400"
+										className="w-full p-3 border border-gray-200 rounded-lg bg-white text-black focus:ring-2 focus:ring-gray-200 focus:border-gray-400"
 									>
 										{product.subscription_intervals?.map((interval) => (
 											<option key={interval.key} value={interval.key}>
@@ -302,9 +295,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 
 								{/* Quantity Selector */}
 								<div className="flex items-center justify-between">
-									<span className="text-sm font-medium text-gray-700">
-										Adet:
-									</span>
+									<span className="text-sm font-medium text-black">Adet:</span>
 									<div className="flex items-center space-x-3">
 										<button
 											type="button"
@@ -333,7 +324,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 								{/* Delivery Day Selector */}
 								<div>
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-medium text-gray-700">
+										<span className="text-sm font-medium text-black">
 											Teslimat Günü:
 										</span>
 										<span className="text-xs text-gray-500">
@@ -366,7 +357,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 																? "border-red-200 bg-red-50 text-red-500 cursor-not-allowed"
 																: isSelected
 																	? "border-gray-600 bg-gray-600 text-white"
-																	: "border-gray-200 hover:border-gray-300 text-gray-700"
+																	: "border-gray-200 hover:border-gray-300 text-black"
 														}`}
 													>
 														<span className={isInactive ? "line-through" : ""}>
@@ -374,7 +365,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 														</span>
 													</button>
 													{day.alwaysInactive && day.id === 1 ? (
-														<span className="text-[10px] text-center mt-0.5 text-gray-600 font-medium">
+														<span className="text-[10px] text-center mt-0.5 text-black font-medium">
 															Kalan Stok:
 														</span>
 													) : !day.alwaysInactive ? (
@@ -396,7 +387,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 
 								{/* Summary */}
 								<div className="bg-gray-50 p-3 rounded text-sm">
-									<p className="text-gray-700">
+									<p className="text-black">
 										<strong>{quantity} adet</strong> ürün,{" "}
 										<strong>
 											{selectedInterval?.name?.toLowerCase() || "haftalık"}
@@ -429,10 +420,10 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 						>
 							<div className="flex items-center justify-between mb-3">
 								<div>
-									<div className="font-medium text-gray-800">
+									<div className="font-medium text-black">
 										Tek Seferlik Satın Al
 									</div>
-									<div className="text-sm text-gray-600">
+									<div className="text-sm text-black">
 										Şimdi satın al, istediğin zaman tekrar sipariş ver
 									</div>
 								</div>
@@ -459,7 +450,7 @@ const ProductSelector: React.FC<ProductSelectorProps> = memo((props) => {
 				<div className="text-center">
 					<button
 						type="button"
-						className="text-gray-600 hover:text-yellow-600 underline text-sm transition-colors"
+						className="text-black hover:text-yellow-600 underline text-sm transition-colors"
 					>
 						Ürün detaylarını gör
 					</button>

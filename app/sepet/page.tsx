@@ -23,7 +23,7 @@ export default function CartPage() {
 				<div className="flex items-center space-x-4 mb-8 max-w-4xl mx-auto">
 					<Link
 						href="/abonelik"
-						className="flex items-center text-gray-600 hover:text-gray-800"
+						className="flex items-center text-black hover:text-black"
 					>
 						<ArrowLeft className="w-5 h-5 mr-2" />
 						<span className="hidden sm:inline">Alışverişe Devam Et</span>

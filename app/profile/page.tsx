@@ -91,8 +91,8 @@ const AccountInfoItem = memo(
 					<div className={iconColor}>{icon}</div>
 				</div>
 				<div className="flex-1">
-					<p className="text-sm text-gray-600 mb-1">{label}</p>
-					<p className="font-medium text-gray-900">{value}</p>
+					<p className="text-sm text-black mb-1">{label}</p>
+					<p className="font-medium text-black">{value}</p>
 				</div>
 			</div>
 		);
@@ -118,7 +118,7 @@ interface StatusCardProps {
 const StatusCard = memo(({ label, value, isVerified }: StatusCardProps) => {
 	return (
 		<div className="p-4 bg-gray-50 rounded-lg text-center">
-			<p className="text-sm text-gray-600 mb-1">{label}</p>
+			<p className="text-sm text-black mb-1">{label}</p>
 			<p
 				className={`font-semibold ${isVerified ? "text-green-600" : "text-orange-600"}`}
 			>
@@ -208,7 +208,7 @@ const ProfileContent = memo(() => {
 					<ProfileHeader user={user} isGoogleUser={isGoogleUser} />
 					<CardContent className="space-y-6">
 						<div className="space-y-4">
-							<h3 className="font-semibold text-lg text-gray-700 border-b pb-2">
+							<h3 className="font-semibold text-lg text-black border-b pb-2">
 								Hesap Bilgileri
 							</h3>
 
@@ -248,7 +248,7 @@ const ProfileContent = memo(() => {
 
 						{/* Account Status */}
 						<div className="space-y-4">
-							<h3 className="font-semibold text-lg text-gray-700 border-b pb-2">
+							<h3 className="font-semibold text-lg text-black border-b pb-2">
 								Hesap Durumu
 							</h3>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -268,7 +268,7 @@ const ProfileContent = memo(() => {
 						{/* Actions */}
 						<div className="pt-6 border-t space-y-3">
 							<Button
-								variant="default"
+								variant="primary"
 								className="w-full bg-blue-600 hover:bg-blue-700 text-white"
 								onClick={handleNavigateToProfileSettings}
 							>
@@ -288,11 +288,7 @@ const ProfileContent = memo(() => {
 							>
 								Aboneliklerim
 							</Button>
-							<Button
-								variant="destructive"
-								className="w-full"
-								onClick={handleLogout}
-							>
+							<Button variant="dark" className="w-full" onClick={handleLogout}>
 								Çıkış Yap
 							</Button>
 						</div>

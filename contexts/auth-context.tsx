@@ -75,7 +75,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
+// Use same-origin internal API routes; no external base URL
+const API_BASE_URL = "";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const router = useRouter();

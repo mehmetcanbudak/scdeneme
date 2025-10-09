@@ -13,11 +13,11 @@ export const PageHeader = memo(function PageHeader({
 }: PageHeaderProps) {
 	return (
 		<div className={`text-center mb-12 ${className}`}>
-			<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-gray-800">
+			<h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-black">
 				{title}
 			</h1>
 			{subtitle && (
-				<p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+				<p className="text-lg text-black max-w-3xl mx-auto leading-relaxed">
 					{subtitle}
 				</p>
 			)}
@@ -85,12 +85,12 @@ export const FeatureCard = memo(function FeatureCard({
 			className={`bg-white p-8 rounded-lg shadow-sm border border-gray-100 ${className}`}
 		>
 			{icon && <div className="flex-shrink-0 mb-4">{icon}</div>}
-			<h3 className="text-xl font-medium mb-3 text-gray-700">{title}</h3>
-			<p className="text-gray-600 mb-4 leading-relaxed">{description}</p>
+			<h3 className="text-xl font-medium mb-3 text-black">{title}</h3>
+			<p className="text-black mb-4 leading-relaxed">{description}</p>
 			{features && (
 				<ul className="space-y-2">
 					{features.map((feature, idx) => (
-						<li key={idx} className="flex items-center text-sm text-gray-600">
+						<li key={idx} className="flex items-center text-sm text-black">
 							<span className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
 							{feature}
 						</li>
@@ -181,7 +181,7 @@ export const ImageContent = memo(function ImageContent({
 				/>
 			</div>
 			<div className={imageFirst ? "" : "order-1 md:order-2"}>
-				<h2 className="text-2xl font-medium mb-6 text-gray-700">{title}</h2>
+				<h2 className="text-2xl font-medium mb-6 text-black">{title}</h2>
 				{children}
 			</div>
 		</div>

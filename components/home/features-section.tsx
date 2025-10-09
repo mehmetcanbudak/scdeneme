@@ -26,7 +26,7 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 			>
 				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 					<div className="text-center mb-12 md:mb-16">
-						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 text-gray-800">
+						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 text-black">
 							Biz Ne Yapıyoruz
 						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
@@ -41,10 +41,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Biz Skycrops
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Modern dikey tarım teknolojisiyle geleceğin tarımını
 									şekillendiriyoruz
 								</p>
@@ -60,10 +60,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Kapalı Alanda Dikey Tarım
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Kontrollü ortamda sürdürülebilir ve verimli üretim
 									gerçekleştiriyoruz
 								</p>
@@ -93,10 +93,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 										</div>
 									</div>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Pestisitsiz Hormonsuz
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Kimyevi müdahale olmadan doğal yöntemlerle sağlıklı ürünler
 									yetiştiriyoruz
 								</p>
@@ -112,10 +112,10 @@ const FeaturesSection: React.FC<FeaturesSectionProps> = memo(
 										quality={85}
 									/>
 								</div>
-								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
+								<h3 className="text-lg md:text-xl font-semibold mb-3 text-black leading-snug">
 									Taptaze Yeşillikleri Ulaştırıyoruz
 								</h3>
-								<p className="text-base text-gray-600 leading-relaxed">
+								<p className="text-base text-black leading-relaxed">
 									Hasattan dakikalar sonra kapınıza kadar taze ürünlerimizi
 									getiriyoruz
 								</p>

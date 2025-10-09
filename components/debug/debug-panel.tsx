@@ -63,7 +63,8 @@ export default function DebugPanel() {
 					</CardHeader>
 					<CardContent className="text-xs space-y-2">
 						<div>
-							<strong>API URL:</strong> {process.env.NEXT_PUBLIC_API_URL}
+							<strong>Payload API URL:</strong>{" "}
+							{process.env.PAYLOAD_API_URL || "(unset)"}
 						</div>
 
 						<div>

@@ -25,8 +25,8 @@ const FeatureCard: React.FC<FeatureCardProps> = memo(
 				className={`bg-[#FDFBE2] rounded-3xl p-8 shadow-sm border border-black hover:shadow-md transition-all duration-300 ${className}`}
 			>
 				<div>
-					<h3 className="text-2xl font-medium text-gray-800 mb-3">{title}</h3>
-					<p className="text-gray-600 leading-relaxed">{description}</p>
+					<h3 className="text-2xl font-medium text-black mb-3">{title}</h3>
+					<p className="text-black leading-relaxed">{description}</p>
 				</div>
 			</div>
 		);

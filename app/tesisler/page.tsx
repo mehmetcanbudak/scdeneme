@@ -33,7 +33,7 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 			<div className="flex items-start gap-4 mb-6">
 				{feature.icon && <div className="flex-shrink-0">{feature.icon}</div>}
 				<div>
-					<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-3 text-gray-800">
+					<h3 className="text-2xl md:text-3xl font-semibold leading-snug mb-3 text-black">
 						{feature.title}
 					</h3>
 					<p className="text-base leading-relaxed">{feature.description}</p>
@@ -214,7 +214,7 @@ export default function Tesisler() {
 				<div className="mx-auto max-w-7xl">
 					{/* Page Header */}
 					<div className="text-center mb-12">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-gray-800">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 md:mb-6 text-black">
 							Tesisimiz
 						</h1>
 						<p className="text-lg leading-relaxed max-w-3xl mx-auto mb-4">
