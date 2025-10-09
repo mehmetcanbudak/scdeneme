@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Section } from "@/components/ui/page-layout";
 import { CTASection } from "@/components/ui/subscription-components";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { apiClient } from "@/lib/api-client";
 import { Award, Leaf, Shield, Truck, X } from "lucide-react";
@@ -73,6 +74,9 @@ const Abonelik: React.FC = memo(() => {
 
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for subscription page
+	useHeaderColor("#DF626B");
 
 	// Set footer color to match page background
 	useFooterColorSetter("#DF626B");
@@ -572,7 +576,6 @@ const Abonelik: React.FC = memo(() => {
 						mobileAlt: "Abonelik hero görseli",
 					},
 				]}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

@@ -59,13 +59,22 @@ const SubscriptionBenefitsSection: React.FC<SubscriptionBenefitsSectionProps> =
 				backgroundColor: "bg-[#759f72]",
 				borderColor: "border-[#7BA785]",
 			},
+			{
+				icon: "/farmımızda_yetisen_sebzeler/dogal_ve_guvenilir.svg",
+				iconAlt: "Doğal ve Güvenilir Üretim",
+				title: "Doğal ve güvenilir üretim",
+				description:
+					"Pestisitsiz, %90 daha az suyla yetiştirilen yeşilliklerimiz kontrollü koşullarda üretilir ve sofranıza en yüksek tazelikle ulaşır.",
+				backgroundColor: "bg-[#D4A574]",
+				borderColor: "border-[#D4A574]",
+			},
 		];
 
 		return (
 			<section
 				id={sectionId}
 				data-section="subscription-benefits"
-				className={`py-16 md:py-20 bg-[#E7EBDE] relative z-10 ${className}`}
+				className={`py-16 bg-[#E7EBDE] relative z-10 ${className}`}
 			>
 				<div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 					<div className="space-y-6 md:space-y-8">

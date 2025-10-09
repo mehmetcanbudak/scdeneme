@@ -1,6 +1,7 @@
-import { ShoppingBag } from "lucide-react";
-import { memo } from "react";
 import { useCart } from "@/contexts/cart-context";
+import { ShoppingBag } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { memo } from "react";
 
 interface MobileActionIconsProps {
 	shouldBeTransparent: boolean;
@@ -12,10 +13,13 @@ const MobileActionIcons = memo(function MobileActionIcons({
 	className = "",
 }: MobileActionIconsProps) {
 	const { totalItems } = useCart();
+	const pathname = usePathname();
 
-	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${
-		shouldBeTransparent ? "text-white" : "text-gray-600"
-	}`;
+	// Determine icon color based on page and transparency
+	const isHomePage = pathname === "/";
+	const iconColor =
+		isHomePage && !shouldBeTransparent ? "text-gray-800" : "text-white";
+	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${iconColor}`;
 
 	const handleCartClick = () => {
 		// Navigate to cart page or open cart sidebar

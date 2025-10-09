@@ -1,8 +1,9 @@
-import { ShoppingBag, User } from "lucide-react";
-import { memo, useEffect, useState } from "react";
 import AuthModal from "@/components/auth/auth-modal";
 import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
+import { ShoppingBag, User } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { memo, useEffect, useState } from "react";
 
 interface ActionIconsProps {
 	shouldBeTransparent: boolean;
@@ -18,6 +19,7 @@ const ActionIcons = memo(function ActionIcons({
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [cartAnimation, setCartAnimation] = useState(false);
 	const [prevTotalItems, setPrevTotalItems] = useState(totalItems);
+	const pathname = usePathname();
 
 	// Animate cart when items are added
 	useEffect(() => {
@@ -28,9 +30,11 @@ const ActionIcons = memo(function ActionIcons({
 		setPrevTotalItems(totalItems);
 	}, [totalItems, prevTotalItems]);
 
-	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${
-		shouldBeTransparent ? "text-white" : "text-gray-600"
-	}`;
+	// Determine icon color based on page and transparency
+	const isHomePage = pathname === "/";
+	const iconColor =
+		isHomePage && !shouldBeTransparent ? "text-gray-800" : "text-white";
+	const iconClass = `w-5 h-5 transition-colors cursor-pointer hover:opacity-70 ${iconColor}`;
 
 	const handleUserClick = () => {
 		setIsAuthModalOpen(true);
@@ -45,13 +49,7 @@ const ActionIcons = memo(function ActionIcons({
 		<>
 			<div className={`flex items-center space-x-4 ${className}`}>
 				<div className="text-sm uppercase tracking-wide">
-					<span
-						className={`transition-colors ${
-							shouldBeTransparent ? "text-white" : "text-gray-600"
-						}`}
-					>
-						🇹🇷
-					</span>
+					<span className={`transition-colors ${iconColor}`}>🇹🇷</span>
 				</div>
 				{/* <Search className={iconClass} aria-label="Ara" /> */}
 				<div className="relative">

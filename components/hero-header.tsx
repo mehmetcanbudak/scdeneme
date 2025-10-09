@@ -7,17 +7,31 @@ import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "./navigation-context";
 
+/**
+ * Hero slide interface with required fields and optional enhancements
+ */
 export interface HeroSlide {
+	/** Unique identifier for the slide */
 	id?: string;
+	/** Main title text displayed prominently */
 	title: string;
+	/** Subtitle text displayed below the title */
 	subtitle: string;
+	/** Text for the call-to-action button */
 	buttonText?: string;
+	/** Action to perform when button is clicked */
 	buttonAction?: () => void;
+	/** Desktop image source */
 	image?: string;
+	/** Mobile-optimized image source */
 	mobileImage?: string;
+	/** Video source (alternative to images) */
 	video?: string;
+	/** Alt text for desktop image */
 	alt?: string;
+	/** Alt text for mobile image */
 	mobileAlt?: string;
+	/** Logo image source */
 	logo?: string;
 }
 
@@ -28,20 +42,37 @@ export interface HeroButton {
 	size?: "sm" | "default" | "lg";
 }
 
+/**
+ * HeroHeader component props interface
+ */
 interface HeroHeaderProps {
+	/** Array of hero slides to display */
 	slides: HeroSlide[];
+	/** @deprecated No longer used - scroll arrows are disabled by default */
 	onScrollToNext?: () => void;
+	/** Show navigation dots for multiple slides */
 	showDots?: boolean;
+	/** Show call-to-action buttons on slides */
 	showButton?: boolean;
+	/** Display as single image (no carousel) */
 	singleImage?: boolean;
+	/** Custom height for the hero section */
 	customHeight?: string;
+	/** Enable auto-play for carousel */
 	autoPlay?: boolean;
+	/** Interval between auto-play transitions (ms) */
 	autoPlayInterval?: number;
+	/** Additional CSS classes for the container */
 	className?: string;
+	/** Additional CSS classes for content area */
 	contentClassName?: string;
+	/** @deprecated Not used in current implementation */
 	overlayClassName?: string;
+	/** @deprecated Scroll arrows are disabled by default - use for backward compatibility only */
 	showScrollButton?: boolean;
+	/** How media should fit within the container */
 	mediaFit?: "cover" | "contain";
+	/** Background color for the hero section */
 	backgroundColor?: string;
 }
 
@@ -56,7 +87,7 @@ const HeroHeader = memo(function HeroHeader({
 	autoPlayInterval = 5000,
 	className = "",
 	contentClassName = "",
-	showScrollButton = true,
+	showScrollButton = false,
 	mediaFit = "contain",
 	backgroundColor = "transparent",
 }: HeroHeaderProps) {
@@ -66,25 +97,55 @@ const HeroHeader = memo(function HeroHeader({
 	const isMobile = useIsMobile();
 	const navigation = useNavigation();
 
-	// Validate slides prop
+	// Validate slides prop with better error handling
 	const validSlides = useMemo(() => {
-		if (!Array.isArray(slides) || slides.length === 0) {
-			console.warn("HeroHeader: slides prop must be a non-empty array");
-			return [
-				{
-					title: "Welcome",
-					subtitle: "Default slide",
-					buttonText: "Learn More",
-					image: "/placeholder.svg",
-					alt: "Default hero image",
-				},
-			];
+		if (!Array.isArray(slides)) {
+			console.error("HeroHeader: slides prop must be an array");
+			return [];
 		}
-		return slides;
+
+		if (slides.length === 0) {
+			console.warn(
+				"HeroHeader: slides array is empty, component will not render",
+			);
+			return [];
+		}
+
+		// Validate each slide has required fields (allow empty strings for image-only slides)
+		const validatedSlides = slides.filter((slide, index) => {
+			if (typeof slide.title !== "string") {
+				console.warn(`HeroHeader: slide ${index} title must be a string`);
+				return false;
+			}
+			if (typeof slide.subtitle !== "string") {
+				console.warn(`HeroHeader: slide ${index} subtitle must be a string`);
+				return false;
+			}
+			return true;
+		});
+
+		if (validatedSlides.length === 0) {
+			console.error("HeroHeader: no valid slides found");
+			return [];
+		}
+
+		return validatedSlides;
 	}, [slides]);
 
 	const totalSlides = validSlides.length;
 	const isMobileSidebarOpen = navigation?.isMobileSidebarOpen || false;
+
+	// Early return if no valid slides
+	if (totalSlides === 0) {
+		return (
+			<div
+				className="flex items-center justify-center bg-gray-100 text-gray-500"
+				style={{ height: customHeight }}
+			>
+				<p>No valid slides to display</p>
+			</div>
+		);
+	}
 
 	const handleSlideChange = useCallback(
 		(index: number) => {
@@ -342,8 +403,8 @@ const HeroHeader = memo(function HeroHeader({
 				</div>
 			)}
 
-			{/* Scroll down button */}
-			{showScrollButton && onScrollToNext && !isMobileSidebarOpen && (
+			{/* Scroll down button - DEPRECATED: Scroll arrows are disabled by default */}
+			{showScrollButton && !isMobileSidebarOpen && (
 				<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
 					<button
 						type="button"

@@ -42,8 +42,12 @@ const Navigation = memo(function Navigation({
 		throw new Error("Navigation must be used within a NavigationProvider");
 	}
 
-	const { isTransparent, isMobileSidebarOpen, setIsMobileSidebarOpen } =
-		navigationContextValue;
+	const {
+		isTransparent,
+		isMobileSidebarOpen,
+		setIsMobileSidebarOpen,
+		headerBgColor,
+	} = navigationContextValue;
 
 	const handleScroll = useCallback(() => {
 		const scrollY = window.scrollY;
@@ -77,10 +81,16 @@ const Navigation = memo(function Navigation({
 		<>
 			<header
 				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
-					shouldBeTransparent
-						? "bg-transparent"
-						: "bg-[#DBEAFE backdrop-blur-lg shadow-lg border-b border-blue-200/30"
+					shouldBeTransparent ? "bg-transparent" : "backdrop-blur-lg shadow-lg"
 				} ${className}`}
+				style={{
+					backgroundColor: shouldBeTransparent
+						? "transparent"
+						: `${headerBgColor}CC`, // Add CC for ~80% opacity
+					borderBottom: shouldBeTransparent
+						? "none"
+						: `1px solid ${headerBgColor}`,
+				}}
 				aria-label="Ana navigasyon"
 			>
 				<nav
@@ -112,6 +122,7 @@ const Navigation = memo(function Navigation({
 						<NavigationMenu
 							items={NAVIGATION_ITEMS}
 							shouldBeTransparent={shouldBeTransparent}
+							headerBgColor={headerBgColor}
 						/>
 					</div>
 

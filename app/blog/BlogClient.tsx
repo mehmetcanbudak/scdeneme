@@ -205,7 +205,6 @@ export default function BlogClient({
 						mobileAlt: "Blog hero görseli",
 					},
 				]}
-				onScrollToNext={scrollToContent}
 				singleImage
 				showDots={false}
 				customHeight="100vh"

@@ -3,6 +3,7 @@
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import Image from "next/image";
 import Link from "next/link";
@@ -123,6 +124,9 @@ const Hakkimizda = memo(function Hakkimizda() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
 
+	// Set header color for about page
+	useHeaderColor("#DC4F34");
+
 	// Set footer color to match page background
 	useFooterColorSetter("#DC4F34");
 
@@ -209,7 +213,6 @@ const Hakkimizda = memo(function Hakkimizda() {
 			{/* Hero Section */}
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

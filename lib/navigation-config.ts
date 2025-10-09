@@ -21,8 +21,13 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
 		label: "HAKKIMIZDA",
 		ariaLabel: "Hakkımızda sayfasına git",
 	},
+	{ href: "/urunler", label: "ÜRÜNLER", ariaLabel: "Ürünler sayfasına git" },
 	{ href: "/abonelik", label: "ABONELİK", ariaLabel: "Abonelik sayfasına git" },
-	{ href: "/tesisler", label: "TESİSLER", ariaLabel: "Tesisler sayfasına git" },
+	{
+		href: "/tesisler",
+		label: "TESİSİMİZ",
+		ariaLabel: "Tesisimiz sayfasına git",
+	},
 	{ href: "/blog", label: "BLOG", ariaLabel: "Blog sayfasına git" },
 	{ href: "/iletisim", label: "İLETİŞİM", ariaLabel: "İletişim sayfasına git" },
 ];
@@ -43,6 +48,8 @@ export const FOOTER_SECTIONS: FooterSection[] = [
 		links: [
 			{ href: "/hakkimizda", label: "Hakkımızda" },
 			{ href: "/blog", label: "Blog" },
+			{ href: "/sertifikalar", label: "Sertifikalar" },
+			{ href: "/sorular", label: "Sıkça Sorulan Sorular" },
 		],
 	},
 	{

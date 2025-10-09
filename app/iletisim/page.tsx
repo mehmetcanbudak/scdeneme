@@ -3,6 +3,7 @@
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
@@ -136,6 +137,9 @@ const FormInput = memo(function FormInput({
 export default function Iletisim() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for contact page
+	useHeaderColor("#A5D4D9");
 
 	// Set footer color to match page background
 	useFooterColorSetter("#A5D4D9");
@@ -287,7 +291,6 @@ export default function Iletisim() {
 			{/* Hero Section */}
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

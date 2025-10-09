@@ -3,6 +3,7 @@
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
@@ -255,6 +256,9 @@ FeaturedPost.displayName = "FeaturedPost";
 export default function Blog() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for blog page
+	useHeaderColor("#9AB795");
 
 	// Set footer color to match page background
 	useFooterColorSetter("#9AB795");
@@ -509,7 +513,6 @@ export default function Blog() {
 			{/* Fixed header with transparent/scrolled states */}
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

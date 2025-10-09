@@ -11,16 +11,16 @@ import { memo } from "react";
  */
 const WhatWeDoSection = memo(function WhatWeDoSection() {
 	return (
-		<section className="py-16 sm:py-20 bg-[#E7EBDE]">
+		<section className="py-16 bg-[#E7EBDE]">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-6 sm:p-8 hover:shadow-md transition-shadow">
+				<div className="bg-[#FDFBE2] rounded-3xl shadow-sm border border-black p-8 sm:p-12 lg:p-16 hover:shadow-md transition-shadow">
 					<div className="mb-12 sm:mb-16">
 						<h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight mb-4 md:mb-6 text-gray-700 text-center">
 							Biz Ne Yapıyoruz
 						</h2>
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mt-12">
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20 mt-12 justify-items-center">
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
+								<div className="w-60 h-60 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center relative">
 									<Image
 										src="/biz_skycrops.svg"
 										alt="Biz Skycrops Icon"
@@ -39,7 +39,7 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
+								<div className="w-60 h-60 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center relative">
 									<Image
 										src="/kapalı ortam .svg"
 										alt="Kapalı Alan Dikey Tarım Icon"
@@ -58,7 +58,7 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
+								<div className="w-60 h-60 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center relative">
 									<Image
 										src="/pestisitsiz yeni.svg"
 										alt="Pestisitsiz Hormonsuz Icon"
@@ -67,20 +67,6 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 										className="w-full h-full object-contain"
 										quality={85}
 									/>
-									{/* X overlay to indicate no pesticides */}
-									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-										<div className="w-48 h-48 flex items-center justify-center">
-											<svg
-												className="w-48 h-48 text-red-600"
-												fill="currentColor"
-												viewBox="0 0 24 24"
-												aria-hidden="true"
-											>
-												<title>No pesticides icon</title>
-												<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-											</svg>
-										</div>
-									</div>
 								</div>
 								<h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-800 leading-snug">
 									Pestisitsiz Hormonsuz
@@ -91,7 +77,7 @@ const WhatWeDoSection = memo(function WhatWeDoSection() {
 								</p>
 							</div>
 							<div className="text-center">
-								<div className="w-72 h-72 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
+								<div className="w-60 h-60 mx-auto mb-6 bg-purple-100 rounded-full flex items-center justify-center relative">
 									<Image
 										src="/taptaze yeşillikler.svg"
 										alt="Taptaze Icon"

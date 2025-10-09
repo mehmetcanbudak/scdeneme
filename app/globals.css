@@ -181,8 +181,4 @@ body,
 
 /* Navigation button styling */
 
-/* Custom header background color override */
-.bg-\[\#B2A79D\] {
-	--tw-bg-opacity: 1;
-	background-color: rgb(165 212 217 / var(--tw-bg-opacity, 1));
-}
+/* Custom header background color override - removed as colors are now dynamic */

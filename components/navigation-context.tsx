@@ -1,12 +1,14 @@
 "use client";
 
-import { createContext, type ReactNode, useContext, useState } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface NavigationContextType {
 	isTransparent: boolean;
 	setIsTransparent: (transparent: boolean) => void;
 	isMobileSidebarOpen: boolean;
 	setIsMobileSidebarOpen: (open: boolean) => void;
+	headerBgColor: string;
+	setHeaderBgColor: (color: string) => void;
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(
@@ -16,6 +18,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(
 export function NavigationProvider({ children }: { children: ReactNode }) {
 	const [isTransparent, setIsTransparent] = useState(false);
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+	const [headerBgColor, setHeaderBgColor] = useState("#B2A79D");
 
 	return (
 		<NavigationContext.Provider
@@ -24,6 +27,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 				setIsTransparent,
 				isMobileSidebarOpen,
 				setIsMobileSidebarOpen,
+				headerBgColor,
+				setHeaderBgColor,
 			}}
 		>
 			{children}

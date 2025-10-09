@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const variantStyles = {
 	primary:
-		"border-[#010101] bg-[#fdcd62] text-[#010101] hover:bg-[#fdcd62] focus-visible:bg-[#fdcd62]",
+		"border-[#010101] bg-[#FFF] text-[#010101] hover:bg-[#FFF] focus-visible:bg-[#FFF]",
 	primaryInverse:
 		"border-white bg-white text-[#010101] hover:bg-white focus-visible:bg-white",
 	inverseOutline:
@@ -16,9 +16,9 @@ const variantStyles = {
 		"border-[#010101] bg-[#f5c2c1] text-[#010101] hover:bg-[#f5c2c1] focus-visible:bg-[#f5c2c1]",
 	dark: "border-[#010101] bg-[#010101] text-white hover:bg-[#010101] focus-visible:bg-[#010101]",
 	outline:
-		"border-[#010101] bg-transparent text-[#010101] hover:bg-[#fdcd62] focus-visible:bg-[#fdcd62]",
+		"border-[#010101] bg-transparent text-[#010101] hover:bg-[#FFF] focus-visible:bg-[#FFF]",
 	ghost:
-		"border-transparent bg-transparent text-[#010101] hover:bg-[#fdcd62]/40 focus-visible:bg-[#fdcd62]/40",
+		"border-transparent bg-transparent text-[#010101] hover:bg-[#FFF]/40 focus-visible:bg-[#FFF]/40",
 	link: "border-transparent bg-transparent underline-offset-4 hover:underline",
 } as const;
 

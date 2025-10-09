@@ -10,6 +10,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { ArrowLeft, Mail, Phone, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -148,6 +149,9 @@ export default function ProfilePage() {
 const ProfileContent = memo(() => {
 	const { user, logout } = useAuth();
 	const router = useRouter();
+
+	// Set header color for profile page
+	useHeaderColor("#B2A79D");
 
 	/**
 	 * Handles user logout and navigation to home

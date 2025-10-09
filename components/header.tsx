@@ -54,8 +54,12 @@ const Header = memo(function Header({ className = "" }: HeaderProps) {
 		throw new Error("Header must be used within a NavigationProvider");
 	}
 
-	const { isTransparent, isMobileSidebarOpen, setIsMobileSidebarOpen } =
-		navigationContextValue;
+	const {
+		isTransparent,
+		isMobileSidebarOpen,
+		setIsMobileSidebarOpen,
+		headerBgColor,
+	} = navigationContextValue;
 
 	// Handle scroll events with throttling for performance
 	const handleScroll = useCallback(() => {
@@ -95,8 +99,16 @@ const Header = memo(function Header({ className = "" }: HeaderProps) {
 	return (
 		<header
 			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${
-				shouldBeTransparent ? "bg-transparent" : "bg-[#B2A79D] shadow-sm"
+				shouldBeTransparent ? "bg-transparent" : "shadow-sm"
 			} ${className}`}
+			style={{
+				backgroundColor: shouldBeTransparent
+					? "transparent"
+					: `${headerBgColor}CC`, // Add CC for ~80% opacity
+				borderBottom: shouldBeTransparent
+					? "none"
+					: `1px solid ${headerBgColor}`,
+			}}
 			aria-label="Ana navigasyon"
 		>
 			<nav
@@ -141,6 +153,7 @@ const Header = memo(function Header({ className = "" }: HeaderProps) {
 					<NavigationMenu
 						items={NAVIGATION_ITEMS}
 						shouldBeTransparent={shouldBeTransparent}
+						headerBgColor={headerBgColor}
 					/>
 				</div>
 

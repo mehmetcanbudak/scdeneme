@@ -2,6 +2,7 @@
 
 import OTPLoginForm from "@/components/auth/otp-login-form";
 import { useAuth } from "@/contexts/auth-context";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { memo, useCallback, useEffect } from "react";
@@ -40,6 +41,9 @@ LoadingState.displayName = "LoadingState";
 function LoginPage() {
 	const { isAuthenticated, isLoading } = useAuth();
 	const router = useRouter();
+
+	// Set header color for login page
+	useHeaderColor("#B2A79D");
 
 	useEffect(() => {
 		console.log("Login page useEffect:", { isAuthenticated, isLoading });

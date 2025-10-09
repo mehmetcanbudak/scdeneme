@@ -299,7 +299,6 @@ export default function Saglik() {
 
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

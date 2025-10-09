@@ -2,6 +2,7 @@
 
 import HeroHeader from "@/components/hero-header";
 import { Button } from "@/components/ui/button";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -59,6 +60,9 @@ FAQCard.displayName = "FAQCard";
 export default function Sorular() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for FAQ page
+	useHeaderColor("#B2A79D");
 
 	/**
 	 * Scrolls smoothly to the main content section
@@ -161,7 +165,6 @@ export default function Sorular() {
 
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				customHeight="100vh"

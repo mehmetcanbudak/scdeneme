@@ -1,10 +1,10 @@
 "use client";
 
 import ShoppingCart from "@/components/cart/shopping-cart";
-import { Button } from "@/components/ui/button";
+import { useHeaderColor } from "@/hooks/use-header-color";
+import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 
 /**
  * Main cart page component
@@ -13,6 +13,8 @@ import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
  */
 export default function CartPage() {
 	useNavigationTransparency();
+	// Set header color for cart page
+	useHeaderColor("#B2A79D");
 
 	return (
 		<div className="min-h-screen bg-gray-50">

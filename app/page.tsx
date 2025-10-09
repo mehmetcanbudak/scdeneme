@@ -2,8 +2,8 @@
 
 import HeroHeader from "@/components/hero-header";
 import PackagesFAQSection from "@/components/home/packages-faq-section";
+import SocialMediaBanner from "@/components/home/social-media-banner";
 import SubscriptionBenefitsSection from "@/components/home/subscription-benefits-section";
-import SustainabilityCTASection from "@/components/home/sustainability-cta-section";
 import WhatWeDoSection from "@/components/home/what-we-do-section";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
@@ -50,6 +50,7 @@ const VegetablesSection = dynamic(
 
 import type { UiPost } from "@/components/home/blog-section";
 import { useProducts } from "@/contexts/product-context";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import { getArticles, getStrapiMediaUrl } from "@/lib/strapi";
 import { useRouter } from "next/navigation";
@@ -84,6 +85,8 @@ const Home: React.FC = memo(() => {
 
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+	// Set header color for home page
+	useHeaderColor("#E7EBDE");
 
 	/**
 	 * Slides data for hero header with memoization
@@ -202,15 +205,14 @@ const Home: React.FC = memo(() => {
 			{/* Hero Header Component */}
 			<HeroHeader
 				slides={slides}
-				onScrollToNext={scrollToNextSection}
 				singleImage={true}
 				showDots={false}
 				showButton={true}
 				customHeight="100vh"
 			/>
 
-			{/* What We Do Section - Biz Ne Yapıyoruz */}
-			<WhatWeDoSection />
+			{/* Packages FAQ Section - Sebze Paketleri */}
+			<PackagesFAQSection packageImage={packageImage} />
 
 			{/* Vegetables Section - Farmımızda Yetişen Sebzeler */}
 			<Suspense
@@ -219,32 +221,14 @@ const Home: React.FC = memo(() => {
 				<VegetablesSection />
 			</Suspense>
 
-			{/* Packages FAQ Section - Sebze Paketleri */}
-			<PackagesFAQSection packageImage={packageImage} />
+			{/* What We Do Section - Biz Ne Yapıyoruz */}
+			<WhatWeDoSection />
 
 			{/* Subscription Benefits Section - Her hafta farklı paketler and other 2 boxes */}
 			<SubscriptionBenefitsSection />
 
-			{/* Sustainability CTA Section */}
-			<SustainabilityCTASection />
-
-			{/* Blog Section */}
-			<Suspense
-				fallback={<div className="h-96 bg-gray-100 animate-pulse rounded-lg" />}
-			>
-				<BlogSection
-					posts={blogPosts}
-					loading={blogLoading}
-					error={blogError}
-				/>
-			</Suspense>
-
-			{/* Category Grid Section */}
-			<Suspense
-				fallback={<div className="h-64 bg-gray-100 animate-pulse rounded-lg" />}
-			>
-				<CategoryGridSection />
-			</Suspense>
+			{/* Social Media Banner */}
+			<SocialMediaBanner />
 		</div>
 	);
 });

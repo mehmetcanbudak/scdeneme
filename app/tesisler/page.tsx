@@ -2,6 +2,7 @@
 
 import HeroHeader from "@/components/hero-header";
 import { useFooterColorSetter } from "@/hooks/use-footer-color";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import type React from "react";
 import { memo, useCallback, useId, useMemo } from "react";
@@ -71,6 +72,9 @@ const FacilityFeatureCard = memo(function FacilityFeatureCard({
 export default function Tesisler() {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for facilities page
+	useHeaderColor("#F1C2C4");
 
 	// Set footer color to match page background
 	useFooterColorSetter("#F1C2C4");
@@ -196,7 +200,6 @@ export default function Tesisler() {
 			{/* Hero Section */}
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				singleImage={true}
 				showDots={false}
 				showButton={false}

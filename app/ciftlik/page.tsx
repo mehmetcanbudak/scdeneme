@@ -1,6 +1,7 @@
 "use client";
 
 import HeroHeader from "@/components/hero-header";
+import { useHeaderColor } from "@/hooks/use-header-color";
 import { useNavigationTransparency } from "@/hooks/use-navigation-transparency";
 import Image from "next/image";
 import React, { useCallback, useMemo } from "react";
@@ -11,6 +12,9 @@ import React, { useCallback, useMemo } from "react";
 const Ciftlik = React.memo(() => {
 	// Enable transparent navigation for hero section
 	useNavigationTransparency(true);
+
+	// Set header color for farm page
+	useHeaderColor("#B2A79D");
 
 	/**
 	 * Scrolls smoothly to the main content section
@@ -65,7 +69,6 @@ const Ciftlik = React.memo(() => {
 
 			<HeroHeader
 				slides={heroSlides}
-				onScrollToNext={scrollToContent}
 				showDots={false}
 				showButton={false}
 				singleImage={true}
